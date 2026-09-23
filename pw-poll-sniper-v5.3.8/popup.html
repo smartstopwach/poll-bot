@@ -73,26 +73,38 @@
         </div>
 
         <div class="timing-control">
+          <label for="pollDetectionInterval">Poll Detection Speed:</label>
+          <div class="timing-input-group">
+            <input type="range" id="pollDetectionInterval" min="50" max="200" value="100" step="10">
+            <input type="number" id="pollDetectionIntervalInput" min="50" max="200" value="100" step="10" class="timing-number">
+            <span class="timing-unit">ms</span>
+          </div>
+          <div class="timing-hint">How often to check for polls (lower = faster detection)</div>
+        </div>
+
+        <div class="timing-control">
           <label for="pollDelay">Answer Delay:</label>
           <div class="timing-input-group">
             <input type="range" id="pollDelay" min="50" max="500" value="260" step="10">
             <input type="number" id="pollDelayInput" min="50" max="500" value="260" step="10" class="timing-number">
             <span class="timing-unit">ms</span>
           </div>
+          <div class="timing-hint">Wait time after options appear before clicking answer</div>
         </div>
         
         <div class="timing-control">
           <label for="submitDelay">Submit Delay:</label>
           <div class="timing-input-group">
-            <input type="range" id="submitDelay" min="0" max="200" value="25" step="5">
-            <input type="number" id="submitDelayInput" min="0" max="200" value="25" step="5" class="timing-number">
+            <input type="range" id="submitDelay" min="10" max="200" value="25" step="5">
+            <input type="number" id="submitDelayInput" min="10" max="200" value="25" step="5" class="timing-number">
             <span class="timing-unit">ms</span>
           </div>
+          <div class="timing-hint">Wait time after answer click before clicking submit</div>
         </div>
         
         <div class="timing-info">
           <strong>Total Time:</strong> ~<span id="totalTime">335</span>ms
-          <div class="timing-warning">⚠️ Very low delays may be detected</div>
+          <div class="timing-warning">⚠️ Very low delays may cause poll failures</div>
         </div>
       </div>
     </details>

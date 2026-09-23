@@ -49,6 +49,7 @@
   let isCheckRunning = false;
   let pollDelay = PW.POLL_DELAY; // Configurable delay before answering
   let submitDelay = PW.SUBMIT_DELAY; // Configurable delay before submit
+  let pollDetectionInterval = PW.POLL_INTERVAL; // Configurable poll detection interval
   let humanDelayMin = PW.HUMAN_DELAY_MIN; // Minimum human-like delay
   let humanDelayMax = PW.HUMAN_DELAY_MAX; // Maximum human-like delay
   let useHumanDelay = true; // Use human-like delay to avoid detection
@@ -112,7 +113,7 @@
 
       // Load settings from storage FIRST, then start polling
       chrome.storage.local.get(
-        ['autoSubmit', 'autoOpen', 'pollHistory', 'errorLog', 'pollCount', 'pollDelay', 'submitDelay', 'humanDelayMin', 'humanDelayMax', 'useHumanDelay', 'extensionActive'],
+        ['autoSubmit', 'autoOpen', 'pollHistory', 'errorLog', 'pollCount', 'pollDelay', 'submitDelay', 'pollDetectionInterval', 'humanDelayMin', 'humanDelayMax', 'useHumanDelay', 'extensionActive'],
         (result) => {
           selectedOption = null; // Always start blank - NO DEFAULT
           nextPollAnswer = null;
@@ -123,6 +124,7 @@
           pollCount = result.pollCount || 0;
           pollDelay = (result.pollDelay !== undefined && result.pollDelay !== null) ? result.pollDelay : PW.POLL_DELAY;
           submitDelay = (result.submitDelay !== undefined && result.submitDelay !== null) ? result.submitDelay : PW.SUBMIT_DELAY;
+          pollDetectionInterval = (result.pollDetectionInterval !== undefined && result.pollDetectionInterval !== null) ? result.pollDetectionInterval : PW.POLL_INTERVAL;
           humanDelayMin = (result.humanDelayMin !== undefined && result.humanDelayMin !== null) ? result.humanDelayMin : PW.HUMAN_DELAY_MIN;
           humanDelayMax = (result.humanDelayMax !== undefined && result.humanDelayMax !== null) ? result.humanDelayMax : PW.HUMAN_DELAY_MAX;
           useHumanDelay = result.useHumanDelay !== false;
@@ -133,8 +135,8 @@
           
           // NOW start polling (after storage is loaded)
           if (checkInterval) clearInterval(checkInterval);
-          checkInterval = setInterval(checkForPoll, PW.POLL_INTERVAL);
-          console.log('[PW Sniper] Polling started');
+          checkInterval = setInterval(checkForPoll, pollDetectionInterval);
+          console.log('[PW Sniper] Polling started with interval:', pollDetectionInterval, 'ms');
         }
       );
 
@@ -160,6 +162,13 @@
         }
         if (changes.pollDelay !== undefined) pollDelay = changes.pollDelay.newValue;
         if (changes.submitDelay !== undefined) submitDelay = changes.submitDelay.newValue;
+        if (changes.pollDetectionInterval !== undefined) {
+          pollDetectionInterval = changes.pollDetectionInterval.newValue;
+          // Restart polling with new interval
+          if (checkInterval) clearInterval(checkInterval);
+          checkInterval = setInterval(checkForPoll, pollDetectionInterval);
+          console.log('[PW Sniper] Polling interval updated to:', pollDetectionInterval, 'ms');
+        }
         if (changes.humanDelayMin !== undefined) humanDelayMin = changes.humanDelayMin.newValue;
         if (changes.humanDelayMax !== undefined) humanDelayMax = changes.humanDelayMax.newValue;
         if (changes.useHumanDelay !== undefined) useHumanDelay = changes.useHumanDelay.newValue;
@@ -1075,6 +1084,14 @@
           if (msg.submitDelay !== undefined) {
             submitDelay = msg.submitDelay;
             saveToStorage('submitDelay', submitDelay);
+          }
+          if (msg.pollDetectionInterval !== undefined) {
+            pollDetectionInterval = msg.pollDetectionInterval;
+            saveToStorage('pollDetectionInterval', pollDetectionInterval);
+            // Restart polling with new interval
+            if (checkInterval) clearInterval(checkInterval);
+            checkInterval = setInterval(checkForPoll, pollDetectionInterval);
+            console.log('[PW Sniper] Polling interval updated to:', pollDetectionInterval, 'ms');
           }
           if (msg.humanDelayMin !== undefined) {
             humanDelayMin = msg.humanDelayMin;

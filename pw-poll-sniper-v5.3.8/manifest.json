@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "PW Poll Sniper",
-  "version": "5.3.7",
+  "version": "5.3.8",
   "description": "Auto-answer Physics Wallah polls in milliseconds. Press Q then A/B/C/D to set answer.",
   "permissions": ["storage"],
   "host_permissions": [
