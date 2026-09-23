@@ -1,0 +1,953 @@
+<html lang="en" data-color-scheme="light" class="" style="--primary-color: #5a4bda; --primary-color-50: #f1efff; --primary-color-100: #d2ccff; --primary-color-200: #b2a9ff; --primary-color-300: #9387ff; --primary-color-400: #7363fc; --primary-color-500: #B2A9FF; --primary-color-600: #4437b8; --primary-color-700: #312596; --primary-color-800: #211774; --primary-color-900: #140d52; --primary-btn-bg-dis: #D2CCFF; --secondary-color: #e31b4d; --secondary-color-50: #fce8ed; --secondary-color-100: #f18da6; --secondary-color-200: #ef7694; --secondary-color-300: #ec5f83; --secondary-color-400: #e94971; --secondary-color-600: #cd1846; --secondary-color-700: #b6163e; --secondary-color-800: #a01336; --secondary-color-900: #5b0b1f; --premium-color-50: #F3F6FF; --premium-color-100: #DAE2F9; --premium-color-200: #9AAEEB; --premium-color-300: #6682D6; --premium-color-400: #3B60D1; --premium-color-500: #143CB6; --premium-color-600: #1E40A8; --premium-color-700: #1D3378; --premium-color-800: #0C1944; --premium-color-900: #13192C; --grey-color: #b5bbc5; --grey-color-6: #f8f8f8; --grey-color-10: #eaecef; --grey-color-50: #e4e7ea; --grey-color-100: #d9dce1; --grey-color-200: #cdd1d8; --grey-color-300: #c1c6cE; --grey-color-400: #b5bbc5; --grey-color-500: #4A4A59; --grey-color-600: #7b7f86; --grey-color-700: #5E6166; --grey-color-800: #414347; --grey-color-900: #1B2124; --grey-color-a: #F3F4F6; --grey-color-white: #09090B; --grey-color-black: #FFFFFF; --pw-color-black-900: #1B2124; --pw-color-white: #FFFFFF; --background-alpha-white: rgba(255, 255, 255, 0.9); --background-alpha-black: rgba(0, 0, 0, 0.25); --success-color: #1b7938; --success-color-10: #dff1e4; --success-color-100: #adcfb7; --success-color-200: #88b998; --success-color-300: #64a478; --success-color-400: #3f8e58; --success-color-600: #17662f; --success-color-700: #125226; --success-color-800: #0e3f1d; --success-color-900: #0a2c14; --error-color: #bf2734; --error-color-10: #fee7e9; --error-color-100: #e8b1b6; --error-color-200: #de8f95; --error-color-300: #d36c75; --error-color-400: #c94a54; --error-color-600: #a0212c; --error-color-700: #821b23; --error-color-800: #63141b; --error-color-900: #450e13; --warning-color: #eaaa2e; --warning-color-10: #fff6e5; --warning-color-100: #f7e0b4; --warning-color-200: #f4d392; --warning-color-300: #f1c571; --warning-color-400: #edb84f; --warning-color-600: #c58f27; --warning-color-700: #9f741f; --warning-color-800: #7a5818; --warning-color-900: #543d11; --link-color: #037cbf; --link-color-10: #f1f5fe; --link-color-100: #ddebf8; --link-color-200: #bcd8f1; --link-color-300: #81b6e4; --link-color-400: #2b91c9; --link-color-600: #0368a0; --link-color-700: #025482; --link-color-800: #024063; --link-color-900: #012d45; --static-color-black: #1b2124; --static-color-white: #ffffff; --static-color-grey-1: #3d3d3d; --static-color-grey-2: #757575; --static-color-deep-blue: #140D52; --static-color-transparent: transparent; --static-color-inherit: inherit; --static-color-current: currentColor; --indigo-color: #6172F3; --indigo-color-25: #F5F8FF; --indigo-color-50: #EEF4FF; --indigo-color-100: #E0EAFF; --indigo-color-200: #C7D7FE; --indigo-color-300: #A4BCFD; --indigo-color-400: #8098F9; --indigo-color-600: #444CE7; --indigo-color-700: #3538CD; --indigo-color-800: #2D31A6; --indigo-color-900: #2D3282; --violet-color: #7A5AF8; --violet-color-25: #FAFAFF; --violet-color-50: #F4F3FF; --violet-color-100: #EBE9FE; --violet-color-200: #D9D6FE; --violet-color-300: #BDB4FE; --violet-color-400: #9B8AFB; --violet-color-600: #6938EF; --violet-color-700: #5925DC; --violet-color-800: #4A1FB8; --violet-color-900: #3E1C96; --blue-color: #2E90FA; --blue-color-25: #F5FAFF; --blue-color-50: #EFF8FF; --blue-color-100: #D1E9FF; --blue-color-200: #B2DDFF; --blue-color-300: #84CAFF; --blue-color-400: #53B1FD; --blue-color-600: #1570EF; --blue-color-700: #175CD3; --blue-color-800: #1849A9; --blue-color-900: #194185; --green-color: #16B364; --green-color-25: #F6FEF9; --green-color-50: #EDFCF2; --green-color-100: #D3F8DF; --green-color-200: #AAF0C4; --green-color-300: #73E2A3; --green-color-400: #3CCB7F; --green-color-600: #099250; --green-color-700: #087443; --green-color-800: #095C37; --green-color-900: #084C2E; --yellow-color: #EAAA08; --yellow-color-25: #FEFDF0; --yellow-color-50: #FEFBE8; --yellow-color-100: #FEF7C3; --yellow-color-200: #FEEE95; --yellow-color-300: #FDE272; --yellow-color-400: #FAC515; --yellow-color-600: #CA8504; --yellow-color-700: #A15C07; --yellow-color-800: #854A0E; --yellow-color-900: #542C0D; --orange-color: #FB6514; --orange-color-25: #FFFAF5; --orange-color-50: #FFF6ED; --orange-color-100: #FFEAD5; --orange-color-200: #FDDCAB; --orange-color-300: #FEB273; --orange-color-400: #FD853A; --orange-color-600: #EC4A0A; --orange-color-700: #C4320A; --orange-color-800: #9C2A10; --orange-color-900: #7E2410; --red-color: #F04438; --red-color-25: #FFFBFA; --red-color-50: #FEF3F2; --red-color-100: #FEE4E2; --red-color-200: #FECDCA; --red-color-300: #FDA29B; --red-color-400: #F97066; --red-color-600: #D92D20; --red-color-700: #B42318; --red-color-800: #912018; --red-color-900: #7A271A; --elevation-color-page-bg: #EAECEF; --elevation-color-page-bg-2: #FFFFFF; --elevation-color-1: #FFFFFF; --elevation-color-2: #FFFFFF; --elevation-color-3: #FFFFFF; --text-color-heading: #1B2124; --text-color-body-1: #3D3D3D; --text-color-body-2: #757575; --text-color-disabled: #A1A3A4; --stroke-color-dark: #747474; --stroke-color-medium: #B7B7B7; --stroke-color-light: #D9DCE1; --stroke-color-extra-light: #EFEFEF; --overlay-modal-bg: rgba(0, 0, 0, 0.75); --spacing-0: 0px; --spacing-1: 1px; --spacing-2: 2px; --spacing-3: 3px; --spacing-4: 4px; --spacing-6: 6px; --spacing-8: 8px; --spacing-10: 10px; --spacing-12: 12px; --spacing-14: 14px; --spacing-16: 16px; --spacing-18: 18px; --spacing-20: 20px; --spacing-24: 24px; --spacing-28: 28px; --spacing-32: 32px; --spacing-40: 40px; --spacing-48: 48px; --spacing-56: 56px; --spacing-64: 64px; --spacing-80: 80px; --spacing-82: 82px; --spacing-96: 96px; --spacing-100: 100px; --spacing-120: 120px; --spacing-160: 160px; --spacing-auto: auto; --font-10: 10px; --font-12: 12px; --font-14: 14px; --font-16: 16px; --font-18: 18px; --font-20: 20px; --font-24: 24px; --font-32: 32px; --font-40: 40px; --font-64: 64px; --font-80: 80px; --line-height-16: 16px; --line-height-18: 18px; --line-height-20: 20px; --line-height-22: 22px; --line-height-24: 24px; --line-height-26: 26px; --line-height-28: 28px; --line-height-30: 30px; --line-height-32: 32px; --line-height-36: 36px; --line-height-48: 48px; --line-height-50: 50px; --line-height-60: 60px; --line-height-80: 80px; --line-height-96: 96px; --line-height-100: 100px; --line-height-120: 120px; --line-height-none: 1; --border-radius-160: 160px; --shadow-light: 0px 1px 8px rgba(0,0,0,0.08); --shadow-medium: 0px 8px 24px rgba(0,0,0,0.6); --shadow-dark: 0px 12px 36px rgba(0,0,0,0.1); --shadow-none: 0 0 #0000; --delay-800: 800; --delay-1500: 1500; --font-family-reddit: RedditSans; --z-index-100: 100; --z-index-1500: 1500; --dark-primary-color: #5a4bda; --dark-primary-color-50: #332E56; --dark-primary-color-100: #3E3588; --dark-primary-color-200: #473CAA; --dark-primary-color-300: #5D50D3; --dark-primary-color-400: #8375F5; --dark-primary-color-500: #B2A9FF; --dark-primary-color-600: #D2CCFF; --dark-primary-color-700: #DBD6FF; --dark-primary-color-800: #E8E6FF; --dark-primary-color-900: #F1EFFF; --dark-primary-btn-bg-dis: #716E89; --dark-secondary-color: #e31b4d; --dark-secondary-color-50: #fce8ed; --dark-secondary-color-100: #f18da6; --dark-secondary-color-200: #ef7694; --dark-secondary-color-300: #ec5f83; --dark-secondary-color-400: #e94971; --dark-secondary-color-600: #cd1846; --dark-secondary-color-700: #b6163e; --dark-secondary-color-800: #a01336; --dark-secondary-color-900: #5b0b1f; --dark-premium-color-50: #010A24; --dark-premium-color-100: #010F36; --dark-premium-color-200: #011449; --dark-premium-color-300: #02195C; --dark-premium-color-400: #021E6F; --dark-premium-color-500: #2D4487; --dark-premium-color-600: #586BA0; --dark-premium-color-700: #8391B8; --dark-premium-color-800: #AEB7D1; --dark-premium-color-900: #D9DDE9; --dark-grey-color: #989DA5; --dark-grey-color-6: #101014; --dark-grey-color-10: #17171C; --dark-grey-color-50: #1E1E24; --dark-grey-color-100: #23232A; --dark-grey-color-200: #31313A; --dark-grey-color-300: #383842; --dark-grey-color-400: #41414D; --dark-grey-color-500: #4A4A59; --dark-grey-color-600: #676779; --dark-grey-color-700: #787887; --dark-grey-color-800: #B3B3BC; --dark-grey-color-900: #D9D9DA; --dark-grey-color-a: #23232A; --dark-grey-color-white: #09090B; --dark-grey-color-black: #D9D9DA; --dark-pw-color-black-900: #1B2124; --dark-pw-color-white: #D9D9DA; --dark-background-alpha-white: rgba(0, 0, 0, 0.25); --dark-background-alpha-black: rgba(255, 255, 255, 0.9); --dark-success-color: #ADCFB7; --dark-success-color-10: #0A2C14; --dark-success-color-100: #114B22; --dark-success-color-200: #88b998; --dark-success-color-300: #58A76F; --dark-success-color-400: #9BCAA9; --dark-success-color-600: #BCDCC5; --dark-success-color-700: #125226; --dark-success-color-800: #0e3f1d; --dark-success-color-900: #DFF1E4; --dark-error-color: #E8B1B6; --dark-error-color-10: #450E13; --dark-error-color-100: #63141B; --dark-error-color-200: #821B23; --dark-error-color-300: #d36c75; --dark-error-color-400: #c94a54; --dark-error-color-600: #F2CACD; --dark-error-color-700: #821b23; --dark-error-color-800: #63141b; --dark-error-color-900: #FEE7E9; --dark-warning-color: #F7E0B4; --dark-warning-color-10: #30240F; --dark-warning-color-100: #533C13; --dark-warning-color-200: #976D26; --dark-warning-color-300: #DA992B; --dark-warning-color-400: #E6B556; --dark-warning-color-600: #F7E0B4; --dark-warning-color-700: #FCEBCA; --dark-warning-color-800: #FFF6E5; --dark-warning-color-900: #FFFCF5; --dark-link-color: #A4D0E8; --dark-link-color-10: #23292F; --dark-link-color-100: #333D47; --dark-link-color-200: #43607F; --dark-link-color-300: #5880A7; --dark-link-color-400: #2b91c9; --dark-link-color-600: #BCDCEB; --dark-link-color-700: #025482; --dark-link-color-800: #024063; --dark-link-color-900: #012d45; --dark-static-color-black: #1b2124; --dark-static-color-white: #ffffff; --dark-static-color-grey-1: #3d3d3d; --dark-static-color-grey-2: #757575; --dark-static-color-deep-blue: #140D52; --dark-static-color-transparent: transparent; --dark-static-color-inherit: inherit; --dark-static-color-current: currentColor; --dark-indigo-color: #8098F9; --dark-indigo-color-25: #2D3282; --dark-indigo-color-50: #2D31A6; --dark-indigo-color-100: #3538CD; --dark-indigo-color-200: #444CE7; --dark-indigo-color-300: #6172F3; --dark-indigo-color-400: #8098F9; --dark-indigo-color-600: #C7D7FE; --dark-indigo-color-700: #E0EAFF; --dark-indigo-color-800: #EEF4FF; --dark-indigo-color-900: #F5F8FF; --dark-violet-color: #7A5AF8; --dark-violet-color-25: #3E1C96; --dark-violet-color-50: #4A1FB8; --dark-violet-color-100: #5925DC; --dark-violet-color-200: #6938EF; --dark-violet-color-300: #7A5AF8; --dark-violet-color-400: #9B8AFB; --dark-violet-color-600: #D9D6FE; --dark-violet-color-700: #EBE9FE; --dark-violet-color-800: #F4F3FF; --dark-violet-color-900: #FAFAFF; --dark-blue-color: #84CAFF; --dark-blue-color-25: #194185; --dark-blue-color-50: #1849A9; --dark-blue-color-100: #175CD3; --dark-blue-color-200: #1570EF; --dark-blue-color-300: #2E90FA; --dark-blue-color-400: #53B1FD; --dark-blue-color-600: #B2DDFF; --dark-blue-color-700: #D1E9FF; --dark-blue-color-800: #EFF8FF; --dark-blue-color-900: #F5FAFF; --dark-green-color: #3CCB7F; --dark-green-color-25: #084C2E; --dark-green-color-50: #095C37; --dark-green-color-100: #087443; --dark-green-color-200: #099250; --dark-green-color-300: #16B364; --dark-green-color-400: #3CCB7F; --dark-green-color-600: #AAF0C4; --dark-green-color-700: #D3F8DF; --dark-green-color-800: #EDFCF2; --dark-green-color-900: #F6FEF9; --dark-yellow-color: #EAAA08; --dark-yellow-color-25: #542C0D; --dark-yellow-color-50: #854A0E; --dark-yellow-color-100: #A15C07; --dark-yellow-color-200: #CA8504; --dark-yellow-color-300: #EAAA08; --dark-yellow-color-400: #FAC515; --dark-yellow-color-600: #FEEE95; --dark-yellow-color-700: #FEF7C3; --dark-yellow-color-800: #FEFBE8; --dark-yellow-color-900: #FEFDF0; --dark-orange-color: #FB6514; --dark-orange-color-25: #7E2410; --dark-orange-color-50: #9C2A10; --dark-orange-color-100: #C4320A; --dark-orange-color-200: #EC4A0A; --dark-orange-color-300: #FB6514; --dark-orange-color-400: #FD853A; --dark-orange-color-600: #FDDCAB; --dark-orange-color-700: #FFEAD5; --dark-orange-color-800: #FFF6ED; --dark-orange-color-900: #FFFAF5; --dark-red-color: #F97066; --dark-red-color-25: #7A271A; --dark-red-color-50: #912018; --dark-red-color-100: #B42318; --dark-red-color-200: #D92D20; --dark-red-color-300: #F04438; --dark-red-color-400: #F97066; --dark-red-color-600: #FECDCA; --dark-red-color-700: #FEE4E2; --dark-red-color-800: #FEF3F2; --dark-red-color-900: #FFFBFA; --dark-elevation-color-page-bg: #09090B; --dark-elevation-color-page-bg-2: #1E1E24; --dark-elevation-color-1: #23232a; --dark-elevation-color-2: #31313a; --dark-elevation-color-3: #383842; --dark-text-color-heading: #D9D9DA; --dark-text-color-body-1: #BFBFBF; --dark-text-color-body-2: #BFBFBF; --dark-text-color-disabled: #777777; --dark-stroke-color-dark: #8C8CA0; --dark-stroke-color-medium: #5A5A6C; --dark-stroke-color-light: #42424D; --dark-stroke-color-extra-light: #3A3A46; --dark-overlay-modal-bg: rgba(217, 217, 218, 0.4); --dark-spacing-0: 0px; --dark-spacing-1: 1px; --dark-spacing-2: 2px; --dark-spacing-3: 3px; --dark-spacing-4: 4px; --dark-spacing-6: 6px; --dark-spacing-8: 8px; --dark-spacing-10: 10px; --dark-spacing-12: 12px; --dark-spacing-14: 14px; --dark-spacing-16: 16px; --dark-spacing-18: 18px; --dark-spacing-20: 20px; --dark-spacing-24: 24px; --dark-spacing-28: 28px; --dark-spacing-32: 32px; --dark-spacing-40: 40px; --dark-spacing-48: 48px; --dark-spacing-56: 56px; --dark-spacing-64: 64px; --dark-spacing-80: 80px; --dark-spacing-82: 82px; --dark-spacing-96: 96px; --dark-spacing-100: 100px; --dark-spacing-120: 120px; --dark-spacing-160: 160px; --dark-spacing-auto: auto; --dark-font-10: 10px; --dark-font-12: 12px; --dark-font-14: 14px; --dark-font-16: 16px; --dark-font-18: 18px; --dark-font-20: 20px; --dark-font-24: 24px; --dark-font-32: 32px; --dark-font-40: 40px; --dark-font-64: 64px; --dark-font-80: 80px; --dark-line-height-16: 16px; --dark-line-height-18: 18px; --dark-line-height-20: 20px; --dark-line-height-22: 22px; --dark-line-height-24: 24px; --dark-line-height-26: 26px; --dark-line-height-28: 28px; --dark-line-height-30: 30px; --dark-line-height-32: 32px; --dark-line-height-36: 36px; --dark-line-height-48: 48px; --dark-line-height-50: 50px; --dark-line-height-60: 60px; --dark-line-height-80: 80px; --dark-line-height-96: 96px; --dark-line-height-100: 100px; --dark-line-height-120: 120px; --dark-line-height-none: 1; --dark-border-radius-160: 160px; --dark-shadow-light: 0px 1px 8px rgba(0,0,0,0.08); --dark-shadow-medium: 0px 8px 24px rgba(0,0,0,0.6); --dark-shadow-dark: 0px 12px 36px rgba(0,0,0,0.1); --dark-shadow-none: 0 0 #0000; --dark-delay-800: 800; --dark-delay-1500: 1500; --dark-font-family-reddit: RedditSans; --dark-z-index-100: 100; --dark-z-index-1500: 1500;"><head><style class="vjs-styles-defaults">
+      .video-js {
+        width: 300px;
+        height: 150px;
+      }
+
+      .vjs-fluid:not(.vjs-audio-only-mode) {
+        padding-top: 56.25%
+      }
+    </style><style class="vjs-styles-dimensions">
+      .vjs_video_3-dimensions {
+        width: 854px;
+        height: 480.375px;
+      }
+
+      .vjs_video_3-dimensions.vjs-fluid:not(.vjs-audio-only-mode) {
+        padding-top: 56.25%;
+      }
+    </style>
+    <meta charset="utf-8">
+    <link rel="icon" href="/watch/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1.0, user-scalable=0, viewport-fit=cover">
+    <meta name="theme-color" content="#000000">
+    <meta name="description" content="Pw Video Player">
+    <link rel="apple-touch-icon" href="/watch/logo192.png">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="yes" name="mobile-web-app-capable">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="/watch/manifest.json">
+    <script type="text/javascript" id="www-widgetapi-script" src="https://www.youtube.com/s/player/4fd832e7/www-widgetapi.vflset/www-widgetapi.js" async=""></script><script src="https://www.youtube.com/iframe_api"></script><script async="" src="https://www.googletagmanager.com/gtm.js?id=GTM-TLKGKK9"></script><script>
+      function addTimeDifferenceToTimestamps(data, x) {
+    return data.map(item => ({
+        ...item,
+        startTimeTimestamp: item.startTimeTimestamp - x,
+        endTimeTimestamp: item.endTimeTimestamp - x
+    }));
+  }
+     const videoStatsSaveUrl = 'https://api.penpencil.co/v3/video-stats/save-stats';
+     const getIsPeriodicSyncEnabled = () => {
+          try {
+            const value = localStorage.getItem("periodicSyncEnable");
+            return value ? JSON.parse(value) : false;
+          } catch (error) {
+            console.error("Error reading periodicSyncEnable from localStorage:", error);
+            return false;
+          }
+      };
+      window.addEventListener("beforeunload", (event) => {
+      if (!(window.__manualExit || getIsPeriodicSyncEnabled())) {
+          event.preventDefault();
+          event.returnValue = "";
+          window.localStorage.removeItem("frequentEmojis");
+          if (window.videoStats && window.watchStats?.stats) {
+            // // Check if learn2earn key exists in URL query parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const isLearn2Earn = urlParams.get('learn2Earn');
+            if(isLearn2Earn){
+              localStorage.setItem('videoLearn2EarnData', 'true');
+            }
+            const watchStats = [...window.watchStats.stats];
+            if (watchStats) {
+              window.videoStats.isComplete =
+                window.watchStats.duration === window.watchStats.progress;
+              window.videoStats.lastWatchedPointInSec =
+                window.watchStats.progress;
+              window.videoStats.videoLength = window.watchStats.duration;
+              const timeDifference = localStorage.getItem('time-difference') || 0;
+              const tempValue = addTimeDifferenceToTimestamps(watchStats, timeDifference)
+              window.videoStats["watchSessions"][window.videoStats["watchSessions"].length-1]["watchStats"] = [
+                ...tempValue,
+              ];
+              fetch(videoStatsSaveUrl, {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `BEARER ${localStorage.getItem("token")}`,
+                  },
+                  body: JSON.stringify(window.videoStats),
+              })
+              .then(() => {
+                if (isLearn2Earn) {
+                  const watchStats = localStorage.getItem('watchStats');
+                  localStorage.setItem('videoLearn2EarnData', 'true');
+                  const learnToEarnVideoStats = {
+                    videoId: window?.videoStats?.videoId,
+                    watchStats: watchStats,
+                    entryPoint: window.videoStats?.entryPoint,
+                    type: window.videoStats?.type
+                  }
+                  localStorage.setItem('learn2EarnVideoStats', JSON.stringify(learnToEarnVideoStats));
+                }
+                localStorage.removeItem('watchStats');
+                // @ts-ignore
+                // window.player.pause();
+              });
+            }
+          }
+        }
+      });
+    </script>
+
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-TLKGKK9");
+    </script>
+    <!--
+      Notice the use of /watch in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "/watch/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title>PW Video Player</title>
+  <script defer="" src="/watch/static/js/lib-react.04c9bd49.js"></script><script defer="" src="/watch/static/js/8914.0378bf66.js"></script><script defer="" src="/watch/static/js/index.892a163d.js"></script><link href="/watch/static/css/index.8a8db2ca.css" rel="stylesheet"><link id="pw-auth-web-sdk-style" rel="stylesheet" href="https://static.pw.live/web/sdk/auth-new/prod/v1.7.87/pw-auth-web-sdk.style.css" crossorigin="anonymous"><script id="pw-auth-web-sdk-script" src="https://static.pw.live/web/sdk/auth-new/prod/v1.7.87/pw-auth-web-sdk.min.js" type="module" crossorigin="anonymous"></script><style id="_goober"> @keyframes go2264125279{from{transform:scale(0) rotate(45deg);opacity:0;}to{transform:scale(1) rotate(45deg);opacity:1;}}@keyframes go3020080000{from{transform:scale(0);opacity:0;}to{transform:scale(1);opacity:1;}}@keyframes go463499852{from{transform:scale(0) rotate(90deg);opacity:0;}to{transform:scale(1) rotate(90deg);opacity:1;}}@keyframes go1268368563{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}@keyframes go1310225428{from{transform:scale(0) rotate(45deg);opacity:0;}to{transform:scale(1) rotate(45deg);opacity:1;}}@keyframes go651618207{0%{height:0;width:0;opacity:0;}40%{height:0;width:6px;opacity:1;}100%{opacity:1;height:10px;}}@keyframes go901347462{from{transform:scale(0.6);opacity:0.4;}to{transform:scale(1);opacity:1;}}.go4109123758{z-index:9999;}.go4109123758 > *{pointer-events:auto;}</style><style type="text/css">.vjs-youtube .vjs-iframe-blocker { display: none; }.vjs-youtube.vjs-user-inactive .vjs-iframe-blocker { display: block; }.vjs-youtube .vjs-poster { background-size: cover; }.vjs-youtube-mobile .vjs-big-play-button { display: none; }</style><style id="theme-variables">:root {
+  --primary-color: #5a4bda;
+  --primary-color-50: #f1efff;
+  --primary-color-100: #d2ccff;
+  --primary-color-200: #b2a9ff;
+  --primary-color-300: #9387ff;
+  --primary-color-400: #7363fc;
+  --primary-color-500: #B2A9FF;
+  --primary-color-600: #4437b8;
+  --primary-color-700: #312596;
+  --primary-color-800: #211774;
+  --primary-color-900: #140d52;
+  --primary-btn-bg-dis: #D2CCFF;
+  --secondary-color: #e31b4d;
+  --secondary-color-50: #fce8ed;
+  --secondary-color-100: #f18da6;
+  --secondary-color-200: #ef7694;
+  --secondary-color-300: #ec5f83;
+  --secondary-color-400: #e94971;
+  --secondary-color-600: #cd1846;
+  --secondary-color-700: #b6163e;
+  --secondary-color-800: #a01336;
+  --secondary-color-900: #5b0b1f;
+  --premium-color-50: #F3F6FF;
+  --premium-color-100: #DAE2F9;
+  --premium-color-200: #9AAEEB;
+  --premium-color-300: #6682D6;
+  --premium-color-400: #3B60D1;
+  --premium-color-500: #143CB6;
+  --premium-color-600: #1E40A8;
+  --premium-color-700: #1D3378;
+  --premium-color-800: #0C1944;
+  --premium-color-900: #13192C;
+  --grey-color: #b5bbc5;
+  --grey-color-6: #f8f8f8;
+  --grey-color-10: #eaecef;
+  --grey-color-50: #e4e7ea;
+  --grey-color-100: #d9dce1;
+  --grey-color-200: #cdd1d8;
+  --grey-color-300: #c1c6cE;
+  --grey-color-400: #b5bbc5;
+  --grey-color-500: #4A4A59;
+  --grey-color-600: #7b7f86;
+  --grey-color-700: #5E6166;
+  --grey-color-800: #414347;
+  --grey-color-900: #1B2124;
+  --grey-color-a: #F3F4F6;
+  --grey-color-white: #09090B;
+  --grey-color-black: #FFFFFF;
+  --pw-color-black-900: #1B2124;
+  --pw-color-white: #FFFFFF;
+  --background-alpha-white: rgba(255, 255, 255, 0.9);
+  --background-alpha-black: rgba(0, 0, 0, 0.25);
+  --success-color: #1b7938;
+  --success-color-10: #dff1e4;
+  --success-color-100: #adcfb7;
+  --success-color-200: #88b998;
+  --success-color-300: #64a478;
+  --success-color-400: #3f8e58;
+  --success-color-600: #17662f;
+  --success-color-700: #125226;
+  --success-color-800: #0e3f1d;
+  --success-color-900: #0a2c14;
+  --error-color: #bf2734;
+  --error-color-10: #fee7e9;
+  --error-color-100: #e8b1b6;
+  --error-color-200: #de8f95;
+  --error-color-300: #d36c75;
+  --error-color-400: #c94a54;
+  --error-color-600: #a0212c;
+  --error-color-700: #821b23;
+  --error-color-800: #63141b;
+  --error-color-900: #450e13;
+  --warning-color: #eaaa2e;
+  --warning-color-10: #fff6e5;
+  --warning-color-100: #f7e0b4;
+  --warning-color-200: #f4d392;
+  --warning-color-300: #f1c571;
+  --warning-color-400: #edb84f;
+  --warning-color-600: #c58f27;
+  --warning-color-700: #9f741f;
+  --warning-color-800: #7a5818;
+  --warning-color-900: #543d11;
+  --link-color: #037cbf;
+  --link-color-10: #f1f5fe;
+  --link-color-100: #ddebf8;
+  --link-color-200: #bcd8f1;
+  --link-color-300: #81b6e4;
+  --link-color-400: #2b91c9;
+  --link-color-600: #0368a0;
+  --link-color-700: #025482;
+  --link-color-800: #024063;
+  --link-color-900: #012d45;
+  --static-color-black: #1b2124;
+  --static-color-white: #ffffff;
+  --static-color-grey-1: #3d3d3d;
+  --static-color-grey-2: #757575;
+  --static-color-deep-blue: #140D52;
+  --static-color-transparent: transparent;
+  --static-color-inherit: inherit;
+  --static-color-current: currentColor;
+  --indigo-color: #6172F3;
+  --indigo-color-25: #F5F8FF;
+  --indigo-color-50: #EEF4FF;
+  --indigo-color-100: #E0EAFF;
+  --indigo-color-200: #C7D7FE;
+  --indigo-color-300: #A4BCFD;
+  --indigo-color-400: #8098F9;
+  --indigo-color-600: #444CE7;
+  --indigo-color-700: #3538CD;
+  --indigo-color-800: #2D31A6;
+  --indigo-color-900: #2D3282;
+  --violet-color: #7A5AF8;
+  --violet-color-25: #FAFAFF;
+  --violet-color-50: #F4F3FF;
+  --violet-color-100: #EBE9FE;
+  --violet-color-200: #D9D6FE;
+  --violet-color-300: #BDB4FE;
+  --violet-color-400: #9B8AFB;
+  --violet-color-600: #6938EF;
+  --violet-color-700: #5925DC;
+  --violet-color-800: #4A1FB8;
+  --violet-color-900: #3E1C96;
+  --blue-color: #2E90FA;
+  --blue-color-25: #F5FAFF;
+  --blue-color-50: #EFF8FF;
+  --blue-color-100: #D1E9FF;
+  --blue-color-200: #B2DDFF;
+  --blue-color-300: #84CAFF;
+  --blue-color-400: #53B1FD;
+  --blue-color-600: #1570EF;
+  --blue-color-700: #175CD3;
+  --blue-color-800: #1849A9;
+  --blue-color-900: #194185;
+  --green-color: #16B364;
+  --green-color-25: #F6FEF9;
+  --green-color-50: #EDFCF2;
+  --green-color-100: #D3F8DF;
+  --green-color-200: #AAF0C4;
+  --green-color-300: #73E2A3;
+  --green-color-400: #3CCB7F;
+  --green-color-600: #099250;
+  --green-color-700: #087443;
+  --green-color-800: #095C37;
+  --green-color-900: #084C2E;
+  --yellow-color: #EAAA08;
+  --yellow-color-25: #FEFDF0;
+  --yellow-color-50: #FEFBE8;
+  --yellow-color-100: #FEF7C3;
+  --yellow-color-200: #FEEE95;
+  --yellow-color-300: #FDE272;
+  --yellow-color-400: #FAC515;
+  --yellow-color-600: #CA8504;
+  --yellow-color-700: #A15C07;
+  --yellow-color-800: #854A0E;
+  --yellow-color-900: #542C0D;
+  --orange-color: #FB6514;
+  --orange-color-25: #FFFAF5;
+  --orange-color-50: #FFF6ED;
+  --orange-color-100: #FFEAD5;
+  --orange-color-200: #FDDCAB;
+  --orange-color-300: #FEB273;
+  --orange-color-400: #FD853A;
+  --orange-color-600: #EC4A0A;
+  --orange-color-700: #C4320A;
+  --orange-color-800: #9C2A10;
+  --orange-color-900: #7E2410;
+  --red-color: #F04438;
+  --red-color-25: #FFFBFA;
+  --red-color-50: #FEF3F2;
+  --red-color-100: #FEE4E2;
+  --red-color-200: #FECDCA;
+  --red-color-300: #FDA29B;
+  --red-color-400: #F97066;
+  --red-color-600: #D92D20;
+  --red-color-700: #B42318;
+  --red-color-800: #912018;
+  --red-color-900: #7A271A;
+  --elevation-color-page-bg: #EAECEF;
+  --elevation-color-page-bg-2: #FFFFFF;
+  --elevation-color-1: #FFFFFF;
+  --elevation-color-2: #FFFFFF;
+  --elevation-color-3: #FFFFFF;
+  --text-color-heading: #1B2124;
+  --text-color-body-1: #3D3D3D;
+  --text-color-body-2: #757575;
+  --text-color-disabled: #A1A3A4;
+  --stroke-color-dark: #747474;
+  --stroke-color-medium: #B7B7B7;
+  --stroke-color-light: #D9DCE1;
+  --stroke-color-extra-light: #EFEFEF;
+  --overlay-modal-bg: rgba(0, 0, 0, 0.75);
+  --spacing-0: 0px;
+  --spacing-1: 1px;
+  --spacing-2: 2px;
+  --spacing-3: 3px;
+  --spacing-4: 4px;
+  --spacing-6: 6px;
+  --spacing-8: 8px;
+  --spacing-10: 10px;
+  --spacing-12: 12px;
+  --spacing-14: 14px;
+  --spacing-16: 16px;
+  --spacing-18: 18px;
+  --spacing-20: 20px;
+  --spacing-24: 24px;
+  --spacing-28: 28px;
+  --spacing-32: 32px;
+  --spacing-40: 40px;
+  --spacing-48: 48px;
+  --spacing-56: 56px;
+  --spacing-64: 64px;
+  --spacing-80: 80px;
+  --spacing-82: 82px;
+  --spacing-96: 96px;
+  --spacing-100: 100px;
+  --spacing-120: 120px;
+  --spacing-160: 160px;
+  --spacing-auto: auto;
+  --font-10: 10px;
+  --font-12: 12px;
+  --font-14: 14px;
+  --font-16: 16px;
+  --font-18: 18px;
+  --font-20: 20px;
+  --font-24: 24px;
+  --font-32: 32px;
+  --font-40: 40px;
+  --font-64: 64px;
+  --font-80: 80px;
+  --line-height-16: 16px;
+  --line-height-18: 18px;
+  --line-height-20: 20px;
+  --line-height-22: 22px;
+  --line-height-24: 24px;
+  --line-height-26: 26px;
+  --line-height-28: 28px;
+  --line-height-30: 30px;
+  --line-height-32: 32px;
+  --line-height-36: 36px;
+  --line-height-48: 48px;
+  --line-height-50: 50px;
+  --line-height-60: 60px;
+  --line-height-80: 80px;
+  --line-height-96: 96px;
+  --line-height-100: 100px;
+  --line-height-120: 120px;
+  --line-height-none: 1;
+  --border-radius-160: 160px;
+  --shadow-light: 0px 1px 8px rgba(0,0,0,0.08);
+  --shadow-medium: 0px 8px 24px rgba(0,0,0,0.6);
+  --shadow-dark: 0px 12px 36px rgba(0,0,0,0.1);
+  --shadow-none: 0 0 #0000;
+  --delay-800: 800;
+  --delay-1500: 1500;
+  --font-family-reddit: RedditSans;
+  --z-index-100: 100;
+  --z-index-1500: 1500;
+  --dark-primary-color: #5a4bda;
+  --dark-primary-color-50: #332E56;
+  --dark-primary-color-100: #3E3588;
+  --dark-primary-color-200: #473CAA;
+  --dark-primary-color-300: #5D50D3;
+  --dark-primary-color-400: #8375F5;
+  --dark-primary-color-500: #B2A9FF;
+  --dark-primary-color-600: #D2CCFF;
+  --dark-primary-color-700: #DBD6FF;
+  --dark-primary-color-800: #E8E6FF;
+  --dark-primary-color-900: #F1EFFF;
+  --dark-primary-btn-bg-dis: #716E89;
+  --dark-secondary-color: #e31b4d;
+  --dark-secondary-color-50: #fce8ed;
+  --dark-secondary-color-100: #f18da6;
+  --dark-secondary-color-200: #ef7694;
+  --dark-secondary-color-300: #ec5f83;
+  --dark-secondary-color-400: #e94971;
+  --dark-secondary-color-600: #cd1846;
+  --dark-secondary-color-700: #b6163e;
+  --dark-secondary-color-800: #a01336;
+  --dark-secondary-color-900: #5b0b1f;
+  --dark-premium-color-50: #010A24;
+  --dark-premium-color-100: #010F36;
+  --dark-premium-color-200: #011449;
+  --dark-premium-color-300: #02195C;
+  --dark-premium-color-400: #021E6F;
+  --dark-premium-color-500: #2D4487;
+  --dark-premium-color-600: #586BA0;
+  --dark-premium-color-700: #8391B8;
+  --dark-premium-color-800: #AEB7D1;
+  --dark-premium-color-900: #D9DDE9;
+  --dark-grey-color: #989DA5;
+  --dark-grey-color-6: #101014;
+  --dark-grey-color-10: #17171C;
+  --dark-grey-color-50: #1E1E24;
+  --dark-grey-color-100: #23232A;
+  --dark-grey-color-200: #31313A;
+  --dark-grey-color-300: #383842;
+  --dark-grey-color-400: #41414D;
+  --dark-grey-color-500: #4A4A59;
+  --dark-grey-color-600: #676779;
+  --dark-grey-color-700: #787887;
+  --dark-grey-color-800: #B3B3BC;
+  --dark-grey-color-900: #D9D9DA;
+  --dark-grey-color-a: #23232A;
+  --dark-grey-color-white: #09090B;
+  --dark-grey-color-black: #D9D9DA;
+  --dark-pw-color-black-900: #1B2124;
+  --dark-pw-color-white: #D9D9DA;
+  --dark-background-alpha-white: rgba(0, 0, 0, 0.25);
+  --dark-background-alpha-black: rgba(255, 255, 255, 0.9);
+  --dark-success-color: #ADCFB7;
+  --dark-success-color-10: #0A2C14;
+  --dark-success-color-100: #114B22;
+  --dark-success-color-200: #88b998;
+  --dark-success-color-300: #58A76F;
+  --dark-success-color-400: #9BCAA9;
+  --dark-success-color-600: #BCDCC5;
+  --dark-success-color-700: #125226;
+  --dark-success-color-800: #0e3f1d;
+  --dark-success-color-900: #DFF1E4;
+  --dark-error-color: #E8B1B6;
+  --dark-error-color-10: #450E13;
+  --dark-error-color-100: #63141B;
+  --dark-error-color-200: #821B23;
+  --dark-error-color-300: #d36c75;
+  --dark-error-color-400: #c94a54;
+  --dark-error-color-600: #F2CACD;
+  --dark-error-color-700: #821b23;
+  --dark-error-color-800: #63141b;
+  --dark-error-color-900: #FEE7E9;
+  --dark-warning-color: #F7E0B4;
+  --dark-warning-color-10: #30240F;
+  --dark-warning-color-100: #533C13;
+  --dark-warning-color-200: #976D26;
+  --dark-warning-color-300: #DA992B;
+  --dark-warning-color-400: #E6B556;
+  --dark-warning-color-600: #F7E0B4;
+  --dark-warning-color-700: #FCEBCA;
+  --dark-warning-color-800: #FFF6E5;
+  --dark-warning-color-900: #FFFCF5;
+  --dark-link-color: #A4D0E8;
+  --dark-link-color-10: #23292F;
+  --dark-link-color-100: #333D47;
+  --dark-link-color-200: #43607F;
+  --dark-link-color-300: #5880A7;
+  --dark-link-color-400: #2b91c9;
+  --dark-link-color-600: #BCDCEB;
+  --dark-link-color-700: #025482;
+  --dark-link-color-800: #024063;
+  --dark-link-color-900: #012d45;
+  --dark-static-color-black: #1b2124;
+  --dark-static-color-white: #ffffff;
+  --dark-static-color-grey-1: #3d3d3d;
+  --dark-static-color-grey-2: #757575;
+  --dark-static-color-deep-blue: #140D52;
+  --dark-static-color-transparent: transparent;
+  --dark-static-color-inherit: inherit;
+  --dark-static-color-current: currentColor;
+  --dark-indigo-color: #8098F9;
+  --dark-indigo-color-25: #2D3282;
+  --dark-indigo-color-50: #2D31A6;
+  --dark-indigo-color-100: #3538CD;
+  --dark-indigo-color-200: #444CE7;
+  --dark-indigo-color-300: #6172F3;
+  --dark-indigo-color-400: #8098F9;
+  --dark-indigo-color-600: #C7D7FE;
+  --dark-indigo-color-700: #E0EAFF;
+  --dark-indigo-color-800: #EEF4FF;
+  --dark-indigo-color-900: #F5F8FF;
+  --dark-violet-color: #7A5AF8;
+  --dark-violet-color-25: #3E1C96;
+  --dark-violet-color-50: #4A1FB8;
+  --dark-violet-color-100: #5925DC;
+  --dark-violet-color-200: #6938EF;
+  --dark-violet-color-300: #7A5AF8;
+  --dark-violet-color-400: #9B8AFB;
+  --dark-violet-color-600: #D9D6FE;
+  --dark-violet-color-700: #EBE9FE;
+  --dark-violet-color-800: #F4F3FF;
+  --dark-violet-color-900: #FAFAFF;
+  --dark-blue-color: #84CAFF;
+  --dark-blue-color-25: #194185;
+  --dark-blue-color-50: #1849A9;
+  --dark-blue-color-100: #175CD3;
+  --dark-blue-color-200: #1570EF;
+  --dark-blue-color-300: #2E90FA;
+  --dark-blue-color-400: #53B1FD;
+  --dark-blue-color-600: #B2DDFF;
+  --dark-blue-color-700: #D1E9FF;
+  --dark-blue-color-800: #EFF8FF;
+  --dark-blue-color-900: #F5FAFF;
+  --dark-green-color: #3CCB7F;
+  --dark-green-color-25: #084C2E;
+  --dark-green-color-50: #095C37;
+  --dark-green-color-100: #087443;
+  --dark-green-color-200: #099250;
+  --dark-green-color-300: #16B364;
+  --dark-green-color-400: #3CCB7F;
+  --dark-green-color-600: #AAF0C4;
+  --dark-green-color-700: #D3F8DF;
+  --dark-green-color-800: #EDFCF2;
+  --dark-green-color-900: #F6FEF9;
+  --dark-yellow-color: #EAAA08;
+  --dark-yellow-color-25: #542C0D;
+  --dark-yellow-color-50: #854A0E;
+  --dark-yellow-color-100: #A15C07;
+  --dark-yellow-color-200: #CA8504;
+  --dark-yellow-color-300: #EAAA08;
+  --dark-yellow-color-400: #FAC515;
+  --dark-yellow-color-600: #FEEE95;
+  --dark-yellow-color-700: #FEF7C3;
+  --dark-yellow-color-800: #FEFBE8;
+  --dark-yellow-color-900: #FEFDF0;
+  --dark-orange-color: #FB6514;
+  --dark-orange-color-25: #7E2410;
+  --dark-orange-color-50: #9C2A10;
+  --dark-orange-color-100: #C4320A;
+  --dark-orange-color-200: #EC4A0A;
+  --dark-orange-color-300: #FB6514;
+  --dark-orange-color-400: #FD853A;
+  --dark-orange-color-600: #FDDCAB;
+  --dark-orange-color-700: #FFEAD5;
+  --dark-orange-color-800: #FFF6ED;
+  --dark-orange-color-900: #FFFAF5;
+  --dark-red-color: #F97066;
+  --dark-red-color-25: #7A271A;
+  --dark-red-color-50: #912018;
+  --dark-red-color-100: #B42318;
+  --dark-red-color-200: #D92D20;
+  --dark-red-color-300: #F04438;
+  --dark-red-color-400: #F97066;
+  --dark-red-color-600: #FECDCA;
+  --dark-red-color-700: #FEE4E2;
+  --dark-red-color-800: #FEF3F2;
+  --dark-red-color-900: #FFFBFA;
+  --dark-elevation-color-page-bg: #09090B;
+  --dark-elevation-color-page-bg-2: #1E1E24;
+  --dark-elevation-color-1: #23232a;
+  --dark-elevation-color-2: #31313a;
+  --dark-elevation-color-3: #383842;
+  --dark-text-color-heading: #D9D9DA;
+  --dark-text-color-body-1: #BFBFBF;
+  --dark-text-color-body-2: #BFBFBF;
+  --dark-text-color-disabled: #777777;
+  --dark-stroke-color-dark: #8C8CA0;
+  --dark-stroke-color-medium: #5A5A6C;
+  --dark-stroke-color-light: #42424D;
+  --dark-stroke-color-extra-light: #3A3A46;
+  --dark-overlay-modal-bg: rgba(217, 217, 218, 0.4);
+  --dark-spacing-0: 0px;
+  --dark-spacing-1: 1px;
+  --dark-spacing-2: 2px;
+  --dark-spacing-3: 3px;
+  --dark-spacing-4: 4px;
+  --dark-spacing-6: 6px;
+  --dark-spacing-8: 8px;
+  --dark-spacing-10: 10px;
+  --dark-spacing-12: 12px;
+  --dark-spacing-14: 14px;
+  --dark-spacing-16: 16px;
+  --dark-spacing-18: 18px;
+  --dark-spacing-20: 20px;
+  --dark-spacing-24: 24px;
+  --dark-spacing-28: 28px;
+  --dark-spacing-32: 32px;
+  --dark-spacing-40: 40px;
+  --dark-spacing-48: 48px;
+  --dark-spacing-56: 56px;
+  --dark-spacing-64: 64px;
+  --dark-spacing-80: 80px;
+  --dark-spacing-82: 82px;
+  --dark-spacing-96: 96px;
+  --dark-spacing-100: 100px;
+  --dark-spacing-120: 120px;
+  --dark-spacing-160: 160px;
+  --dark-spacing-auto: auto;
+  --dark-font-10: 10px;
+  --dark-font-12: 12px;
+  --dark-font-14: 14px;
+  --dark-font-16: 16px;
+  --dark-font-18: 18px;
+  --dark-font-20: 20px;
+  --dark-font-24: 24px;
+  --dark-font-32: 32px;
+  --dark-font-40: 40px;
+  --dark-font-64: 64px;
+  --dark-font-80: 80px;
+  --dark-line-height-16: 16px;
+  --dark-line-height-18: 18px;
+  --dark-line-height-20: 20px;
+  --dark-line-height-22: 22px;
+  --dark-line-height-24: 24px;
+  --dark-line-height-26: 26px;
+  --dark-line-height-28: 28px;
+  --dark-line-height-30: 30px;
+  --dark-line-height-32: 32px;
+  --dark-line-height-36: 36px;
+  --dark-line-height-48: 48px;
+  --dark-line-height-50: 50px;
+  --dark-line-height-60: 60px;
+  --dark-line-height-80: 80px;
+  --dark-line-height-96: 96px;
+  --dark-line-height-100: 100px;
+  --dark-line-height-120: 120px;
+  --dark-line-height-none: 1;
+  --dark-border-radius-160: 160px;
+  --dark-shadow-light: 0px 1px 8px rgba(0,0,0,0.08);
+  --dark-shadow-medium: 0px 8px 24px rgba(0,0,0,0.6);
+  --dark-shadow-dark: 0px 12px 36px rgba(0,0,0,0.1);
+  --dark-shadow-none: 0 0 #0000;
+  --dark-delay-800: 800;
+  --dark-delay-1500: 1500;
+  --dark-font-family-reddit: RedditSans;
+  --dark-z-index-100: 100;
+  --dark-z-index-1500: 1500;
+  --primary-color: #5a4bda;
+  --primary-color-50: #f1efff;
+  --primary-color-100: #d2ccff;
+  --primary-color-200: #b2a9ff;
+  --primary-color-300: #9387ff;
+  --primary-color-400: #7363fc;
+  --primary-color-500: #B2A9FF;
+  --primary-color-600: #4437b8;
+  --primary-color-700: #312596;
+  --primary-color-800: #211774;
+  --primary-color-900: #140d52;
+  --primary-btn-bg-dis: #D2CCFF;
+  --secondary-color: #e31b4d;
+  --secondary-color-50: #fce8ed;
+  --secondary-color-100: #f18da6;
+  --secondary-color-200: #ef7694;
+  --secondary-color-300: #ec5f83;
+  --secondary-color-400: #e94971;
+  --secondary-color-600: #cd1846;
+  --secondary-color-700: #b6163e;
+  --secondary-color-800: #a01336;
+  --secondary-color-900: #5b0b1f;
+  --premium-color-50: #F3F6FF;
+  --premium-color-100: #DAE2F9;
+  --premium-color-200: #9AAEEB;
+  --premium-color-300: #6682D6;
+  --premium-color-400: #3B60D1;
+  --premium-color-500: #143CB6;
+  --premium-color-600: #1E40A8;
+  --premium-color-700: #1D3378;
+  --premium-color-800: #0C1944;
+  --premium-color-900: #13192C;
+  --grey-color: #b5bbc5;
+  --grey-color-6: #f8f8f8;
+  --grey-color-10: #eaecef;
+  --grey-color-50: #e4e7ea;
+  --grey-color-100: #d9dce1;
+  --grey-color-200: #cdd1d8;
+  --grey-color-300: #c1c6cE;
+  --grey-color-400: #b5bbc5;
+  --grey-color-500: #4A4A59;
+  --grey-color-600: #7b7f86;
+  --grey-color-700: #5E6166;
+  --grey-color-800: #414347;
+  --grey-color-900: #1B2124;
+  --grey-color-a: #F3F4F6;
+  --grey-color-white: #09090B;
+  --grey-color-black: #FFFFFF;
+  --pw-color-black-900: #1B2124;
+  --pw-color-white: #FFFFFF;
+  --background-alpha-white: rgba(255, 255, 255, 0.9);
+  --background-alpha-black: rgba(0, 0, 0, 0.25);
+  --success-color: #1b7938;
+  --success-color-10: #dff1e4;
+  --success-color-100: #adcfb7;
+  --success-color-200: #88b998;
+  --success-color-300: #64a478;
+  --success-color-400: #3f8e58;
+  --success-color-600: #17662f;
+  --success-color-700: #125226;
+  --success-color-800: #0e3f1d;
+  --success-color-900: #0a2c14;
+  --error-color: #bf2734;
+  --error-color-10: #fee7e9;
+  --error-color-100: #e8b1b6;
+  --error-color-200: #de8f95;
+  --error-color-300: #d36c75;
+  --error-color-400: #c94a54;
+  --error-color-600: #a0212c;
+  --error-color-700: #821b23;
+  --error-color-800: #63141b;
+  --error-color-900: #450e13;
+  --warning-color: #eaaa2e;
+  --warning-color-10: #fff6e5;
+  --warning-color-100: #f7e0b4;
+  --warning-color-200: #f4d392;
+  --warning-color-300: #f1c571;
+  --warning-color-400: #edb84f;
+  --warning-color-600: #c58f27;
+  --warning-color-700: #9f741f;
+  --warning-color-800: #7a5818;
+  --warning-color-900: #543d11;
+  --link-color: #037cbf;
+  --link-color-10: #f1f5fe;
+  --link-color-100: #ddebf8;
+  --link-color-200: #bcd8f1;
+  --link-color-300: #81b6e4;
+  --link-color-400: #2b91c9;
+  --link-color-600: #0368a0;
+  --link-color-700: #025482;
+  --link-color-800: #024063;
+  --link-color-900: #012d45;
+  --static-color-black: #1b2124;
+  --static-color-white: #ffffff;
+  --static-color-grey-1: #3d3d3d;
+  --static-color-grey-2: #757575;
+  --static-color-deep-blue: #140D52;
+  --static-color-transparent: transparent;
+  --static-color-inherit: inherit;
+  --static-color-current: currentColor;
+  --indigo-color: #6172F3;
+  --indigo-color-25: #F5F8FF;
+  --indigo-color-50: #EEF4FF;
+  --indigo-color-100: #E0EAFF;
+  --indigo-color-200: #C7D7FE;
+  --indigo-color-300: #A4BCFD;
+  --indigo-color-400: #8098F9;
+  --indigo-color-600: #444CE7;
+  --indigo-color-700: #3538CD;
+  --indigo-color-800: #2D31A6;
+  --indigo-color-900: #2D3282;
+  --violet-color: #7A5AF8;
+  --violet-color-25: #FAFAFF;
+  --violet-color-50: #F4F3FF;
+  --violet-color-100: #EBE9FE;
+  --violet-color-200: #D9D6FE;
+  --violet-color-300: #BDB4FE;
+  --violet-color-400: #9B8AFB;
+  --violet-color-600: #6938EF;
+  --violet-color-700: #5925DC;
+  --violet-color-800: #4A1FB8;
+  --violet-color-900: #3E1C96;
+  --blue-color: #2E90FA;
+  --blue-color-25: #F5FAFF;
+  --blue-color-50: #EFF8FF;
+  --blue-color-100: #D1E9FF;
+  --blue-color-200: #B2DDFF;
+  --blue-color-300: #84CAFF;
+  --blue-color-400: #53B1FD;
+  --blue-color-600: #1570EF;
+  --blue-color-700: #175CD3;
+  --blue-color-800: #1849A9;
+  --blue-color-900: #194185;
+  --green-color: #16B364;
+  --green-color-25: #F6FEF9;
+  --green-color-50: #EDFCF2;
+  --green-color-100: #D3F8DF;
+  --green-color-200: #AAF0C4;
+  --green-color-300: #73E2A3;
+  --green-color-400: #3CCB7F;
+  --green-color-600: #099250;
+  --green-color-700: #087443;
+  --green-color-800: #095C37;
+  --green-color-900: #084C2E;
+  --yellow-color: #EAAA08;
+  --yellow-color-25: #FEFDF0;
+  --yellow-color-50: #FEFBE8;
+  --yellow-color-100: #FEF7C3;
+  --yellow-color-200: #FEEE95;
+  --yellow-color-300: #FDE272;
+  --yellow-color-400: #FAC515;
+  --yellow-color-600: #CA8504;
+  --yellow-color-700: #A15C07;
+  --yellow-color-800: #854A0E;
+  --yellow-color-900: #542C0D;
+  --orange-color: #FB6514;
+  --orange-color-25: #FFFAF5;
+  --orange-color-50: #FFF6ED;
+  --orange-color-100: #FFEAD5;
+  --orange-color-200: #FDDCAB;
+  --orange-color-300: #FEB273;
+  --orange-color-400: #FD853A;
+  --orange-color-600: #EC4A0A;
+  --orange-color-700: #C4320A;
+  --orange-color-800: #9C2A10;
+  --orange-color-900: #7E2410;
+  --red-color: #F04438;
+  --red-color-25: #FFFBFA;
+  --red-color-50: #FEF3F2;
+  --red-color-100: #FEE4E2;
+  --red-color-200: #FECDCA;
+  --red-color-300: #FDA29B;
+  --red-color-400: #F97066;
+  --red-color-600: #D92D20;
+  --red-color-700: #B42318;
+  --red-color-800: #912018;
+  --red-color-900: #7A271A;
+  --elevation-color-page-bg: #EAECEF;
+  --elevation-color-page-bg-2: #FFFFFF;
+  --elevation-color-1: #FFFFFF;
+  --elevation-color-2: #FFFFFF;
+  --elevation-color-3: #FFFFFF;
+  --text-color-heading: #1B2124;
+  --text-color-body-1: #3D3D3D;
+  --text-color-body-2: #757575;
+  --text-color-disabled: #A1A3A4;
+  --stroke-color-dark: #747474;
+  --stroke-color-medium: #B7B7B7;
+  --stroke-color-light: #D9DCE1;
+  --stroke-color-extra-light: #EFEFEF;
+  --overlay-modal-bg: rgba(0, 0, 0, 0.75);
+  --spacing-0: 0px;
+  --spacing-1: 1px;
+  --spacing-2: 2px;
+  --spacing-3: 3px;
+  --spacing-4: 4px;
+  --spacing-6: 6px;
+  --spacing-8: 8px;
+  --spacing-10: 10px;
+  --spacing-12: 12px;
+  --spacing-14: 14px;
+  --spacing-16: 16px;
+  --spacing-18: 18px;
+  --spacing-20: 20px;
+  --spacing-24: 24px;
+  --spacing-28: 28px;
+  --spacing-32: 32px;
+  --spacing-40: 40px;
+  --spacing-48: 48px;
+  --spacing-56: 56px;
+  --spacing-64: 64px;
+  --spacing-80: 80px;
+  --spacing-82: 82px;
+  --spacing-96: 96px;
+  --spacing-100: 100px;
+  --spacing-120: 120px;
+  --spacing-160: 160px;
+  --spacing-auto: auto;
+  --font-10: 10px;
+  --font-12: 12px;
+  --font-14: 14px;
+  --font-16: 16px;
+  --font-18: 18px;
+  --font-20: 20px;
+  --font-24: 24px;
+  --font-32: 32px;
+  --font-40: 40px;
+  --font-64: 64px;
+  --font-80: 80px;
+  --line-height-16: 16px;
+  --line-height-18: 18px;
+  --line-height-20: 20px;
+  --line-height-22: 22px;
+  --line-height-24: 24px;
+  --line-height-26: 26px;
+  --line-height-28: 28px;
+  --line-height-30: 30px;
+  --line-height-32: 32px;
+  --line-height-36: 36px;
+  --line-height-48: 48px;
+  --line-height-50: 50px;
+  --line-height-60: 60px;
+  --line-height-80: 80px;
+  --line-height-96: 96px;
+  --line-height-100: 100px;
+  --line-height-120: 120px;
+  --line-height-none: 1;
+  --border-radius-160: 160px;
+  --shadow-light: 0px 1px 8px rgba(0,0,0,0.08);
+  --shadow-medium: 0px 8px 24px rgba(0,0,0,0.6);
+  --shadow-dark: 0px 12px 36px rgba(0,0,0,0.1);
+  --shadow-none: 0 0 #0000;
+  --delay-800: 800;
+  --delay-1500: 1500;
+  --font-family-reddit: RedditSans;
+  --z-index-100: 100;
+  --z-index-1500: 1500;
+}</style><script src="https://www.googletagmanager.com/gtag/js?l=dataLayer&amp;id=G-9RN512817V" async=""></script><link rel="stylesheet" type="text/css" href="/watch/static/css/async/6413.c8f89879.css"><link rel="stylesheet" type="text/css" href="/watch/static/css/async/2031.72875445.css"><link rel="stylesheet" type="text/css" href="/watch/static/css/async/103.5a9e59db.css"><link rel="stylesheet" type="text/css" href="/watch/static/css/async/5341.469bbd79.css"><link rel="stylesheet" type="text/css" href="/watch/static/css/async/7767.5df62471.css"><link rel="stylesheet" type="text/css" href="/watch/static/css/async/6104.0783bf9d.css"><link rel="stylesheet" type="text/css" href="/watch/static/css/async/3049.452002ae.css"><link rel="stylesheet" type="text/css" href="/watch/static/css/async/5132.68943327.css"><link rel="stylesheet" type="text/css" href="/watch/static/css/async/41.b6515c55.css"><link rel="stylesheet" type="text/css" href="/watch/static/css/async/450.3df44be3.css"><link rel="stylesheet" type="text/css" href="/watch/static/css/async/8294.45f47e3b.css"><link rel="stylesheet" type="text/css" href="/watch/static/css/async/6302.7aad0f98.css"></head>
+  <body style="overflow: unset;">
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"><div class="!z-[99999]" id="pw_auth-flow"></div><div class="h-[100%] md:overflow-auto lg:overflow-hidden"><div class="relative" style="height: 190.125px;"><div class="flex h-full w-full"><div id="player-animation"></div><div id="video-player-container" class="video-player-app flex-1 w-1 flex-grow"><div class="interactive-layer-wrapper" id="interactive-layer-wrapper"><div class=""><div class=""><div class="flex space-x-2 lg:space-x-4 p-4 lg:p-[24px] items-center"><div class="opacity-0 transition-all bg-opacity-30 duration-200 opacity-0 duration-200 h-0 overflow-hidden"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="player-icon cursor-pointer hover:scale-105 transition-all duration-200"><path d="M19 12H5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12 19L5 12L12 5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></div><div class="flex-1"></div><div class="flex space-x-2 items-center lg:space-x-4"><div class="relative w-10 h-10"><div id="record-poll-icon" class="absolute z-20  left-0 top-0  cursor-pointer hover:scale-110 duration-200 transition-all flex flex-col items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="none" viewBox="0 0 40 40"><path fill="#ffffff" d="M32.445 4.007H7.555c-.881-.06-1.748.278-2.413.943C4.477 5.615 4.066 6.553 4 7.56v24.878c.066 1.008.477 1.946 1.142 2.611.665.665 1.532 1.004 2.413.943h24.89c.881.06 1.748-.278 2.413-.943.665-.665 1.076-1.603 1.142-2.611V7.561c-.066-1.008-.477-1.946-1.142-2.611-.665-.665-1.532-1.004-2.413-.943zM14.667 28.885h-3.555V16.446h3.555v12.439zm7.112 0h-3.557v-17.77h3.556v17.77zm7.111 0h-3.556v-7.108h3.555l.001 7.108z"></path></svg></div></div><div class="opacity-0 transition-all bg-opacity-30 duration-200 opacity-0 duration-200 h-0 overflow-hidden"><div class="w-[35px] h-[35px] md:w-[35px] md:h-[35px] z-[10]"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon" class="player-icon cursor-pointer hover:scale-105 transition-all duration-200"><path fill-rule="evenodd" d="M10.5 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm0 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm0 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z" clip-rule="evenodd"></path></svg></div></div></div></div> </div></div><div class="flex-1"><div id="player-body" class="cursor-pointer h-full w-full flex flex-col items-center justify-center"></div></div><div class="opacity-0 transition-all duration-200 opacity-0 duration-200"><div class="flex space-y-2 flex-col player-footer"><div class="relative"><div id="progress-placeholder" class="relative"><div class="flex justify-between gap-4  px-[24px] mb-4  pb-[16px]"><div class="flex space-x-2 items-center flex-1"><div class="flex items-center"><div class="cursor-pointer w-0 h-0 opacity-0 overflow-hidden"></div><div id="current-time-placeholder" class="font-semibold min-w-8 text-base !ml-1"><div class="vjs-current-time vjs-time-control vjs-control"><span class="vjs-control-text" role="presentation">Current Time </span><span class="vjs-current-time-display" aria-live="off" role="presentation">1:45:18</span></div></div><div id="total-time-placeholder" class="ml-1 flex items-center gap-1 text-[#B5BBC5] font-semibold">/<div class="vjs-duration vjs-time-control vjs-control"><span class="vjs-control-text" role="presentation">Duration </span><span class="vjs-duration-display" aria-live="off" role="presentation">1:58:56</span></div></div></div><div class="text-black bg-white rounded-full px-[6px] text-xs h-5 flex items-center">2x</div></div></div><div class="vjs-progress-control vjs-control" id="progress-control" style="bottom: -15px;"><div tabindex="0" class="vjs-progress-holder vjs-slider vjs-slider-horizontal" role="slider" aria-valuenow="88.55" aria-valuemin="0" aria-valuemax="100" aria-label="Progress Bar" aria-valuetext="1:45:18 of 1:58:56"><div class="vjs-load-progress" style="width: 89.41%;"><span class="vjs-control-text"><span>Loaded</span>: <span class="vjs-control-text-loaded-percentage">89.41%</span></span><div data-start="6288" data-end="6379.977666" style="left: 98.56%; width: 1.44%;"></div></div><div class="vjs-mouse-display" style="left: 280px;"><div class="vjs-time-tooltip" aria-hidden="true" style="right: 0px;">1:38:31</div></div><div class="vjs-play-progress vjs-slider-bar" aria-hidden="true" style="width: 88.55%;"><div class="vjs-time-tooltip" aria-hidden="true" style="right: 0px;">1:45:18</div></div></div></div></div></div><div class="flex space-x-2 lg:space-x-4 px-[16px] pb-[24px] pt-[8px] justify-between items-center"><div class="flex-1 space-x-1 sm:space-x-3 flex pl-[8px]" id="footer-left-section"><div class="flex flex-col items-center justify-center" id="play-pause-action"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon" class=" player-icon cursor-pointer hover:scale-105 transition-all duration-200"><path fill-rule="evenodd" d="M6.75 5.25a.75.75 0 0 1 .75-.75H9a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75H7.5a.75.75 0 0 1-.75-.75V5.25Zm7.5 0A.75.75 0 0 1 15 4.5h1.5a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75H15a.75.75 0 0 1-.75-.75V5.25Z" clip-rule="evenodd"></path></svg></div><div id="time_backward_button" class=" cursor-pointer duration-200 transition-all hover:scale-110"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="none" pointerEvent="none" style="pointer-events: none;"><path fill="#fff" d="M9.015 13.232a1.109 1.109 0 0 1 1.475-.125 1.001 1.001 0 0 1 .21 1.407 10.97 10.97 0 0 0-2.547 7.045c0 2.192.66 4.336 1.9 6.176a11.723 11.723 0 0 0 5.09 4.195c2.083.898 4.391 1.2 6.648.868a12.065 12.065 0 0 0 6.072-2.738 11.314 11.314 0 0 0 3.55-5.465c.609-2.112.569-4.348-.115-6.44a11.357 11.357 0 0 0-3.74-5.346 12.1 12.1 0 0 0-6.165-2.538l1.454 1.2a1.006 1.006 0 0 1 .118 1.457c-.186.208-.45.337-.735.358a1.106 1.106 0 0 1-.783-.245L17.68 9.94a1.04 1.04 0 0 1-.278-.354 1 1 0 0 1 .278-1.217l3.768-3.101a1.09 1.09 0 0 1 .784-.245c.14.01.278.048.404.11.126.06.239.145.33.249a.995.995 0 0 1 .142 1.14 1.04 1.04 0 0 1-.26.317l-1.622 1.337a14.335 14.335 0 0 1 7.422 2.818 13.46 13.46 0 0 1 4.611 6.253c.873 2.47.978 5.13.303 7.655a13.348 13.348 0 0 1-4.106 6.57 14.243 14.243 0 0 1-7.178 3.35c-2.68.423-5.432.09-7.919-.961a13.867 13.867 0 0 1-6.084-4.958A13.051 13.051 0 0 1 6 21.559c-.01-3.024 1.053-5.961 3.015-8.328Z"></path><path fill="#fff" d="M16.02 12.927a1.128 1.128 0 0 1-1.536.112l-3.812-3.101a1.032 1.032 0 0 1-.28-.352.991.991 0 0 1 0-.866c.065-.136.16-.256.28-.352l3.813-3.102a1.141 1.141 0 0 1 1.083-.21c.182.058.346.163.472.303a.991.991 0 0 1 .193 1.035 1.033 1.033 0 0 1-.333.442l-2.845 2.318 2.847 2.316c.108.087.197.195.262.316a.996.996 0 0 1-.144 1.14ZM15.158 24.985a.912.912 0 0 0-.64.238.816.816 0 0 0 0 1.214.914.914 0 0 0 .64.238h2.64a.914.914 0 0 0 .64-.238.816.816 0 0 0 0-1.214.912.912 0 0 0-.64-.238h-.444v-7.18a.82.82 0 0 0-.125-.433.866.866 0 0 0-.34-.311.91.91 0 0 0-.903.041l-1.32.846a.845.845 0 0 0-.363.523.817.817 0 0 0 .114.619.88.88 0 0 0 .528.372c.219.054.451.025.649-.08v5.603h-.436ZM22.197 16.96c-.583 0-1.143.223-1.555.619a2.069 2.069 0 0 0-.644 1.493v5.49c0 .56.231 1.097.644 1.493.412.396.972.619 1.555.619h1.32c.29 0 .576-.055.843-.161a2.21 2.21 0 0 0 .713-.458c.204-.196.367-.429.477-.685.11-.256.168-.53.168-.808v-5.49c0-.278-.057-.552-.168-.808a2.107 2.107 0 0 0-.477-.685 2.208 2.208 0 0 0-.713-.458 2.28 2.28 0 0 0-.842-.16h-1.32Zm1.76 2.112v5.49a.417.417 0 0 1-.13.301.453.453 0 0 1-.313.125h-1.317a.453.453 0 0 1-.313-.125.417.417 0 0 1-.13-.3v-5.491c0-.113.047-.221.13-.301a.453.453 0 0 1 .313-.125h1.32c.118.001.23.046.312.126.082.08.128.188.128.3Z"></path></svg></div><div class="cursor-pointer duration-200 transition-all hover:scale-110" id="time_forward_button"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="none" pointerEvent="none" style="pointer-events: none;"><path fill="#fff" d="M30.99 13.236a1.11 1.11 0 0 0-1.496-.15 1.003 1.003 0 0 0-.195 1.43 10.965 10.965 0 0 1 2.548 7.045c.001 2.192-.659 4.337-1.899 6.177a11.726 11.726 0 0 1-5.091 4.196 12.303 12.303 0 0 1-6.65.868 12.071 12.071 0 0 1-6.076-2.737 11.313 11.313 0 0 1-3.55-5.465c-.61-2.112-.57-4.348.114-6.44a11.356 11.356 0 0 1 3.74-5.346 12.107 12.107 0 0 1 6.169-2.538l-1.459 1.2a1.008 1.008 0 0 0-.09 1.433 1.11 1.11 0 0 0 1.49.137l3.77-3.101a1.04 1.04 0 0 0 .278-.353 1 1 0 0 0-.277-1.217l-3.77-3.1a1.12 1.12 0 0 0-1.21-.165c-.13.062-.245.148-.339.254a.995.995 0 0 0-.128 1.165c.069.122.163.23.276.316l1.623 1.337a14.34 14.34 0 0 0-7.421 2.82 13.457 13.457 0 0 0-4.61 6.253 12.916 12.916 0 0 0-.299 7.653 13.345 13.345 0 0 0 4.107 6.567 14.248 14.248 0 0 0 7.18 3.346c2.68.424 5.432.09 7.919-.96 2.486-1.051 4.6-2.774 6.085-4.957a13.045 13.045 0 0 0 2.273-7.342c.012-3.023-1.05-5.96-3.012-8.326Z"></path><path fill="#fff" d="M24.029 12.931a1.107 1.107 0 0 0 1.52.112l3.77-3.1a1.04 1.04 0 0 0 .277-.353 1 1 0 0 0-.278-1.217l-3.77-3.1a1.12 1.12 0 0 0-1.21-.165c-.129.062-.244.148-.338.254a.993.993 0 0 0-.128 1.165c.069.122.163.23.276.316l2.814 2.316-2.815 2.316a1.007 1.007 0 0 0-.118 1.457ZM15.159 24.987a.914.914 0 0 0-.641.238.816.816 0 0 0 0 1.214.914.914 0 0 0 .64.238h2.64a.914.914 0 0 0 .641-.239.816.816 0 0 0 0-1.214.887.887 0 0 0-.64-.237h-.444v-7.178a.819.819 0 0 0-.125-.434.866.866 0 0 0-.34-.31.912.912 0 0 0-.903.04l-1.32.846a.843.843 0 0 0-.363.523.816.816 0 0 0 .114.619c.12.184.308.317.527.372.22.054.452.025.65-.08v5.602h-.436ZM22.2 16.964c-.583 0-1.143.222-1.556.618A2.069 2.069 0 0 0 20 19.075v5.489c0 .56.232 1.097.644 1.493.413.396.973.618 1.556.618h1.32c.29 0 .576-.055.843-.16a2.21 2.21 0 0 0 .714-.458c.204-.196.366-.429.476-.685.111-.256.168-.53.168-.808v-5.49c0-.277-.057-.551-.168-.807a2.105 2.105 0 0 0-.476-.685 2.208 2.208 0 0 0-.714-.458 2.281 2.281 0 0 0-.842-.16H22.2Zm1.76 2.11v5.49a.417.417 0 0 1-.13.3.453.453 0 0 1-.313.125H22.2a.453.453 0 0 1-.313-.124.417.417 0 0 1-.13-.301v-5.49c0-.112.047-.22.13-.3a.453.453 0 0 1 .313-.125h1.32c.118.001.23.046.312.126.082.08.129.188.129.3Z"></path></svg></div><div class="flex max-w-[120px] items-center group custom-volume-slider lg:flex" id="volume-btn-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon" class="player-icon"><path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 0 0 1.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06ZM18.584 5.106a.75.75 0 0 1 1.06 0c3.808 3.807 3.808 9.98 0 13.788a.75.75 0 0 1-1.06-1.06 8.25 8.25 0 0 0 0-11.668.75.75 0 0 1 0-1.06Z"></path><path d="M15.932 7.757a.75.75 0 0 1 1.061 0 6 6 0 0 1 0 8.486.75.75 0 0 1-1.06-1.061 4.5 4.5 0 0 0 0-6.364.75.75 0 0 1 0-1.06Z"></path></svg><input type="range" class="w-0 transition-all opacity-0 duration-500 group-hover:w-full  group-hover:opacity-100 h-1 bg-gray-50 text-white rounded-lg appearance-none cursor-pointer range-sm" value="100"></div></div><div class="flex-1"></div><div class="flex-1 flex justify-end space-x-1 sm:space-x-3 items-center !mr-4" id="footer-right-section"><div class="relative"><div class="w-full h-full flex items-center justify-center cursor-pointer"><div class="rounded-full p-[2px] bg-gradient-to-r from-[#53B1FD] to-[#FDA29B] cursor-pointer transition-all ask-ai-button ask-ai-button-onboarding duration-200 transition-all" style="box-shadow: none; transition: box-shadow 0.3s ease-in-out;"><button id="askAiIcon" class="flex items-center justify-center rounded-full cursor-pointer transition-all relative focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 bg-black gap-1 px-3 py-1 xl:px-4 w-full justify-between xl:gap-[15px] overflow-hidden" title="Ask AI" aria-label="Ask AI Assistant" style="background: black; transition: none;"><img src="/watch/static/svg/AiGuruIcon.5cde6b90.svg" alt="AI Guru" class="flex-shrink-0 w-5 h-5 xl:w-[30px] xl:h-[30px]"><span class="hidden xl:block text-[#D9D9DA] font-semibold text-[16px] xl:text-[18px] tracking-[0px] whitespace-nowrap">Ask AI</span></button></div></div></div><div class="cursor-pointer hover:scale-110 duration-200 transition-all flex flex-col items-center justify-center md:!flex hidden"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="none" color="#ffffff"><path fill="#ffffff" d="M26.982 21.097a1.094 1.094 0 0 1-1.093 1.094H24.83a1.094 1.094 0 1 1 0-2.185h1.058a1.094 1.094 0 0 1 1.093 1.094v-.003Zm-5.96-1.094h-7.474a1.094 1.094 0 1 0 0 2.185h7.473a1.094 1.094 0 0 0 0-2.185Zm5.431-6.455H13.548a1.094 1.094 0 0 0 0 2.185h12.905a1.094 1.094 0 1 0 0-2.185ZM34 10.376v14.979a4.382 4.382 0 0 1-4.375 4.375h-11.35l-3.508 3.51a2.619 2.619 0 0 1-4.464-1.85v-1.66A4.379 4.379 0 0 1 6 25.355v-14.98A4.381 4.381 0 0 1 10.376 6h19.252A4.379 4.379 0 0 1 34 10.376Zm-2.184 0a2.19 2.19 0 0 0-2.184-2.185H10.375a2.19 2.19 0 0 0-2.184 2.185v14.979a2.19 2.19 0 0 0 2.184 2.184 2.116 2.116 0 0 1 2.115 2.115v1.737a.428.428 0 0 0 .728.302l3.53-3.53a2.104 2.104 0 0 1 1.495-.62h11.382a2.19 2.19 0 0 0 2.184-2.185V10.376h.006Z"></path></svg></div><div class="cursor-pointer hover:scale-110 duration-200 transition-all md:!flex hidden flex-col items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="none" color="#ffffff"><path fill="#ffffff" d="M32.363 15.664H21.992V7.636A2.64 2.64 0 0 0 19.356 5H7.636A2.64 2.64 0 0 0 5 7.636v10.545a2.642 2.642 0 0 0 2.192 2.6L6.77 23.31a.879.879 0 0 0 1.44.812l3.854-3.302h5.945v8.027a2.64 2.64 0 0 0 2.636 2.636h7.292l3.857 3.305a.877.877 0 0 0 1.438-.811l-.424-2.528a2.641 2.641 0 0 0 2.192-2.6V18.302a2.64 2.64 0 0 0-2.636-2.636l-.001-.001Zm-20.625 3.399a.879.879 0 0 0-.572.212L8.9 21.215l.189-1.129a.878.878 0 0 0-.867-1.023h-.587a.879.879 0 0 1-.878-.882V7.636a.88.88 0 0 1 .878-.878h11.717a.88.88 0 0 1 .879.878v10.545a.88.88 0 0 1-.879.88l-7.615.002Zm21.504 9.784a.88.88 0 0 1-.88.879h-.585a.878.878 0 0 0-.867 1.023l.19 1.13-2.266-1.941a.879.879 0 0 0-.573-.212h-7.616a.88.88 0 0 1-.88-.879v-8.059a2.64 2.64 0 0 0 2.227-2.607v-.761h10.37a.88.88 0 0 1 .88.878v10.549Z"></path><path fill="#ffffff" d="m27.486 19.848-.01-.024a1.034 1.034 0 0 0-.96-.645 1.034 1.034 0 0 0-.96.646l-.008.02-2.64 6.931a.88.88 0 0 0 1.642.626l.442-1.16h3.03l.436 1.157a.879.879 0 0 0 1.645-.62l-2.617-6.931Zm-1.825 4.637.852-2.24.844 2.24h-1.696ZM17.16 15.275a4.379 4.379 0 1 0-1.231 1.254l.462.462a.879.879 0 0 0 1.24-1.242l-.472-.474Zm-3.677.245a2.625 2.625 0 1 1 2.386-1.535l-.476-.476a.879.879 0 0 0-1.243 1.243l.496.496c-.361.18-.76.273-1.163.272Z"></path></svg></div><div class="cursor-pointer hover:scale-110 duration-200 transition-all md:!flex hidden"><svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.1001 10.0005C5.1001 9.72435 5.32396 9.50049 5.6001 9.50049H5.80004C6.07618 9.50049 6.30004 9.72435 6.30004 10.0005V29.9999C6.30004 30.2761 6.07618 30.4999 5.80004 30.4999H5.6001C5.32395 30.4999 5.1001 30.2761 5.1001 29.9999V10.0005Z" fill="#ffffff"></path><path d="M10.2993 28.3004C10.2993 29.0736 10.9261 29.7004 11.6993 29.7004H28.2989C29.0721 29.7004 29.6989 29.0736 29.6989 28.3004V11.7008C29.6989 10.9276 29.0721 10.3008 28.2989 10.3008H11.6993C10.9261 10.3008 10.2993 10.9276 10.2993 11.7008V28.3004Z" stroke="#ffffff" stroke-width="1.8"></path><path d="M33.6997 10.0005C33.6997 9.72435 33.9236 9.50049 34.1997 9.50049H34.3997C34.6758 9.50049 34.8997 9.72435 34.8997 10.0005V29.9999C34.8997 30.2761 34.6758 30.4999 34.3997 30.4999H34.1997C33.9236 30.4999 33.6997 30.2761 33.6997 29.9999V10.0005Z" fill="#ffffff" stroke="#ffffff"></path><path d="M17.4846 17.1081C17.4418 17.0866 17.3938 17.0763 17.3459 17.0784C17.298 17.0805 17.2515 17.0948 17.2108 17.12C17.17 17.1452 17.1363 17.1803 17.113 17.2222C17.0897 17.264 17.0774 17.3111 17.0774 17.359L17.4846 17.1081ZM17.4846 17.1081L22.7666 19.7491C22.8132 19.7725 22.8524 19.8083 22.8798 19.8526C22.9072 19.897 22.9217 19.9481 22.9217 20.0002C22.9217 20.0524 22.9072 20.1035 22.8798 20.1478C22.8524 20.1921 22.8133 20.2279 22.7669 20.2513C22.767 20.2513 22.7668 20.2513 22.7669 20.2513L17.4846 22.8924M17.4846 17.1081V22.8924ZM17.4846 22.8924C17.4418 22.9139 17.3938 22.9242 17.3459 22.9221C17.298 22.92 17.2515 22.9057 17.2108 22.8805L16.9481 23.3059M17.4846 22.8924L16.9481 23.3059ZM16.9481 23.3059C17.0614 23.3759 17.1907 23.4157 17.3238 23.4216C17.4568 23.4275 17.5892 23.3993 17.7082 23.3396L16.6763 23.0219C16.7412 23.1382 16.8348 23.236 16.9481 23.3059ZM16.9481 23.3059L17.2108 22.8805C17.17 22.8553 17.1363 22.8201 17.113 22.7783C17.0897 22.7365 17.0774 22.6894 17.0774 22.6414M16.9481 23.3059L17.0774 22.6414Z" fill="#ffffff"></path><path d="M17.4846 17.1081C17.4418 17.0866 17.3938 17.0763 17.3459 17.0784C17.298 17.0805 17.2515 17.0948 17.2108 17.12C17.17 17.1452 17.1363 17.1803 17.113 17.2222C17.0897 17.264 17.0774 17.3111 17.0774 17.359M17.4846 17.1081L17.0774 17.359M17.4846 17.1081L22.7666 19.7491C22.8132 19.7725 22.8524 19.8083 22.8798 19.8526M17.4846 17.1081V22.8924M17.0774 17.359V22.6414M22.8798 19.8526L23.3052 19.59M22.8798 19.8526C22.9072 19.897 22.9217 19.9481 22.9217 20.0002C22.9217 20.0524 22.9072 20.1035 22.8798 20.1478M22.8798 20.1478L23.3052 20.4105M22.8798 20.1478C22.8524 20.1921 22.8133 20.2279 22.7669 20.2513M22.7669 20.2513C22.7668 20.2513 22.767 20.2513 22.7669 20.2513ZM22.7669 20.2513L17.4846 22.8924M17.4846 22.8924C17.4418 22.9139 17.3938 22.9242 17.3459 22.9221C17.298 22.92 17.2515 22.9057 17.2108 22.8805M17.4846 22.8924L16.9481 23.3059M17.2108 22.8805L16.9481 23.3059M17.2108 22.8805C17.17 22.8553 17.1363 22.8201 17.113 22.7783C17.0897 22.7365 17.0774 22.6894 17.0774 22.6414M16.9481 23.3059C17.0614 23.3759 17.1907 23.4157 17.3238 23.4216C17.4568 23.4275 17.5892 23.3993 17.7082 23.3396L16.6763 23.0219C16.7412 23.1382 16.8348 23.236 16.9481 23.3059ZM16.9481 23.3059L17.0774 22.6414" stroke="#ffffff"></path></svg></div><div title="Add note" class="cursor-pointer hover:scale-110 duration-200 transition-all w-[28px] h-[33px] flex justify-end md:!flex hidden"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="30" viewBox="0 0 25 32" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M17.8092 3.38739L18.7966 1.5487C19.5652 0.117637 21.3461 -0.418176 22.7743 0.351949C22.7908 0.360824 22.8073 0.369699 22.8237 0.378574C24.252 1.14864 24.7868 2.93301 24.0182 4.36407L22.6495 6.91264V29.2353C22.6495 30.7624 21.4139 32.0004 19.8897 32.0004C16.8698 32.0004 5.77965 32.0004 2.75974 32.0004C1.23559 32.0004 0 30.7624 0 29.2353V6.15251C0 4.62539 1.23559 3.38739 2.75974 3.38739H17.8092ZM16.735 5.38739H2.75974C2.338 5.38739 1.9961 5.72995 1.9961 6.15251C1.9961 9.81951 1.9961 25.5683 1.9961 29.2353C1.9961 29.6578 2.338 30.0004 2.75974 30.0004C5.77965 30.0004 16.8698 30.0004 19.8897 30.0004C20.3115 30.0004 20.6534 29.6578 20.6534 29.2353V10.6292L18.886 13.9199C18.7037 14.2594 18.4273 14.5389 18.0901 14.7247L16.5277 15.5856C15.9344 15.9126 15.2162 15.9158 14.6199 15.5944C14.0236 15.2729 13.6307 14.6704 13.5762 13.9943L13.4325 12.2134C13.4016 11.8291 13.482 11.4441 13.6644 11.1046L16.735 5.38739ZM4.96212 25.4511H17.6249C18.1758 25.4511 18.6229 25.0029 18.6229 24.4511C18.6229 23.8991 18.1758 23.4511 17.6249 23.4511H4.96212C4.41132 23.4511 3.96407 23.8991 3.96407 24.4511C3.96407 25.0029 4.41132 25.4511 4.96212 25.4511ZM5.0245 22.0629H17.6873C18.2381 22.0629 18.6853 21.6148 18.6853 21.0629C18.6853 20.5109 18.2381 20.0629 17.6873 20.0629H5.0245C4.4737 20.0629 4.02645 20.5109 4.02645 21.0629C4.02645 21.6148 4.4737 22.0629 5.0245 22.0629ZM4.96212 18.6747H13.2584C13.8093 18.6747 14.2565 18.2266 14.2565 17.6747C14.2565 17.1228 13.8093 16.6747 13.2584 16.6747H4.96212C4.41132 16.6747 3.96407 17.1228 3.96407 17.6747C3.96407 18.2266 4.41132 18.6747 4.96212 18.6747ZM15.4222 12.0523C15.4222 12.0523 19.2319 4.95876 20.5544 2.49645C20.8006 2.03807 21.371 1.86645 21.8285 2.11314C21.8449 2.12201 21.8614 2.13089 21.8778 2.13976C22.3353 2.38639 22.5066 2.95795 22.2605 3.41632C20.938 5.87864 17.1282 12.9722 17.1282 12.9722L15.5658 13.8332L15.4222 12.0523Z" fill="#fff"></path></svg></div><div class="flex flex-col items-center justify-center"><div class="relative flex flex-col items-center justify-center" data-headlessui-state=""><button class="focus:outline-none" type="button" aria-expanded="false" data-headlessui-state="" id="setting-icon"><div class="cursor-pointer hover:scale-110 duration-200 transition-all h-[40px] w-[40px]"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" size="40"><path d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></div></button></div><div hidden="" style="position: fixed; top: 1px; left: 1px; width: 1px; height: 0px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px; display: none;"></div></div><div class="flex flex-col items-center justify-center h-[40px] w-[40px] !h-[28px] !w-[28px]"><svg width="24" height="24" class=" player-icon cursor-pointer hover:scale-105 transition-all duration-200" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21.3369 1.75H23.6703V8.41667H21.3369V3.97222H16.6702V1.75H21.3369ZM2.67025 1.75H7.33692V3.97222H2.67025V8.41667H0.336914V1.75H2.67025ZM21.3369 19.5278V15.0833H23.6703V21.75H16.6702V19.5278H21.3369ZM2.67025 19.5278H7.33692V21.75H0.336914V15.0833H2.67025V19.5278Z" fill="white"></path></svg></div></div></div></div></div><div class=""><div class="absolute bottom-0 right-0 w-[600px] max-w-full"><div class="w-full bg-red-500 relative flex"><div class="flex-1 emotes emote-container" id="emote-1"></div><div class="flex-1 emotes emote-container" id="emote-2"></div><div class="flex-1 emotes emote-container" id="emote-3"></div><div class="flex-1 emotes emote-container" id="emote-4"></div><div class="flex-1 emotes emote-container" id="emote-5"></div><div class="flex-1 emotes emote-container" id="emote-6"></div><div class="flex-1 emotes emote-container" id="emote-7"></div><div class="flex-1 emotes emote-container" id="emote-8"></div><div class="flex-1 emotes emote-container" id="emote-9"></div><div class="flex-1 emotes emote-container" id="emote-10"></div><div class="flex-1 emotes emote-container" id="emote-11"></div><div class="flex-1 emotes emote-container" id="emote-12"></div><div class="flex-1 emotes emote-container" id="emote-13"></div><div class="flex-1 emotes emote-container" id="emote-14"></div><div class="flex-1 emotes emote-container" id="emote-15"></div><div class="flex-1 emotes emote-container" id="emote-16"></div><div class="flex-1 emotes emote-container" id="emote-17"></div><div class="flex-1 emotes emote-container" id="emote-18"></div><div class="flex-1 emotes emote-container" id="emote-19"></div><div class="flex-1 emotes emote-container" id="emote-20"></div><div class="flex-1 emotes emote-container" id="emote-21"></div><div class="flex-1 emotes emote-container" id="emote-22"></div><div class="flex-1 emotes emote-container" id="emote-23"></div><div class="flex-1 emotes emote-container" id="emote-24"></div><div class="flex-1 emotes emote-container" id="emote-25"></div><div class="flex-1 emotes emote-container" id="emote-26"></div><div class="flex-1 emotes emote-container" id="emote-27"></div><div class="flex-1 emotes emote-container" id="emote-28"></div><div class="flex-1 emotes emote-container" id="emote-29"></div><div class="flex-1 emotes emote-container" id="emote-30"></div><div class="flex-1 emotes emote-container" id="emote-31"></div><div class="flex-1 emotes emote-container" id="emote-32"></div><div class="flex-1 emotes emote-container" id="emote-33"></div><div class="flex-1 emotes emote-container" id="emote-34"></div><div class="flex-1 emotes emote-container" id="emote-35"></div><div class="flex-1 emotes emote-container" id="emote-36"></div><div class="flex-1 emotes emote-container" id="emote-37"></div><div class="flex-1 emotes emote-container" id="emote-38"></div><div class="flex-1 emotes emote-container" id="emote-39"></div><div class="flex-1 emotes emote-container" id="emote-40"></div><div class="flex-1 emotes emote-container" id="emote-41"></div><div class="flex-1 emotes emote-container" id="emote-42"></div><div class="flex-1 emotes emote-container" id="emote-43"></div><div class="flex-1 emotes emote-container" id="emote-44"></div><div class="flex-1 emotes emote-container" id="emote-45"></div><div class="flex-1 emotes emote-container" id="emote-46"></div><div class="flex-1 emotes emote-container" id="emote-47"></div><div class="flex-1 emotes emote-container" id="emote-48"></div><div class="flex-1 emotes emote-container" id="emote-49"></div><div class="flex-1 emotes emote-container" id="emote-50"></div></div></div></div></div><div class="w-full h-full flex flex-col items-center justify-center"><div class="relative w-full h-full md:h-auto"><div class="player relative"><div id="vjs_video_3" tabindex="-1" role="region" class="vjs-fluid vjs_video_3-dimensions vjs-workinghover vjs-v7 video-js vjs-seek-buttons vjs-controls-enabled vjs-has-started vjs-user-inactive vjs-playing" lang="en" translate="no" aria-label="Video Player" style="outline: none;"><video id="vjs_video_3_html5_api" tabindex="-1" role="application" class="vjs-tech" preload="metadata" autoplay="" playsinline="playsinline" src="blob:https://www.pw.live/d67a610f-18fd-4e71-b529-95787fde409f"></video><div class="vjs-poster vjs-hidden" tabindex="-1" aria-disabled="false"></div><div class="vjs-title"><button class="vjs-button vjs-custom-back-button" id="vjs-custom-back-button"><img src="back.svg" class="vjs-custom-action-icons"></button><div class="vjs-title-field"> </div><div class="vjs-title-right-actions right-actions flex flex-row"><button class="vjs-button vjs-custom-meet-button-hidden" id="vjs-custom-meet-button"><img src="meet.png" class="vjs-custom-action-icons"></button><button class="vjs-button vjs-custom-poll-button" id="vjs-custom-poll-button"><img src="polls.svg" class="vjs-custom-action-icons" id="poll-image"></button><button class="vjs-button vjs-custom-report-button" id="vjs-custom-report-button"><img src="report.png" class="vjs-custom-action-icons"></button><button class="vjs-button vjs-custom-three-dots-button" id="vjs-custom-three-dots-button"><img src="threeDots.svg" class="vjs-custom-action-icons"></button></div></div><div class="vjs-text-track-display" translate="yes" aria-live="off" aria-atomic="true"><div style="position: absolute; inset: 0px; margin: 1.5%;"></div></div><div class="vjs-play-toggle-layer" aria-disabled="false"></div><div class="vjs-loading-spinner" dir="ltr"><span class="vjs-control-text">Video Player is loading.</span></div><button class="vjs-big-play-button" type="button" aria-disabled="false"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Play Video</span></button><div class="vjs-control-bar" dir="ltr"><div class="top vjs-control-separator"></div><button class="vjs-seek-button skip-back skip-10 vjs-control vjs-button" type="button" aria-disabled="false"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Seek back 10 seconds</span></button><button class="vjs-seek-button skip-forward skip-10 vjs-control vjs-button" type="button" aria-disabled="false"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Seek forward 10 seconds</span></button><div class="middle vjs-control-separator"><button class="vjs-play-control vjs-control vjs-button vjs-custom-action-icons vjs-playing" type="button" aria-disabled="false"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Pause</span></button><div class="vjs-custom-control-spacer vjs-spacer "> </div></div><div class="bottom vjs-control-separator"><div class="vjs-skip-buttons">
+                    <div class="vjs-icon-replay-5 pr-[8px] lg:pr-[12px] cursor-pointer" id="replay-seek-button">
+                            <img src="backward.svg" alt="">
+                    </div>
+                    <div class="vjs-icon-forward-5 cursor-pointer" id="forward-seek-button">
+                            <img src="forward.svg" alt="">
+                    </div>
+                </div><div class="vjs-volume-panel vjs-control vjs-volume-panel-horizontal"><button class="vjs-mute-control vjs-control vjs-button vjs-custom-action-icons vjs-vol-3" type="button" aria-disabled="false"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Mute</span></button><div class="vjs-volume-control vjs-control vjs-volume-horizontal"><div tabindex="0" class="vjs-volume-bar vjs-slider-bar vjs-slider vjs-slider-horizontal" role="slider" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-label="Volume Level" aria-live="polite" aria-valuetext="100%"><div class="vjs-mouse-display"><div class="vjs-volume-tooltip" aria-hidden="true"></div></div><div class="vjs-volume-level" style="width: 100%;"><span class="vjs-control-text"></span></div></div></div></div><div class="vjs-time-control vjs-time-divider" aria-hidden="true"><div><span>/</span></div></div><div class="vjs-custom-control-spacer vjs-spacer "> </div><div class="vjs-menu-button vjs-menu-button-popup vjs-control vjs-button"><button class="custom-setting-button-icon vjs-menu-button vjs-menu-button-popup vjs-button" type="button" aria-disabled="false" aria-haspopup="true" aria-expanded="false"><span class="vjs-icon-placeholder" aria-hidden="true"><img src="settings.svg" class="vjs-custom-action-icons vjs-custom-action-icons-animate"></span><span class="vjs-control-text" aria-live="polite">Settings</span></button></div><button class="vjs-fullscreen-control vjs-control vjs-button" type="button" aria-disabled="false" title="Full Screen"><img src="maximize.svg" class="vjs-custom-action-icons"><span class="vjs-control-text" aria-live="polite">Full Screen</span></button></div></div><div class="vjs-menu vjs-setting-menu"><div class="vjs-close-menu-layer vjs-close-setting-menu" tabindex="0" role="button" aria-disabled="false"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite"></span></div><ul class="vjs-menu-content" role="menu"><li class="vjs-menu-item vjs-setting-menu-item vjs-setting-playback-rate" aria-disabled="false" role="menuitem">
+        <div class="vjs-icon-placeholder vjs-icon-slow-motion-video"></div>
+        <div class="vjs-setting-menu-label">Speed</div>
+        <div class="vjs-spacer"></div>
+      <div class="vjs-setting-menu-value">2x</div></li><li class="vjs-menu-item vjs-setting-menu-item vjs-setting-quality" aria-disabled="false" role="menuitem">
+        <div class="vjs-icon-placeholder vjs-icon-hd"></div>
+        <div class="vjs-setting-menu-label">Quality</div>
+        <div class="vjs-spacer"></div>
+      <div class="vjs-setting-menu-value">480p</div></li><li class="vjs-menu-item vjs-setting-menu-item vjs-setting-quality" aria-disabled="false" role="menuitem">
+        <div class="vjs-icon-placeholder vjs-icon-hd"></div>
+        <div class="vjs-setting-menu-label">Quality</div>
+        <div class="vjs-spacer"></div>
+      <div class="vjs-setting-menu-value">Auto</div></li><li class="vjs-menu-item vjs-setting-menu-item vjs-hidden vjs-setting-subtitles" aria-disabled="false" role="menuitem">
+        <div class="vjs-icon-placeholder vjs-icon-subtitles"></div>
+        <div class="vjs-setting-menu-label">Subtitles</div>
+        <div class="vjs-spacer"></div>
+      <div class="vjs-setting-menu-value"></div></li><li class="vjs-menu-item vjs-setting-menu-item vjs-hidden vjs-setting-audio" aria-disabled="false" role="menuitem">
+        <div class="vjs-icon-placeholder vjs-icon-audiotrack"></div>
+        <div class="vjs-setting-menu-label">Audio</div>
+        <div class="vjs-spacer"></div>
+      <div class="vjs-setting-menu-value"></div></li></ul></div><div class="vjs-error-display vjs-modal-dialog vjs-hidden " tabindex="-1" aria-describedby="vjs_video_3_component_661_description" aria-hidden="true" aria-label="Modal Window" role="dialog"><p class="vjs-modal-dialog-description vjs-control-text" id="vjs_video_3_component_661_description">This is a modal window.</p><div class="vjs-modal-dialog-content" role="document"></div></div><div class="vjs-modal-dialog vjs-hidden  vjs-text-track-settings" tabindex="-1" aria-describedby="vjs_video_3_component_667_description" aria-hidden="true" aria-label="Caption Settings Dialog" role="dialog"><p class="vjs-modal-dialog-description vjs-control-text" id="vjs_video_3_component_667_description">Beginning of dialog window. Escape will cancel and close the window.</p><div class="vjs-modal-dialog-content" role="document"><div class="vjs-track-settings-colors"><fieldset class="vjs-fg-color vjs-track-setting"><legend id="captions-text-legend-vjs_video_3_component_667">Text</legend><label id="captions-foreground-color-vjs_video_3_component_667" class="vjs-label">Color</label><select aria-labelledby="captions-text-legend-vjs_video_3_component_667 captions-foreground-color-vjs_video_3_component_667"><option id="captions-foreground-color-vjs_video_3_component_667-White" value="#FFF" aria-labelledby="captions-text-legend-vjs_video_3_component_667 captions-foreground-color-vjs_video_3_component_667 captions-foreground-color-vjs_video_3_component_667-White">White</option><option id="captions-foreground-color-vjs_video_3_component_667-Black" value="#000" aria-labelledby="captions-text-legend-vjs_video_3_component_667 captions-foreground-color-vjs_video_3_component_667 captions-foreground-color-vjs_video_3_component_667-Black">Black</option><option id="captions-foreground-color-vjs_video_3_component_667-Red" value="#F00" aria-labelledby="captions-text-legend-vjs_video_3_component_667 captions-foreground-color-vjs_video_3_component_667 captions-foreground-color-vjs_video_3_component_667-Red">Red</option><option id="captions-foreground-color-vjs_video_3_component_667-Green" value="#0F0" aria-labelledby="captions-text-legend-vjs_video_3_component_667 captions-foreground-color-vjs_video_3_component_667 captions-foreground-color-vjs_video_3_component_667-Green">Green</option><option id="captions-foreground-color-vjs_video_3_component_667-Blue" value="#00F" aria-labelledby="captions-text-legend-vjs_video_3_component_667 captions-foreground-color-vjs_video_3_component_667 captions-foreground-color-vjs_video_3_component_667-Blue">Blue</option><option id="captions-foreground-color-vjs_video_3_component_667-Yellow" value="#FF0" aria-labelledby="captions-text-legend-vjs_video_3_component_667 captions-foreground-color-vjs_video_3_component_667 captions-foreground-color-vjs_video_3_component_667-Yellow">Yellow</option><option id="captions-foreground-color-vjs_video_3_component_667-Magenta" value="#F0F" aria-labelledby="captions-text-legend-vjs_video_3_component_667 captions-foreground-color-vjs_video_3_component_667 captions-foreground-color-vjs_video_3_component_667-Magenta">Magenta</option><option id="captions-foreground-color-vjs_video_3_component_667-Cyan" value="#0FF" aria-labelledby="captions-text-legend-vjs_video_3_component_667 captions-foreground-color-vjs_video_3_component_667 captions-foreground-color-vjs_video_3_component_667-Cyan">Cyan</option></select><span class="vjs-text-opacity vjs-opacity"><label id="captions-foreground-opacity-vjs_video_3_component_667" class="vjs-label">Transparency</label><select aria-labelledby="captions-text-legend-vjs_video_3_component_667 captions-foreground-opacity-vjs_video_3_component_667"><option id="captions-foreground-opacity-vjs_video_3_component_667-Opaque" value="1" aria-labelledby="captions-text-legend-vjs_video_3_component_667 captions-foreground-opacity-vjs_video_3_component_667 captions-foreground-opacity-vjs_video_3_component_667-Opaque">Opaque</option><option id="captions-foreground-opacity-vjs_video_3_component_667-SemiTransparent" value="0.5" aria-labelledby="captions-text-legend-vjs_video_3_component_667 captions-foreground-opacity-vjs_video_3_component_667 captions-foreground-opacity-vjs_video_3_component_667-SemiTransparent">Semi-Transparent</option></select></span></fieldset><fieldset class="vjs-bg-color vjs-track-setting"><legend id="captions-background-vjs_video_3_component_667">Background</legend><label id="captions-background-color-vjs_video_3_component_667" class="vjs-label">Color</label><select aria-labelledby="captions-background-vjs_video_3_component_667 captions-background-color-vjs_video_3_component_667"><option id="captions-background-color-vjs_video_3_component_667-Black" value="#000" aria-labelledby="captions-background-vjs_video_3_component_667 captions-background-color-vjs_video_3_component_667 captions-background-color-vjs_video_3_component_667-Black">Black</option><option id="captions-background-color-vjs_video_3_component_667-White" value="#FFF" aria-labelledby="captions-background-vjs_video_3_component_667 captions-background-color-vjs_video_3_component_667 captions-background-color-vjs_video_3_component_667-White">White</option><option id="captions-background-color-vjs_video_3_component_667-Red" value="#F00" aria-labelledby="captions-background-vjs_video_3_component_667 captions-background-color-vjs_video_3_component_667 captions-background-color-vjs_video_3_component_667-Red">Red</option><option id="captions-background-color-vjs_video_3_component_667-Green" value="#0F0" aria-labelledby="captions-background-vjs_video_3_component_667 captions-background-color-vjs_video_3_component_667 captions-background-color-vjs_video_3_component_667-Green">Green</option><option id="captions-background-color-vjs_video_3_component_667-Blue" value="#00F" aria-labelledby="captions-background-vjs_video_3_component_667 captions-background-color-vjs_video_3_component_667 captions-background-color-vjs_video_3_component_667-Blue">Blue</option><option id="captions-background-color-vjs_video_3_component_667-Yellow" value="#FF0" aria-labelledby="captions-background-vjs_video_3_component_667 captions-background-color-vjs_video_3_component_667 captions-background-color-vjs_video_3_component_667-Yellow">Yellow</option><option id="captions-background-color-vjs_video_3_component_667-Magenta" value="#F0F" aria-labelledby="captions-background-vjs_video_3_component_667 captions-background-color-vjs_video_3_component_667 captions-background-color-vjs_video_3_component_667-Magenta">Magenta</option><option id="captions-background-color-vjs_video_3_component_667-Cyan" value="#0FF" aria-labelledby="captions-background-vjs_video_3_component_667 captions-background-color-vjs_video_3_component_667 captions-background-color-vjs_video_3_component_667-Cyan">Cyan</option></select><span class="vjs-bg-opacity vjs-opacity"><label id="captions-background-opacity-vjs_video_3_component_667" class="vjs-label">Transparency</label><select aria-labelledby="captions-background-vjs_video_3_component_667 captions-background-opacity-vjs_video_3_component_667"><option id="captions-background-opacity-vjs_video_3_component_667-Opaque" value="1" aria-labelledby="captions-background-vjs_video_3_component_667 captions-background-opacity-vjs_video_3_component_667 captions-background-opacity-vjs_video_3_component_667-Opaque">Opaque</option><option id="captions-background-opacity-vjs_video_3_component_667-SemiTransparent" value="0.5" aria-labelledby="captions-background-vjs_video_3_component_667 captions-background-opacity-vjs_video_3_component_667 captions-background-opacity-vjs_video_3_component_667-SemiTransparent">Semi-Transparent</option><option id="captions-background-opacity-vjs_video_3_component_667-Transparent" value="0" aria-labelledby="captions-background-vjs_video_3_component_667 captions-background-opacity-vjs_video_3_component_667 captions-background-opacity-vjs_video_3_component_667-Transparent">Transparent</option></select></span></fieldset><fieldset class="vjs-window-color vjs-track-setting"><legend id="captions-window-vjs_video_3_component_667">Window</legend><label id="captions-window-color-vjs_video_3_component_667" class="vjs-label">Color</label><select aria-labelledby="captions-window-vjs_video_3_component_667 captions-window-color-vjs_video_3_component_667"><option id="captions-window-color-vjs_video_3_component_667-Black" value="#000" aria-labelledby="captions-window-vjs_video_3_component_667 captions-window-color-vjs_video_3_component_667 captions-window-color-vjs_video_3_component_667-Black">Black</option><option id="captions-window-color-vjs_video_3_component_667-White" value="#FFF" aria-labelledby="captions-window-vjs_video_3_component_667 captions-window-color-vjs_video_3_component_667 captions-window-color-vjs_video_3_component_667-White">White</option><option id="captions-window-color-vjs_video_3_component_667-Red" value="#F00" aria-labelledby="captions-window-vjs_video_3_component_667 captions-window-color-vjs_video_3_component_667 captions-window-color-vjs_video_3_component_667-Red">Red</option><option id="captions-window-color-vjs_video_3_component_667-Green" value="#0F0" aria-labelledby="captions-window-vjs_video_3_component_667 captions-window-color-vjs_video_3_component_667 captions-window-color-vjs_video_3_component_667-Green">Green</option><option id="captions-window-color-vjs_video_3_component_667-Blue" value="#00F" aria-labelledby="captions-window-vjs_video_3_component_667 captions-window-color-vjs_video_3_component_667 captions-window-color-vjs_video_3_component_667-Blue">Blue</option><option id="captions-window-color-vjs_video_3_component_667-Yellow" value="#FF0" aria-labelledby="captions-window-vjs_video_3_component_667 captions-window-color-vjs_video_3_component_667 captions-window-color-vjs_video_3_component_667-Yellow">Yellow</option><option id="captions-window-color-vjs_video_3_component_667-Magenta" value="#F0F" aria-labelledby="captions-window-vjs_video_3_component_667 captions-window-color-vjs_video_3_component_667 captions-window-color-vjs_video_3_component_667-Magenta">Magenta</option><option id="captions-window-color-vjs_video_3_component_667-Cyan" value="#0FF" aria-labelledby="captions-window-vjs_video_3_component_667 captions-window-color-vjs_video_3_component_667 captions-window-color-vjs_video_3_component_667-Cyan">Cyan</option></select><span class="vjs-window-opacity vjs-opacity"><label id="captions-window-opacity-vjs_video_3_component_667" class="vjs-label">Transparency</label><select aria-labelledby="captions-window-vjs_video_3_component_667 captions-window-opacity-vjs_video_3_component_667"><option id="captions-window-opacity-vjs_video_3_component_667-Transparent" value="0" aria-labelledby="captions-window-vjs_video_3_component_667 captions-window-opacity-vjs_video_3_component_667 captions-window-opacity-vjs_video_3_component_667-Transparent">Transparent</option><option id="captions-window-opacity-vjs_video_3_component_667-SemiTransparent" value="0.5" aria-labelledby="captions-window-vjs_video_3_component_667 captions-window-opacity-vjs_video_3_component_667 captions-window-opacity-vjs_video_3_component_667-SemiTransparent">Semi-Transparent</option><option id="captions-window-opacity-vjs_video_3_component_667-Opaque" value="1" aria-labelledby="captions-window-vjs_video_3_component_667 captions-window-opacity-vjs_video_3_component_667 captions-window-opacity-vjs_video_3_component_667-Opaque">Opaque</option></select></span></fieldset></div><div class="vjs-track-settings-font"><fieldset class="vjs-font-percent vjs-track-setting"><legend id="captions-font-size-vjs_video_3_component_667" class="">Font Size</legend><select aria-labelledby="captions-font-size-vjs_video_3_component_667"><option id="captions-font-size-vjs_video_3_component_667-50" value="0.50" aria-labelledby="captions-font-size-vjs_video_3_component_667 captions-font-size-vjs_video_3_component_667-50">50%</option><option id="captions-font-size-vjs_video_3_component_667-75" value="0.75" aria-labelledby="captions-font-size-vjs_video_3_component_667 captions-font-size-vjs_video_3_component_667-75">75%</option><option id="captions-font-size-vjs_video_3_component_667-100" value="1.00" aria-labelledby="captions-font-size-vjs_video_3_component_667 captions-font-size-vjs_video_3_component_667-100">100%</option><option id="captions-font-size-vjs_video_3_component_667-125" value="1.25" aria-labelledby="captions-font-size-vjs_video_3_component_667 captions-font-size-vjs_video_3_component_667-125">125%</option><option id="captions-font-size-vjs_video_3_component_667-150" value="1.50" aria-labelledby="captions-font-size-vjs_video_3_component_667 captions-font-size-vjs_video_3_component_667-150">150%</option><option id="captions-font-size-vjs_video_3_component_667-175" value="1.75" aria-labelledby="captions-font-size-vjs_video_3_component_667 captions-font-size-vjs_video_3_component_667-175">175%</option><option id="captions-font-size-vjs_video_3_component_667-200" value="2.00" aria-labelledby="captions-font-size-vjs_video_3_component_667 captions-font-size-vjs_video_3_component_667-200">200%</option><option id="captions-font-size-vjs_video_3_component_667-300" value="3.00" aria-labelledby="captions-font-size-vjs_video_3_component_667 captions-font-size-vjs_video_3_component_667-300">300%</option><option id="captions-font-size-vjs_video_3_component_667-400" value="4.00" aria-labelledby="captions-font-size-vjs_video_3_component_667 captions-font-size-vjs_video_3_component_667-400">400%</option></select></fieldset><fieldset class="vjs-edge-style vjs-track-setting"><legend id="vjs_video_3_component_667" class="">Text Edge Style</legend><select aria-labelledby="vjs_video_3_component_667"><option id="vjs_video_3_component_667-None" value="none" aria-labelledby="vjs_video_3_component_667 vjs_video_3_component_667-None">None</option><option id="vjs_video_3_component_667-Raised" value="raised" aria-labelledby="vjs_video_3_component_667 vjs_video_3_component_667-Raised">Raised</option><option id="vjs_video_3_component_667-Depressed" value="depressed" aria-labelledby="vjs_video_3_component_667 vjs_video_3_component_667-Depressed">Depressed</option><option id="vjs_video_3_component_667-Uniform" value="uniform" aria-labelledby="vjs_video_3_component_667 vjs_video_3_component_667-Uniform">Uniform</option><option id="vjs_video_3_component_667-Dropshadow" value="dropshadow" aria-labelledby="vjs_video_3_component_667 vjs_video_3_component_667-Dropshadow">Dropshadow</option></select></fieldset><fieldset class="vjs-font-family vjs-track-setting"><legend id="captions-font-family-vjs_video_3_component_667" class="">Font Family</legend><select aria-labelledby="captions-font-family-vjs_video_3_component_667"><option id="captions-font-family-vjs_video_3_component_667-ProportionalSansSerif" value="proportionalSansSerif" aria-labelledby="captions-font-family-vjs_video_3_component_667 captions-font-family-vjs_video_3_component_667-ProportionalSansSerif">Proportional Sans-Serif</option><option id="captions-font-family-vjs_video_3_component_667-MonospaceSansSerif" value="monospaceSansSerif" aria-labelledby="captions-font-family-vjs_video_3_component_667 captions-font-family-vjs_video_3_component_667-MonospaceSansSerif">Monospace Sans-Serif</option><option id="captions-font-family-vjs_video_3_component_667-ProportionalSerif" value="proportionalSerif" aria-labelledby="captions-font-family-vjs_video_3_component_667 captions-font-family-vjs_video_3_component_667-ProportionalSerif">Proportional Serif</option><option id="captions-font-family-vjs_video_3_component_667-MonospaceSerif" value="monospaceSerif" aria-labelledby="captions-font-family-vjs_video_3_component_667 captions-font-family-vjs_video_3_component_667-MonospaceSerif">Monospace Serif</option><option id="captions-font-family-vjs_video_3_component_667-Casual" value="casual" aria-labelledby="captions-font-family-vjs_video_3_component_667 captions-font-family-vjs_video_3_component_667-Casual">Casual</option><option id="captions-font-family-vjs_video_3_component_667-Script" value="script" aria-labelledby="captions-font-family-vjs_video_3_component_667 captions-font-family-vjs_video_3_component_667-Script">Script</option><option id="captions-font-family-vjs_video_3_component_667-SmallCaps" value="small-caps" aria-labelledby="captions-font-family-vjs_video_3_component_667 captions-font-family-vjs_video_3_component_667-SmallCaps">Small Caps</option></select></fieldset></div><div class="vjs-track-settings-controls"><button type="button" class="vjs-default-button" title="restore all settings to the default values">Reset<span class="vjs-control-text"> restore all settings to the default values</span></button><button type="button" class="vjs-done-button">Done</button></div></div><button class="vjs-close-button vjs-control vjs-button" type="button" aria-disabled="false"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Close Modal Dialog</span></button><p class="vjs-control-text">End of dialog window.</p></div></div></div></div></div></div></div></div><div class="w-full fixed md:relative lg:fixed bottom-0 left-0 right-0 transition-all duration-500 overflow-y-auto md:!h-screen lg:h-1/1 bg-white" style="border-top-right-radius: 10px; border-top-left-radius: 10px; height: 394.875px; opacity: 1;"><div class="flex flex-col h-full w-full "><div></div><div class="flex-1 h-1 flex flex-col "><div class="flex sticky top-0 z-10 bg-white justify-between items-center  px-4 py-3 shadow-slideModeHeading"><div class="font-semibold subHeading-wl47RZ"><span class="text-black">Poll</span></div><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon" id="close-poll-wrapperIcon" height="30" class="text-bold cursor-pointer"><path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"></path></svg></div><div class="px-4 py-3  flex-1 h-1"><div class="flex flex-col gap-3  flex-1 h-full  min-h-1 w-full"><div class="flex-1 overflow-y-auto"><div><div class="pb-3"><div class="font-semibold subHeading-wl47RZ"><span class="text-black">Single Type Choice Poll</span></div></div><div class=""><div class="flex items-center gap-[14px] mb-3"><button class="border-[1px] rounded-md w-[83%] border-[#989DA5] hover:border-[1px] hover:border-[#CCCCCC] hover:shadow-[0_2px_15px_rgb(0,0,0,0.07)] cursor-pointer" style="border: 1px solid rgb(27, 121, 56); overflow: hidden;"><div class="flex items-center gap-[18px] py-[16px] pl-[24px] pr-[16px]" style="opacity: 0.4; width: 92.6142%; transition: opacity 0.5s ease-out, width 0.5s ease-out; background-color: rgb(223, 241, 228);"><div class="flex justify-start"><input type="radio" class="text-[#757575] bg-[#fff] border-[#E0E0E0] checked:accent-[#757575] hover:opacity-80 hover:border-[1px] hover:border-[#CCCCCC] hover:shadow-[0_2px_15px_rgb(0,0,0,0.07)] cursor-pointer" style="transform: scale(1.5); border: 1px solid rgb(117, 117, 117);"></div><div><div class="font-medium subHeading-wl47RZ"><span class="line-clamp-1 text-[#1B2124]">A</span></div></div></div></button><div><div class="font-semibold subHeading-wl47RZ"><span class="text-black">92.6%</span></div></div></div><div class="flex items-center gap-[14px] mb-3"><button class="border-[1px] rounded-md w-[83%] border-[#989DA5] hover:border-[1px] hover:border-[#CCCCCC] hover:shadow-[0_2px_15px_rgb(0,0,0,0.07)] cursor-pointer" style="border: 1px solid rgb(152, 157, 165); overflow: hidden;"><div class="flex items-center gap-[18px] py-[16px] pl-[24px] pr-[16px]" style="opacity: 0.4; width: 5.02915%; transition: opacity 0.5s ease-out, width 0.5s ease-out; background-color: rgb(234, 236, 239);"><div class="flex justify-start"><input type="radio" class="text-[#757575] bg-[#fff] border-[#E0E0E0] checked:accent-[#757575] hover:opacity-80 hover:border-[1px] hover:border-[#CCCCCC] hover:shadow-[0_2px_15px_rgb(0,0,0,0.07)] cursor-pointer" style="transform: scale(1.5); border: 1px solid rgb(117, 117, 117);"></div><div><div class="font-medium subHeading-wl47RZ"><span class="line-clamp-1 text-[#1B2124]">B</span></div></div></div></button><div><div class="font-semibold subHeading-wl47RZ"><span class="text-black">5.0%</span></div></div></div><div class="flex items-center gap-[14px] mb-3"><button class="border-[1px] rounded-md w-[83%] border-[#989DA5] hover:border-[1px] hover:border-[#CCCCCC] hover:shadow-[0_2px_15px_rgb(0,0,0,0.07)] cursor-pointer" style="border: 1px solid rgb(152, 157, 165); overflow: hidden;"><div class="flex items-center gap-[18px] py-[16px] pl-[24px] pr-[16px]" style="opacity: 0.4; width: 2.01652%; transition: opacity 0.5s ease-out, width 0.5s ease-out; background-color: rgb(234, 236, 239);"><div class="flex justify-start"><input type="radio" class="text-[#757575] bg-[#fff] border-[#E0E0E0] checked:accent-[#757575] hover:opacity-80 hover:border-[1px] hover:border-[#CCCCCC] hover:shadow-[0_2px_15px_rgb(0,0,0,0.07)] cursor-pointer" style="transform: scale(1.5); border: 1px solid rgb(117, 117, 117);"></div><div><div class="font-medium subHeading-wl47RZ"><span class="line-clamp-1 text-[#1B2124]">C</span></div></div></div></button><div><div class="font-semibold subHeading-wl47RZ"><span class="text-black">2.0%</span></div></div></div><div class="flex items-center gap-[14px] mb-3"><button class="border-[1px] rounded-md w-[83%] border-[#989DA5] hover:border-[1px] hover:border-[#CCCCCC] hover:shadow-[0_2px_15px_rgb(0,0,0,0.07)] cursor-pointer" style="border: 1px solid rgb(152, 157, 165); overflow: hidden;"><div class="flex items-center gap-[18px] py-[16px] pl-[24px] pr-[16px]" style="opacity: 0.4; width: 0.340136%; transition: opacity 0.5s ease-out, width 0.5s ease-out; background-color: rgb(234, 236, 239);"><div class="flex justify-start"><input type="radio" class="text-[#757575] bg-[#fff] border-[#E0E0E0] checked:accent-[#757575] hover:opacity-80 hover:border-[1px] hover:border-[#CCCCCC] hover:shadow-[0_2px_15px_rgb(0,0,0,0.07)] cursor-pointer" style="transform: scale(1.5); border: 1px solid rgb(117, 117, 117);"></div><div><div class="font-medium subHeading-wl47RZ"><span class="line-clamp-1 text-[#1B2124]">D</span></div></div></div></button><div><div class="font-semibold subHeading-wl47RZ"><span class="text-black">0.3%</span></div></div></div></div></div><div class="pt-[12px] text-center mx-auto flex justify-center"><div class="_root_sutcz_1 _subHeading_sutcz_59 _bold_sutcz_23 _none_sutcz_19" data-color-scheme="light"><div class="whitespace-nowrap"><span class="text-[#1B2124]">Correct Answer is</span><span class="text-[#1B7938]">A</span></div><span class="text-[#1B7938] whitespace-nowrap">92.61 % Answered Correctly!</span></div></div><div class="mt-[12px] max-w-[383px] mx-auto w-full border-[1px] rounded-md" style="box-shadow: rgba(0, 0, 0, 0.08) 0px 1px 8px;"><div class="py-[32px] px-[0px] flex flex-col gap-[16px] place-content-center rounded-[8px] shadow-[0_1px_8px_rgb(0,0,0,0.08)]"><div class="flex justify-center items-center"><svg width="104" height="104" viewBox="0 0 104 104" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_270_17739)"><path d="M30.7464 10.0389L29.7189 10.1722C28.1328 10.3785 27.014 11.8313 27.2203 13.4166L38.7675 102.395H45.7824L33.9909 12.5382C33.7846 10.9521 32.3325 9.83336 30.7464 10.0389Z" fill="#996459"></path><path d="M33.991 12.5382C33.7847 10.9521 32.3326 9.83336 30.7465 10.0389L29.719 10.1722C29.6293 10.1841 29.5421 10.2007 29.4556 10.2198C30.3998 10.5967 31.1187 11.4584 31.2591 12.5382L43.0506 102.395H45.7825L33.991 12.5382Z" fill="#875850"></path><path d="M61.1256 55.3206L10.9133 61.8356C8.55911 62.1419 6.4017 60.4804 6.09543 58.1238L2.67722 31.7874C2.37094 29.4333 4.03403 27.2758 6.38821 26.9696L37.1426 22.9777L56.6005 20.4521C58.9547 20.1458 61.1121 21.8089 61.4184 24.1631L63.9955 44.017L64.8366 50.5003C65.1429 52.8569 63.4814 55.0143 61.1256 55.3206Z" fill="#F8A28B"></path><path d="M63.9955 44.0178L39.1675 40.7939C39.035 40.7773 38.9025 40.7535 38.7739 40.7257C38.643 40.5416 38.643 40.2885 38.789 40.1028L42.5579 35.2612C43.564 33.9536 43.3196 32.0762 42.012 31.0686C40.7044 30.0601 38.8271 30.3045 37.8194 31.6121L35.6636 34.3812L37.1426 22.9777L56.6005 20.4521C58.9547 20.1458 61.1121 21.8097 61.4184 24.1639L63.9955 44.0178Z" fill="#F58C79"></path><path d="M44.8953 46.9455C44.8953 47.5962 44.6898 48.2547 44.2614 48.8094C43.2838 50.0789 41.462 50.3201 40.1862 49.3489L35.2017 45.5498C34.9747 45.3761 34.6486 45.4173 34.4733 45.6443L30.625 50.5899C30.0514 51.3286 29.1912 51.7142 28.324 51.7142C27.7035 51.7142 27.0767 51.5174 26.5474 51.108C25.2057 50.0741 24.9597 48.1349 26 46.798L29.7133 42.0293C29.8911 41.8 29.8482 41.4683 29.6173 41.293L24.7376 37.5724C23.43 36.5671 23.1856 34.6898 24.1941 33.3798C25.2017 32.0722 27.0791 31.8286 28.3867 32.8363L33.299 36.5798C33.5259 36.7528 33.8512 36.7123 34.0266 36.4854L35.6635 34.3812L35.4564 35.976C35.1676 38.2001 36.6291 40.244 38.7738 40.7256C38.804 40.7685 38.8405 40.8066 38.8825 40.8391L43.6901 44.5033C44.4796 45.1047 44.8953 46.0188 44.8953 46.9455Z" fill="white"></path><path d="M72.4251 0.0254389L73.1543 0.120654C74.8229 0.337267 75.9996 1.86467 75.783 3.53331L62.9528 102.395H56.0331L69.0124 2.65495C69.2283 0.986315 70.7565 -0.191175 72.4251 0.0254389Z" fill="#996459"></path><path d="M73.1543 0.120641L72.4252 0.0254263C71.8047 -0.0547128 71.2048 0.0579579 70.6835 0.315831C71.9435 0.820469 72.7552 2.12491 72.5727 3.5333L59.7426 102.395H62.9529L75.7831 3.5333C75.9997 1.86466 74.823 0.337255 73.1543 0.120641Z" fill="#875850"></path><path d="M42.5578 35.2612L38.7889 40.1029C38.6429 40.2893 38.6429 40.5416 38.7739 40.7257C36.6291 40.2441 35.1676 38.2002 35.4564 35.9761L35.6635 34.3812L37.8193 31.6121C38.827 30.3045 40.7043 30.0601 42.0119 31.0686C43.3196 32.0763 43.5639 33.9536 42.5578 35.2612Z" fill="#EFF2FA"></path><path d="M42.6269 37.9558L93.2732 44.5287C95.5092 44.8184 97.5563 43.2418 97.8459 41.0066L101.32 14.2346C101.611 11.9994 100.034 9.9515 97.7983 9.66189L47.152 3.0889C44.9168 2.79849 42.8697 4.37588 42.5793 6.61105L39.1047 33.3831C38.8151 35.6182 40.3917 37.6653 42.6269 37.9558Z" fill="#FFD782"></path><path d="M64.0907 32.4746C63.3773 32.3928 62.7267 32.031 62.2808 31.4693L57.2344 25.1097C56.3061 23.9394 56.5013 22.2374 57.6716 21.309C58.8419 20.3807 60.5431 20.5759 61.4723 21.7462L64.8373 25.9873L76.6011 16.6515C77.7706 15.7231 79.4726 15.9191 80.401 17.0894C81.3293 18.259 81.1341 19.961 79.9638 20.8893L66.0814 31.9064C65.5189 32.3524 64.8032 32.5571 64.0907 32.4746Z" fill="white"></path><path d="M71.2787 104H31.6828C30.7965 104 30.0776 103.281 30.0776 102.395C30.0776 101.508 30.7965 100.79 31.6828 100.79H71.2787C72.1657 100.79 72.8846 101.508 72.8846 102.395C72.8838 103.281 72.1657 104 71.2787 104Z" fill="#5C546A"></path></g><defs><clipPath id="clip0_270_17739"><rect width="104" height="104" fill="white"></rect></clipPath></defs></svg></div><div class="flex justify-center text-center"><div class="font-bold subHeading-wl47RZ"><span class="text-[#333333] text-center">Not Participated</span></div></div></div></div></div><div class="w-full flex flex-col gap-2"><div class="border-y-[1px] px-[35px] py-[10px]  flex justify-between items-center bg-customGray border-strokeLight !p-4 !text-customDarkGray -mx-4"><div class="w-full flex items-center justify-center ">You did not attempt this poll!</div></div><div class="flex items-center justify-between gap-3 w-full"><button class="_base_h00pp_1 _medium_h00pp_30 _primary_h00pp_50 _full-width_h00pp_4" data-color-scheme="light"><span class="_child-wrapper_h00pp_15"><span class="_root_sutcz_1 _regular_sutcz_63 _semi-bold_sutcz_26 _none_sutcz_19 _typography_h00pp_53" data-color-scheme="light" style="color: inherit;"><span>See Leaderboard</span></span></span></button></div></div></div></div></div></div></div></div><div id="_rht_toaster" style="position: fixed; z-index: 9999; inset: 16px; pointer-events: none;"></div></div>
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+      <script src="https://static.pw.live/web/sdk/auth-new/prod/pw-auth-sdk-loader.js?version=1.7.87" async=""></script>
+  
+  
+
+<div id="psc-toast" class="">👁 Toggles visible again</div></body><!--  <script src="./youtube.min.js"></script>--></html>
+
+
+
+https://www.pw.live/watch/?batchSlug=6779346f920e596fe7f0e247&batchSubjectId=69bebe73176fd8748cdf2ce3&subjectSlug=69bebe73176fd8748cdf2ce3&topicSlug=all&scheduleId=6aac029fa48f0cbeb3b31ccf&type=penpencilvdo&isPPJEnabled=true&entryPoint=BATCH_LECTURE_VIDEOS_6aac029fa48f0cbeb3b31ccf&learn2Earn=true&parentId=6779346f920e596fe7f0e247&vType=BATCHES&childId=6aac029fa48f0cbeb3b31ccf&pollSessionId=1789765894230 url har bar chnge hota alg alg lec ke liye
+
+
+
+mujhe nhi pta maine kiska html diya hai

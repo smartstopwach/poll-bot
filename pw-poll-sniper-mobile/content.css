@@ -1,0 +1,40 @@
+/* content.css - Visual feedback overlay for PW Poll Sniper */
+
+.pw-poll-sniper-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: linear-gradient(135deg, #7c4dff, #536dfe);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 999999;
+  box-shadow: 0 4px 20px rgba(124, 77, 255, 0.4);
+  animation: pws-slide-in 0.3s ease-out, pws-fade-out 0.3s ease-in 2.7s forwards;
+  pointer-events: none;
+}
+
+@keyframes pws-slide-in {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes pws-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.pw-poll-sniper-highlight {
+  outline: 3px solid #7c4dff !important;
+  outline-offset: 2px !important;
+  animation: pws-pulse-highlight 0.5s ease-in-out;
+}
+
+@keyframes pws-pulse-highlight {
+  0% { outline-color: transparent; }
+  50% { outline-color: #7c4dff; }
+  100% { outline-color: #7c4dff; }
+}

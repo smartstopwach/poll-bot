@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PW Poll Sniper Mobile</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header with Extension Toggle -->
+    <div class="header">
+      <div class="header-top">
+        <div class="logo-section">
+          <div class="logo">⚡</div>
+          <div>
+            <h1>PW Poll Sniper</h1>
+            <p class="subtitle">Mobile v5.3.6</p>
+          </div>
+        </div>
+        <label class="main-toggle">
+          <input type="checkbox" id="extensionToggle">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="status-bar" id="statusBar">
+        <span class="status-dot"></span>
+        <span class="status-text" id="statusText">Inactive</span>
+      </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="stats-section">
+      <div class="stat-card">
+        <div class="stat-value" id="pollCount">0</div>
+        <div class="stat-label">Polls</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="successCount">0</div>
+        <div class="stat-label">Success</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="avgTime">0ms</div>
+        <div class="stat-label">Avg Time</div>
+      </div>
+    </div>
+
+    <!-- Quick Answer Section -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-icon">🎯</span>
+        <span class="section-title">Quick Answer</span>
+      </div>
+      <div class="answer-grid">
+        <button class="answer-btn" data-option="A">A</button>
+        <button class="answer-btn" data-option="B">B</button>
+        <button class="answer-btn" data-option="C">C</button>
+        <button class="answer-btn" data-option="D">D</button>
+      </div>
+      <p class="hint">Tap to pre-select answer for next poll</p>
+    </div>
+
+    <!-- Settings Section (Collapsible) -->
+    <details class="section collapsible">
+      <summary class="section-header">
+        <span class="section-icon">⚙️</span>
+        <span class="section-title">Settings</span>
+      </summary>
+      <div class="section-content">
+        <div class="toggle-row">
+          <span class="toggle-label">Auto Submit</span>
+          <label class="switch">
+            <input type="checkbox" id="autoSubmit" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <span class="toggle-label">Auto Open Poll</span>
+          <label class="switch">
+            <input type="checkbox" id="autoOpen" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <span class="toggle-label">Human-like Delay</span>
+          <label class="switch">
+            <input type="checkbox" id="humanDelay" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+    </details>
+
+    <!-- Shortcuts Section (Collapsible) -->
+    <details class="section collapsible">
+      <summary class="section-header">
+        <span class="section-icon">⌨️</span>
+        <span class="section-title">Touch Controls</span>
+      </summary>
+      <div class="section-content">
+        <div class="shortcut-row">
+          <kbd>P</kbd>
+          <span>Toggle ON/OFF</span>
+        </div>
+        <div class="shortcut-row">
+          <kbd>Q</kbd>
+          <span>Enter answer mode (30s)</span>
+        </div>
+        <div class="shortcut-row">
+          <kbd>A/B</kbd>
+          <span>Select answer</span>
+        </div>
+      </div>
+    </details>
+
+    <!-- Help Section (Collapsible) -->
+    <details class="section collapsible">
+      <summary class="section-header">
+        <span class="section-icon">❓</span>
+        <span class="section-title">How to Use</span>
+      </summary>
+      <div class="section-content">
+        <ol class="help-list">
+          <li>Enable extension (toggle ON or press P)</li>
+          <li>Open a PW lecture (live or recorded)</li>
+          <li>Tap Q button on overlay panel</li>
+          <li>Tap A/B/C/D to select answer</li>
+          <li>Wait for poll - auto-answers!</li>
+        </ol>
+      </div>
+    </details>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p>Works on Live & Recorded lectures</p>
+      <p class="version">v5.3.6 • Bug-free</p>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

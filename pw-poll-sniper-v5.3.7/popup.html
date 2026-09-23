@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>PW Poll Sniper</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header with Extension Toggle -->
+    <header class="header">
+      <div class="header-left">
+        <h1>🎯 PW Poll Sniper</h1>
+        <span class="version">v5.3.3</span>
+      </div>
+      <div class="header-right">
+        <label class="main-toggle">
+          <input type="checkbox" id="extensionToggle">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </header>
+
+    <!-- Status Bar -->
+    <div class="status-bar" id="statusBar">
+      <div class="status-indicator">
+        <span class="status-dot" id="statusDot"></span>
+        <span class="status-text" id="statusText">Inactive</span>
+      </div>
+      <div class="status-stats">
+        <span id="pollCount">0</span> polls answered
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="section">
+      <h3>Quick Answer</h3>
+      <div class="option-group">
+        <button class="option-btn" data-option="A">A</button>
+        <button class="option-btn" data-option="B">B</button>
+        <button class="option-btn" data-option="C">C</button>
+        <button class="option-btn" data-option="D">D</button>
+      </div>
+      <p class="hint">Select answer for next poll (or press Q + A/B/C/D)</p>
+    </div>
+
+    <!-- Dashboard Button -->
+    <button id="openDashboard" class="dashboard-btn">
+      📊 Open Dashboard
+    </button>
+
+    <!-- Timing Controls -->
+    <details class="section collapsible">
+      <summary>⚡ Response Speed Settings</summary>
+      <div class="timing-group">
+        <div class="timing-control">
+          <label class="toggle-label">
+            <input type="checkbox" id="useHumanDelay" checked>
+            <span class="toggle-text">Human-like Random Delay</span>
+          </label>
+          <div class="timing-hint">Adds random delay to avoid detection</div>
+        </div>
+        
+        <div id="humanDelaySettings">
+          <div class="timing-control">
+            <label>Human Delay Range (ms):</label>
+            <div class="timing-input-group">
+              <input type="number" id="humanDelayMin" min="300" max="5000" value="500" step="100" class="timing-number">
+              <span class="timing-unit">to</span>
+              <input type="number" id="humanDelayMax" min="300" max="5000" value="1500" step="100" class="timing-number">
+            </div>
+          </div>
+        </div>
+
+        <div class="timing-control">
+          <label for="pollDelay">Answer Delay:</label>
+          <div class="timing-input-group">
+            <input type="range" id="pollDelay" min="50" max="500" value="260" step="10">
+            <input type="number" id="pollDelayInput" min="50" max="500" value="260" step="10" class="timing-number">
+            <span class="timing-unit">ms</span>
+          </div>
+        </div>
+        
+        <div class="timing-control">
+          <label for="submitDelay">Submit Delay:</label>
+          <div class="timing-input-group">
+            <input type="range" id="submitDelay" min="0" max="200" value="25" step="5">
+            <input type="number" id="submitDelayInput" min="0" max="200" value="25" step="5" class="timing-number">
+            <span class="timing-unit">ms</span>
+          </div>
+        </div>
+        
+        <div class="timing-info">
+          <strong>Total Time:</strong> ~<span id="totalTime">335</span>ms
+          <div class="timing-warning">⚠️ Very low delays may be detected</div>
+        </div>
+      </div>
+    </details>
+
+    <!-- Shortcuts -->
+    <details class="section collapsible">
+      <summary>⌨️ Keyboard Shortcuts</summary>
+      <div class="shortcuts">
+        <div class="shortcut"><kbd>P</kbd> Toggle ON/OFF</div>
+        <div class="shortcut"><kbd>Q</kbd> Set answer mode (30s)</div>
+        <div class="shortcut"><kbd>A/B/C/D</kbd> Select answer</div>
+        <div class="shortcut"><kbd>Esc</kbd> Cancel Q mode</div>
+      </div>
+    </details>
+
+    <!-- Help -->
+    <details class="section collapsible">
+      <summary>❓ How to Use</summary>
+      <div class="help">
+        <p>1. Enable extension (toggle above or press P)</p>
+        <p>2. Press <kbd>Q</kbd> to enter answer mode</p>
+        <p>3. Press <kbd>A/B/C/D</kbd> to select answer</p>
+        <p>4. Poll aane pe auto-answer hoga</p>
+        <p>5. Last letter wins (Q→B→C = C)</p>
+      </div>
+    </details>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

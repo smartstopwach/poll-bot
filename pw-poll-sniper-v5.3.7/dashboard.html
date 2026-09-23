@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PW Poll Sniper - Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+  <div class="dashboard">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-left">
+        <h1>🎯 PW Poll Sniper Dashboard</h1>
+        <span class="version">v5.3.3</span>
+      </div>
+      <div class="header-right">
+        <div class="status-badge" id="statusBadge">
+          <span class="status-dot"></span>
+          <span class="status-text">Inactive</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">📊</div>
+        <div class="stat-info">
+          <div class="stat-value" id="totalPolls">0</div>
+          <div class="stat-label">Total Polls</div>
+        </div>
+      </div>
+      <div class="stat-card success">
+        <div class="stat-icon">✅</div>
+        <div class="stat-info">
+          <div class="stat-value" id="successPolls">0</div>
+          <div class="stat-label">Successful</div>
+        </div>
+      </div>
+      <div class="stat-card error">
+        <div class="stat-icon">❌</div>
+        <div class="stat-info">
+          <div class="stat-value" id="failedPolls">0</div>
+          <div class="stat-label">Failed</div>
+        </div>
+      </div>
+      <div class="stat-card info">
+        <div class="stat-icon">⚡</div>
+        <div class="stat-info">
+          <div class="stat-value" id="avgTime">0ms</div>
+          <div class="stat-label">Avg Response</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- History Section -->
+      <div class="section">
+        <div class="section-header">
+          <h2>📋 Poll History</h2>
+          <div class="section-actions">
+            <select id="historyFilter" class="filter-select">
+              <option value="all">All</option>
+              <option value="SUCCESS">Success</option>
+              <option value="FAILED">Failed</option>
+            </select>
+            <button class="btn btn-danger" id="clearHistory">🗑 Clear All</button>
+          </div>
+        </div>
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Poll #</th>
+                <th>Answer</th>
+                <th>Time</th>
+                <th>Method</th>
+                <th>Timestamp</th>
+              </tr>
+            </thead>
+            <tbody id="historyTable">
+              <tr>
+                <td colspan="6" class="empty">No polls answered yet</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Errors Section -->
+      <div class="section">
+        <div class="section-header">
+          <h2>🚨 Error Log</h2>
+          <button class="btn btn-danger" id="clearErrors">🗑 Clear All</button>
+        </div>
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Level</th>
+                <th>Message</th>
+                <th>Timestamp</th>
+              </tr>
+            </thead>
+            <tbody id="errorTable">
+              <tr>
+                <td colspan="3" class="empty">No errors 🎉</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Advanced Settings -->
+      <div class="section">
+        <div class="section-header">
+          <h2>⚙️ Advanced Settings</h2>
+        </div>
+        <div class="settings-grid">
+          <div class="setting-item">
+            <label>Extension Status</label>
+            <label class="toggle">
+              <input type="checkbox" id="extensionToggle">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="setting-item">
+            <label>Auto Submit</label>
+            <label class="toggle">
+              <input type="checkbox" id="autoSubmit" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="setting-item">
+            <label>Auto Open Poll</label>
+            <label class="toggle">
+              <input type="checkbox" id="autoOpen" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="setting-item">
+            <label>Human-like Delay</label>
+            <label class="toggle">
+              <input type="checkbox" id="useHumanDelay" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Keyboard Shortcuts -->
+      <div class="section">
+        <div class="section-header">
+          <h2>⌨️ Keyboard Shortcuts</h2>
+        </div>
+        <div class="shortcuts-grid">
+          <div class="shortcut-item">
+            <kbd>P</kbd>
+            <span>Toggle Extension ON/OFF</span>
+          </div>
+          <div class="shortcut-item">
+            <kbd>Q</kbd>
+            <span>Set answer mode (30s timeout)</span>
+          </div>
+          <div class="shortcut-item">
+            <kbd>A / B / C / D</kbd>
+            <span>Select answer (last wins)</span>
+          </div>
+          <div class="shortcut-item">
+            <kbd>Esc</kbd>
+            <span>Cancel Q mode</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>PW Poll Sniper v5.3.3 | Auto-refreshes every 2 seconds | <a href="https://github.com" target="_blank">GitHub</a></p>
+    </footer>
+  </div>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>

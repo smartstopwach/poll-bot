@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PW Poll Sniper Mobile - User Manual v5.4.4</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0f172a;
+      --bg2: #1e293b;
+      --bg3: #334155;
+      --green: #10b981;
+      --blue: #3b82f6;
+      --yellow: #fbbf24;
+      --red: #ef4444;
+      --text: #e2e8f0;
+      --text2: #94a3b8;
+      --border: rgba(255,255,255,0.1);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      padding: 60px 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(16,185,129,0.1) 0%, transparent 50%);
+      animation: pulse 4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.1); opacity: 1; }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .hero-icon {
+      font-size: 72px;
+      margin-bottom: 20px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .hero h1 {
+      font-size: 42px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #10b981, #3b82f6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 12px;
+    }
+
+    .hero .subtitle {
+      font-size: 18px;
+      color: var(--text2);
+      margin-bottom: 8px;
+    }
+
+    .hero .version-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--green), #059669);
+      color: white;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 16px;
+      box-shadow: 0 4px 12px rgba(16,185,129,0.3);
+    }
+
+    /* Download Button */
+    .download-section {
+      padding: 40px 20px;
+      text-align: center;
+      background: var(--bg2);
+    }
+
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: linear-gradient(135deg, var(--green), #059669);
+      color: white;
+      padding: 18px 40px;
+      border-radius: 16px;
+      font-size: 20px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 24px rgba(16,185,129,0.3);
+      border: none;
+      cursor: pointer;
+    }
+
+    .download-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(16,185,129,0.4);
+    }
+
+    .download-btn:active {
+      transform: translateY(0);
+    }
+
+    .download-info {
+      margin-top: 16px;
+      color: var(--text2);
+      font-size: 14px;
+    }
+
+    /* Container */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 48px;
+    }
+
+    .section-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-title .icon {
+      font-size: 32px;
+    }
+
+    /* Step Cards */
+    .step-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 16px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .step-card:hover {
+      border-color: var(--green);
+      transform: translateX(4px);
+    }
+
+    .step-number {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, var(--green), #059669);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 800;
+      color: white;
+      opacity: 0.2;
+    }
+
+    .step-card h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--green);
+    }
+
+    .step-card p {
+      color: var(--text2);
+      font-size: 15px;
+    }
+
+    .step-card code {
+      background: var(--bg3);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 13px;
+      color: var(--yellow);
+    }
+
+    /* Visual Demo */
+    .demo-box {
+      background: var(--bg);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      margin: 16px 0;
+      text-align: center;
+    }
+
+    .phone-frame {
+      display: inline-block;
+      width: 200px;
+      height: 360px;
+      background: #1a1a2e;
+      border: 3px solid #444;
+      border-radius: 24px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(180deg, #16213e 0%, #0f3460 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .phone-video {
+      width: 90%;
+      height: 50%;
+      background: #000;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #555;
+      font-size: 12px;
+    }
+
+    .fab-demo {
+      position: absolute;
+      bottom: 30px;
+      right: 20px;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #10b981, #10b981dd);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 700;
+      color: #3b82f6;
+      box-shadow: 0 4px 16px rgba(16,185,129,0.4), 0 0 24px rgba(16,185,129,0.2);
+      border: 2px solid rgba(255,255,255,0.3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .fab-demo:hover {
+      transform: scale(1.1);
+    }
+
+    .fab-demo .green-dot {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(34, 197, 94, 0.6);
+      box-shadow: 0 0 4px rgba(34, 197, 94, 0.4);
+    }
+
+    .expanded-demo {
+      position: absolute;
+      bottom: 30px;
+      right: 10px;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(12px);
+      border-radius: 12px;
+      padding: 8px;
+      border: 2px solid #10b981;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4), 0 0 30px rgba(16,185,129,0.2);
+      display: none;
+    }
+
+    .expanded-demo .btn-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 4px;
+    }
+
+    .expanded-demo .btn {
+      padding: 10px 4px;
+      background: rgba(255,255,255,0.15);
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .expanded-demo .btn:hover {
+      background: rgba(255,255,255,0.25);
+    }
+
+    .expanded-demo .btn.selected {
+      background: #3b82f6;
+    }
+
+    .expanded-demo .btn.blank-active {
+      background: #6b7280;
+    }
+
+    /* Feature Grid */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+    }
+
+    .feature-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+      border-color: var(--blue);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(59,130,246,0.1);
+    }
+
+    .feature-card .feature-icon {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .feature-card h4 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .feature-card p {
+      font-size: 13px;
+      color: var(--text2);
+    }
+
+    /* Buttons Table */
+    .btn-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+    }
+
+    .btn-table th, .btn-table td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .btn-table th {
+      background: var(--bg3);
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--green);
+    }
+
+    .btn-table td {
+      font-size: 14px;
+      color: var(--text2);
+    }
+
+    .btn-table .btn-preview {
+      display: inline-block;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      color: white;
+    }
+
+    .btn-a { background: rgba(59,130,246,0.3); }
+    .btn-blank { background: rgba(107,114,128,0.3); }
+
+    /* Troubleshooting */
+    .trouble-card {
+      background: var(--bg2);
+      border-left: 4px solid var(--red);
+      border-radius: 0 12px 12px 0;
+      padding: 20px;
+      margin-bottom: 12px;
+    }
+
+    .trouble-card h4 {
+      color: var(--red);
+      font-size: 15px;
+      margin-bottom: 8px;
+    }
+
+    .trouble-card p {
+      font-size: 14px;
+      color: var(--text2);
+    }
+
+    .trouble-card .fix {
+      color: var(--green);
+      font-weight: 600;
+    }
+
+    /* Status Colors */
+    .status-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .status-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .status-dot.green { background: var(--green); box-shadow: 0 0 8px var(--green); }
+    .status-dot.blue { background: var(--blue); box-shadow: 0 0 8px var(--blue); }
+    .status-dot.gray { background: #6b7280; }
+
+    /* Checklist */
+    .checklist {
+      list-style: none;
+    }
+
+    .checklist li {
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 15px;
+    }
+
+    .checklist li::before {
+      content: '✅';
+      font-size: 16px;
+    }
+
+    /* Footer */
+    .footer {
+      background: var(--bg2);
+      padding: 30px 20px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer p {
+      color: var(--text2);
+      font-size: 14px;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 28px; }
+      .hero-icon { font-size: 48px; }
+      .section-title { font-size: 22px; }
+      .download-btn { padding: 14px 28px; font-size: 16px; }
+      .feature-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Animations */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Tabs */
+    .tab-container {
+      margin: 24px 0;
+    }
+
+    .tab-buttons {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .tab-btn {
+      padding: 10px 20px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text2);
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .tab-btn.active {
+      background: var(--green);
+      color: white;
+      border-color: var(--green);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Arrow */
+    .arrow {
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    /* Warning Box */
+    .warning-box {
+      background: rgba(251,191,36,0.1);
+      border: 1px solid rgba(251,191,36,0.3);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin: 16px 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .warning-box .icon { font-size: 24px; }
+    .warning-box p { font-size: 14px; color: var(--yellow); }
+  </style>
+</head>
+<body>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-content">
+      <div class="hero-icon">⚡</div>
+      <h1>PW Poll Sniper Mobile</h1>
+      <p class="subtitle">Auto-answer Physics Wallah polls on your phone</p>
+      <p class="subtitle" style="font-size: 14px;">Works on LIVE + RECORDED lectures • Kiwi Browser</p>
+      <div class="version-badge">v5.4.4 — STABLE & BUG-FREE</div>
+    </div>
+  </div>
+
+  <!-- Download -->
+  <div class="download-section">
+    <a href="pw-poll-sniper-mobile.zip" download="pw-poll-sniper-mobile.zip" class="download-btn" id="downloadBtn">
+      <span>📥</span>
+      <span>Download Extension (v5.4.4)</span>
+    </a>
+    <p class="download-info">pw-poll-sniper-mobile.zip • For Kiwi Browser (Android)</p>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container">
+
+    <!-- What Is This -->
+    <div class="section fade-in">
+      <h2 class="section-title"><span class="icon">🎯</span> What Is This?</h2>
+      <div class="step-card">
+        <p>PW Poll Sniper Mobile ek Chrome extension hai jo <strong>Physics Wallah (pw.live)</strong> website pe automatically polls detect karta hai aur aapka pre-selected answer tick karke submit kar deta hai.</p>
+        <br>
+        <p><strong>Works on:</strong> LIVE lectures + RECORDED lectures</p>
+        <p><strong>Browser:</strong> Kiwi Browser (Android) — because normal Chrome mobile doesn't support extensions</p>
+        <p><strong>Response Time:</strong> 800-2000ms (with human-like delay)</p>
+      </div>
+    </div>
+
+    <!-- Installation -->
+    <div class="section fade-in">
+      <h2 class="section-title"><span class="icon">📲</span> Installation (Step by Step)</h2>
+
+      <div class="step-card">
+        <div class="step-number">1</div>
+        <h3>Step 1: Install Kiwi Browser</h3>
+        <p>Google Play Store se <strong>Kiwi Browser</strong> download karo. Normal Chrome mobile pe extensions kaam nahi karte, isliye Kiwi zaroori hai.</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-number">2</div>
+        <h3>Step 2: Download Extension</h3>
+        <p>Upar diye gaye green <strong>"Download Extension"</strong> button pe click karo. <code>pw-poll-sniper-mobile.zip</code> file download hogi.</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-number">3</div>
+        <h3>Step 3: Extract ZIP File</h3>
+        <p>Downloaded <code>pw-poll-sniper-mobile.zip</code> file ko kisi folder mein extract karo. Phone ka file manager ya ZArchiver app use karo.</p>
+        <br>
+        <p>⚠️ <strong>Important:</strong> Extract karo, zip mat use karo directly!</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-number">4</div>
+        <h3>Step 4: Open Kiwi Browser → Extensions</h3>
+        <p>Kiwi Browser kholo → <strong>⋮ (3 dots menu)</strong> → <strong>Extensions</strong> pe tap karo.</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-number">5</div>
+        <h3>Step 5: Enable Developer Mode</h3>
+        <p>Extensions page pe <strong>"Developer mode"</strong> toggle ON karo (top-right corner pe).</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-number">6</div>
+        <h3>Step 6: Load Extension</h3>
+        <p><strong>"+ (from .zip/.crx/.user.js)"</strong> button pe tap karo → Extracted folder select karo (<code>pw-poll-sniper-mobile</code>).</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-number">7</div>
+        <h3>Step 7: Verify Installation ✅</h3>
+        <p>Extensions list mein <strong>"PW Poll Sniper Mobile"</strong> dikhna chahiye. Extension icon (⚡) browser toolbar mein aa jayega.</p>
+      </div>
+    </div>
+
+    <!-- Visual Demo -->
+    <div class="section fade-in">
+      <h2 class="section-title"><span class="icon">📱</span> How It Looks on Phone</h2>
+
+      <div class="demo-box">
+        <p style="margin-bottom: 16px; color: var(--text2);">👇 Tap the green circle to see it expand!</p>
+
+        <div class="phone-frame" id="phoneFrame">
+          <div class="phone-screen">
+            <div class="phone-video">📹 Video Player</div>
+            <p style="color: #555; font-size: 11px; margin-top: 8px;">PW Lecture Playing...</p>
+          </div>
+
+          <!-- Collapsed FAB -->
+          <div class="fab-demo" id="fabDemo" onclick="toggleFab()">
+            <span id="fabText">_</span>
+            <div class="green-dot"></div>
+          </div>
+
+          <!-- Expanded Panel -->
+          <div class="expanded-demo" id="expandedDemo">
+            <div class="btn-row">
+              <button class="btn" onclick="selectAnswer('A')">A</button>
+              <button class="btn" onclick="selectAnswer('B')">B</button>
+              <button class="btn" onclick="selectAnswer('C')">C</button>
+              <button class="btn" onclick="selectAnswer('D')">D</button>
+              <button class="btn" id="blankBtn" onclick="selectAnswer('_')">_</button>
+            </div>
+          </div>
+        </div>
+
+        <p style="margin-top: 16px; color: var(--text2); font-size: 13px;">
+          <span class="arrow">↑</span> Interactive demo — tap circle & buttons!
+        </p>
+      </div>
+    </div>
+
+    <!-- How to Use -->
+    <div class="section fade-in">
+      <h2 class="section-title"><span class="icon">🎮</span> How to Use (Step by Step)</h2>
+
+      <div class="step-card">
+        <div class="step-number">1</div>
+        <h3>Open PW Lecture</h3>
+        <p>Kiwi Browser mein <code>pw.live</code> kholo → Login karo → Koi bhi LIVE ya RECORDED lecture kholo.</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-number">2</div>
+        <h3>Enable Extension</h3>
+        <p>Extension icon (⚡) tap karo → Toggle <strong>ON</strong> karo. Green circle screen pe bottom-right mein dikhega.</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-number">3</div>
+        <h3>Tap Green Circle</h3>
+        <p>Green circle pe tap karo → 5 buttons dikhenge: <strong>A, B, C, D, _</strong></p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-number">4</div>
+        <h3>Select Answer</h3>
+        <p><strong>A/B/C/D</strong> mein se koi ek tap karo. Panel automatically close ho jayega (300ms). Circle pe selected answer blue mein dikhega.</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-number">5</div>
+        <h3>Wait for Poll</h3>
+        <p>Jab poll aayega, extension automatically: poll icon detect karega → panel open karega → answer select karega → submit karega!</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-number">6</div>
+        <h3>Poll Answered! ✅</h3>
+        <p>Poll successfully answer ho jayega. Circle reset hoke <strong>_</strong> dikha dega. Next poll ke liye phir se answer select karo.</p>
+      </div>
+    </div>
+
+    <!-- Buttons Explained -->
+    <div class="section fade-in">
+      <h2 class="section-title"><span class="icon">🔘</span> 5 Buttons Explained</h2>
+
+      <table class="btn-table">
+        <thead>
+          <tr>
+            <th>Button</th>
+            <th>Function</th>
+            <th>When Active</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="btn-preview btn-a">A</div></td>
+            <td>Select answer A for next poll</td>
+            <td>🔵 Blue background</td>
+          </tr>
+          <tr>
+            <td><div class="btn-preview btn-a">B</div></td>
+            <td>Select answer B for next poll</td>
+            <td>🔵 Blue background</td>
+          </tr>
+          <tr>
+            <td><div class="btn-preview btn-a">C</div></td>
+            <td>Select answer C for next poll</td>
+            <td>🔵 Blue background</td>
+          </tr>
+          <tr>
+            <td><div class="btn-preview btn-a">D</div></td>
+            <td>Select answer D for next poll</td>
+            <td>🔵 Blue background</td>
+          </tr>
+          <tr>
+            <td><div class="btn-preview btn-blank">_</div></td>
+            <td>Reset to no answer (blank)</td>
+            <td>⚫ Gray background</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="warning-box">
+        <span class="icon">💡</span>
+        <p><strong>Tip:</strong> Koi bhi button tap karne se panel automatically 300ms mein close ho jata hai. Agar galti se circle tap ho gaya, toh 17 seconds wait karo — panel apne aap close ho jayega. Ya phir <code>_</code> tap karo toh turant close ho jayega.</p>
+      </div>
+    </div>
+
+    <!-- Green Circle States -->
+    <div class="section fade-in">
+      <h2 class="section-title"><span class="icon">🟢</span> Green Circle States</h2>
+
+      <div class="status-row">
+        <div class="status-dot gray"></div>
+        <div>
+          <strong style="color: #6b7280;">_ (Underscore)</strong> — No answer selected. Poll aayega toh open hoga but answer nahi karega.
+        </div>
+      </div>
+
+      <div class="status-row">
+        <div class="status-dot blue"></div>
+        <div>
+          <strong style="color: var(--blue);">A / B / C / D</strong> — Answer selected hai. Jab poll aayega, ye answer automatically tick hoga.
+        </div>
+      </div>
+
+      <div class="status-row">
+        <div class="status-dot green"></div>
+        <div>
+          <strong style="color: var(--green);">Small Green Dot</strong> — Extension active hai (top-right corner pe chhota sa green dot).
+        </div>
+      </div>
+    </div>
+
+    <!-- Features -->
+    <div class="section fade-in">
+      <h2 class="section-title"><span class="icon">✨</span> Features</h2>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🎯</div>
+          <h4>Auto Poll Detection</h4>
+          <p>Poll icon ka color change detect karta hai (white → blue). LIVE + RECORDED dono pe kaam karta hai.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h4>Fast Response</h4>
+          <p>800-2000ms mein poll answer karta hai (human-like delay ke saath).</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📱</div>
+          <h4>Touch Optimized</h4>
+          <p>Kiwi Browser ke liye specially optimized. Touch events + mouse events dono support karta hai.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🟢</div>
+          <h4>Smart FAB Overlay</h4>
+          <p>56px green circle — tap karo toh expand hota hai. Minimal, clean, screen block nahi karta.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">⏱️</div>
+          <h4>17s Auto-Collapse</h4>
+          <p>Panel 17 seconds mein automatically close ho jata hai. Screen clean rehta hai.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🔄</div>
+          <h4>Auto Reset</h4>
+          <p>Har poll ke baad answer reset ho jata hai (_). Next poll ke liye fresh selection karo.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🖐️</div>
+          <h4>Draggable</h4>
+          <p>Green circle ko kahin bhi drag kar sakte ho. Long press + drag to reposition.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h4>Poll History</h4>
+          <p>Last 50 polls ka history save hota hai. Dashboard mein dekh sakte ho.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🧠</div>
+          <h4>Human-Like Delay</h4>
+          <p>500-1500ms random delay — bot jaisa nahi lagta, natural lagta hai.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🎨</div>
+          <h4>Modern UI</h4>
+          <p>Dark theme, glassmorphism, smooth animations. Phone pe beautiful dikhta hai.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Popup Menu -->
+    <div class="section fade-in">
+      <h2 class="section-title"><span class="icon">📋</span> Popup Menu Guide</h2>
+
+      <p style="color: var(--text2); margin-bottom: 16px;">Extension icon (⚡) tap karo toh popup menu khulta hai:</p>
+
+      <div class="step-card">
+        <h3>🔘 Extension Toggle</h3>
+        <p>Top pe toggle switch — ON/OFF karo. Green = Active, Red = Inactive.</p>
+      </div>
+
+      <div class="step-card">
+        <h3>📊 Stats Section</h3>
+        <p>Total polls, successful polls, average response time dikhata hai.</p>
+      </div>
+
+      <div class="step-card">
+        <h3>🎯 Quick Answer</h3>
+        <p>A/B/C/D buttons — tap karke answer pre-select karo.</p>
+      </div>
+
+      <div class="step-card">
+        <h3>⚙️ Settings</h3>
+        <p>
+          <strong>Auto Submit</strong> — Automatically submit karta hai (Recommended: ON)<br>
+          <strong>Auto Open Poll</strong> — Poll icon automatically click karta hai (Recommended: ON)<br>
+          <strong>Human-like Delay</strong> — Random delay add karta hai (Recommended: ON)
+        </p>
+      </div>
+    </div>
+
+    <!-- Settings -->
+    <div class="section fade-in">
+      <h2 class="section-title"><span class="icon">⚙️</span> Recommended Settings</h2>
+
+      <ul class="checklist">
+        <li><strong>Auto Submit:</strong> ON — Poll automatically submit hoga</li>
+        <li><strong>Auto Open Poll:</strong> ON — Poll icon automatically click hoga</li>
+        <li><strong>Human-like Delay:</strong> ON — Natural lagta hai, detection se bachta hai</li>
+        <li><strong>Extension Default:</strong> OFF — Jab chahiye tab ON karo</li>
+      </ul>
+    </div>
+
+    <!-- LIVE vs RECORDED -->
+    <div class="section fade-in">
+      <h2 class="section-title"><span class="icon">📺</span> LIVE vs RECORDED Lectures</h2>
+
+      <div class="tab-container">
+        <div class="tab-buttons">
+          <button class="tab-btn active" onclick="showTab('live')">🔴 LIVE</button>
+          <button class="tab-btn" onclick="showTab('recorded')">📹 RECORDED</button>
+        </div>
+
+        <div class="tab-content active" id="tab-live">
+          <div class="step-card">
+            <h3>LIVE Lectures</h3>
+            <p><strong>Poll Icon:</strong> <code>#poll-icon</code></p>
+            <p><strong>Inactive Color:</strong> <code>#ffffff</code> (white)</p>
+            <p><strong>Active Color:</strong> Blue/colored (any non-white)</p>
+            <p><strong>Detection:</strong> Icon color change detect hota hai</p>
+            <br>
+            <p>Jab teacher poll bhejta hai, icon white se blue ho jata hai. Extension detect karta hai aur automatically poll panel open karta hai.</p>
+          </div>
+        </div>
+
+        <div class="tab-content" id="tab-recorded">
+          <div class="step-card">
+            <h3>RECORDED Lectures</h3>
+            <p><strong>Poll Icon:</strong> <code>#record-poll-icon</code></p>
+            <p><strong>Inactive Color:</strong> <code>#ffffff</code> (white)</p>
+            <p><strong>Active Color:</strong> <code>var(--primary)</code> (CSS variable → blue)</p>
+            <p><strong>Detection:</strong> Icon color + computed style fallback</p>
+            <br>
+            <p>Recorded lectures mein poll icon alag ID use karta hai. Extension dono check karta hai aur CSS variables ko bhi detect kar sakta hai.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Troubleshooting -->
+    <div class="section fade-in">
+      <h2 class="section-title"><span class="icon">🔧</span> Troubleshooting</h2>
+
+      <div class="trouble-card">
+        <h4>❌ Extension load nahi ho raha</h4>
+        <p><span class="fix">Fix:</span> ZIP file ko extract karo, folder load karo. Direct ZIP load mat karo. Developer mode ON hona chahiye.</p>
+      </div>
+
+      <div class="trouble-card">
+        <h4>❌ Green circle nahi dikh raha</h4>
+        <p><span class="fix">Fix:</span> Extension toggle ON karo (popup menu se). Lecture page pe hona chahiye (video player wala page).</p>
+      </div>
+
+      <div class="trouble-card">
+        <h4>❌ Poll detect nahi ho raha</h4>
+        <p><span class="fix">Fix:</span> Auto Open Poll setting ON hona chahiye. Answer select hona chahiye (circle pe A/B/C/D dikhe, _ nahi).</p>
+      </div>
+
+      <div class="trouble-card">
+        <h4>❌ Answer select nahi ho raha</h4>
+        <p><span class="fix">Fix:</span> Green circle tap karo → A/B/C/D button tap karo → Circle pe answer blue mein dikhega. Agar _ hai toh answer select nahi hua.</p>
+      </div>
+
+      <div class="trouble-card">
+        <h4>❌ Panel khul nahi raha</h4>
+        <p><span class="fix">Fix:</span> Page refresh karo. Extension disable-enable karo. Kiwi Browser restart karo.</p>
+      </div>
+
+      <div class="trouble-card">
+        <h4>❌ Poll submit nahi ho raha</h4>
+        <p><span class="fix">Fix:</span> Auto Submit setting ON hona chahiye. Poll active hona chahiye (already answered nahi hona chahiye).</p>
+      </div>
+    </div>
+
+    <!-- Tips -->
+    <div class="section fade-in">
+      <h2 class="section-title"><span class="icon">💡</span> Pro Tips</h2>
+
+      <div class="step-card">
+        <h3>🎯 Answer Pehle Select Karo</h3>
+        <p>Poll aane se PEHLE answer select karo. Jab poll aayega, turant answer ho jayega. Teacher question puche → answer select karo → poll ka wait karo.</p>
+      </div>
+
+      <div class="step-card">
+        <h3>🔄 Answer Change Kar Sakte Ho</h3>
+        <p>Agar galat answer select ho gaya, toh circle tap karo → naya answer select karo. Purana answer replace ho jayega.</p>
+      </div>
+
+      <div class="step-card">
+        <h3>🖐️ Circle Drag Karo</h3>
+        <p>Green circle ko long press karke kahin bhi drag kar sakte ho. Corner mein rakh do toh video block nahi hoga.</p>
+      </div>
+
+      <div class="step-card">
+        <h3>⏱️ 17 Second Timeout</h3>
+        <p>Panel 17 seconds mein automatically close hota hai. Agar galti se tap ho gaya, toh wait karo ya <code>_</code> tap karo.</p>
+      </div>
+
+      <div class="step-card">
+        <h3>🧠 Human Delay ON Rakho</h3>
+        <p>Human-like delay ON rakhna zaroori hai. Instant answer suspicious lagta hai. 500-1500ms delay natural lagta hai.</p>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="section fade-in">
+      <h2 class="section-title"><span class="icon">❓</span> FAQ</h2>
+
+      <div class="step-card">
+        <h3>Kya ye safe hai?</h3>
+        <p>Haan, human-like delay ON rakhne pe safe hai. 500-1500ms delay natural lagta hai. Bahut fast answer suspicious hota hai.</p>
+      </div>
+
+      <div class="step-card">
+        <h3>Kya Chrome mobile pe kaam karega?</h3>
+        <p>Nahi, normal Chrome mobile pe extensions kaam nahi karte. <strong>Kiwi Browser</strong> use karo — ye Chrome extensions support karta hai.</p>
+      </div>
+
+      <div class="step-card">
+        <h3>Kya iPhone pe kaam karega?</h3>
+        <p>Nahi, Safari iOS pe Chrome extensions kaam nahi karte. Sirf Android pe Kiwi Browser mein kaam karta hai.</p>
+      </div>
+
+      <div class="step-card">
+        <h3>Poll count kahan dikhega?</h3>
+        <p>Popup menu ke Stats section mein. Green circle pe badge nahi hai — clean design ke liye. Dashboard mein bhi dekh sakte ho.</p>
+      </div>
+
+      <div class="step-card">
+        <h3>Kya exam mein use kar sakte hain?</h3>
+        <p>⚠️ <strong>Nahi!</strong> Exams mein proctoring ho sakti hai. Sirf practice polls ke liye use karo. Graded assessments mein risk hai.</p>
+      </div>
+
+      <div class="step-card">
+        <h3>Extension uninstall kaise karein?</h3>
+        <p>Kiwi Browser → ⋮ → Extensions → PW Poll Sniper Mobile → Remove → Confirm.</p>
+      </div>
+    </div>
+
+    <!-- Quick Reference -->
+    <div class="section fade-in">
+      <h2 class="section-title"><span class="icon">📝</span> Quick Reference</h2>
+
+      <div class="step-card" style="background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(59,130,246,0.1)); border-color: var(--green);">
+        <h3 style="font-size: 20px;">🚀 Quick Start (30 Seconds)</h3>
+        <br>
+        <p style="font-size: 16px; line-height: 2;">
+          <span class="arrow">1.</span> Kiwi Browser install karo<br>
+          <span class="arrow">2.</span> Extension download + extract karo<br>
+          <span class="arrow">3.</span> Extensions → Developer mode ON → Load folder<br>
+          <span class="arrow">4.</span> PW lecture kholo<br>
+          <span class="arrow">5.</span> Extension ON karo (popup toggle)<br>
+          <span class="arrow">6.</span> Green circle tap karo<br>
+          <span class="arrow">7.</span> A/B/C/D select karo<br>
+          <span class="arrow">8.</span> Poll ka wait karo → Auto-answer! ✅
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p>⚡ PW Poll Sniper Mobile v5.4.4</p>
+    <p style="margin-top: 8px;">Stable & Bug-Free • Works on LIVE + RECORDED</p>
+    <p style="margin-top: 8px; font-size: 12px; color: #64748b;">Made for Physics Wallah students • Use responsibly</p>
+  </div>
+
+  <script>
+    // FAB Demo Interaction
+    let isExpanded = false;
+    let selectedAnswer = '_';
+
+    function toggleFab() {
+      const fab = document.getElementById('fabDemo');
+      const expanded = document.getElementById('expandedDemo');
+
+      if (!isExpanded) {
+        fab.style.display = 'none';
+        expanded.style.display = 'block';
+        isExpanded = true;
+        updateButtonStates();
+      }
+    }
+
+    function selectAnswer(letter) {
+      selectedAnswer = letter;
+      const fab = document.getElementById('fabDemo');
+      const fabText = document.getElementById('fabText');
+      const expanded = document.getElementById('expandedDemo');
+
+      fabText.textContent = letter === '_' ? '_' : letter;
+      fabText.style.color = letter === '_' ? '#94a3b8' : '#3b82f6';
+
+      // Collapse after 300ms
+      setTimeout(() => {
+        expanded.style.display = 'none';
+        fab.style.display = 'flex';
+        isExpanded = false;
+      }, 300);
+    }
+
+    function updateButtonStates() {
+      const buttons = document.querySelectorAll('.expanded-demo .btn');
+      buttons.forEach(btn => {
+        btn.classList.remove('selected', 'blank-active');
+        if (btn.textContent === selectedAnswer && selectedAnswer !== '_') {
+          btn.classList.add('selected');
+        }
+        if (btn.id === 'blankBtn' && selectedAnswer === '_') {
+          btn.classList.add('blank-active');
+        }
+      });
+    }
+
+    // Click outside to collapse
+    document.addEventListener('click', (e) => {
+      if (isExpanded && !e.target.closest('.phone-frame')) {
+        const fab = document.getElementById('fabDemo');
+        const expanded = document.getElementById('expandedDemo');
+        expanded.style.display = 'none';
+        fab.style.display = 'flex';
+        isExpanded = false;
+      }
+    });
+
+    // Tab switching
+    function showTab(tab) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById('tab-' + tab).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    // Scroll animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // Download button animation
+    document.getElementById('downloadBtn').addEventListener('click', function() {
+      this.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        this.style.transform = '';
+      }, 200);
+    });
+  </script>
+
+</body>
+</html>
