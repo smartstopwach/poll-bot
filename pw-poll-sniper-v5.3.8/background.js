@@ -1,4 +1,4 @@
-// background.js - v4.9.0 Service Worker (Fixed message handling)
+// background.js - v5.3.8 Service Worker (FIX #13: Badge persists, FIX #14: Version updated)
 
 // Listen for messages from content script
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
@@ -14,9 +14,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   }
 });
 
-// Reset badge when navigating to PW site
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.status === 'complete' && tab.url && tab.url.includes('pw.live')) {
-    chrome.action.setBadgeText({ text: '' });
-  }
+// FIX #13: Don't reset badge on navigation - keep poll count visible
+// Only reset badge when extension is first installed or updated
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.action.setBadgeText({ text: '' });
 });
