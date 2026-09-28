@@ -169,7 +169,9 @@
           const urlChangeCheck = setInterval(() => {
             if (window.location.href !== lastURL) {
               lastURL = window.location.href;
-              // URL changed! Re-evaluate lecture page status immediately
+              // URL changed! Reset flags and re-evaluate lecture page status
+              panelOpening = false;
+              pollIconClickedAt = 0;
               updateUI();
             }
           }, 500);
@@ -671,63 +673,6 @@
     updateUI();
   }
 
-  // ============================================
-  // TOUCH DRAG FUNCTIONALITY FOR FAB
-  // ============================================
-  function setupFABDrag(fab) {
-    let isDragging = false;
-    let startX, startY, initialX, initialY;
-    
-    fab.addEventListener('touchstart', (e) => {
-      isDragging = false;
-      fabWasDragged = false; // Reset drag flag
-      const touch = e.touches[0];
-      startX = touch.clientX;
-      startY = touch.clientY;
-      const rect = statusPanel.getBoundingClientRect();
-      initialX = rect.left;
-      initialY = rect.top;
-    });
-    
-    fab.addEventListener('touchmove', (e) => {
-      if (!startX || !startY) return;
-      
-      const touch = e.touches[0];
-      const deltaX = touch.clientX - startX;
-      const deltaY = touch.clientY - startY;
-      
-      // Only start dragging if moved more than 10px
-      if (Math.abs(deltaX) > 10 || Math.abs(deltaY) > 10) {
-        isDragging = true;
-        fabWasDragged = true; // Mark as dragged
-        e.preventDefault();
-        
-        const newX = Math.max(0, Math.min(window.innerWidth - 56, initialX + deltaX));
-        const newY = Math.max(0, Math.min(window.innerHeight - 56, initialY + deltaY));
-        
-        statusPanel.style.left = newX + 'px';
-        statusPanel.style.top = newY + 'px';
-        statusPanel.style.right = 'auto';
-        statusPanel.style.bottom = 'auto';
-      }
-    });
-    
-    fab.addEventListener('touchend', (e) => {
-      if (isDragging) {
-        e.preventDefault();
-        e.stopPropagation();
-        // FIX #15: Save FAB position to storage
-        fabPosition = {
-          left: statusPanel.style.left,
-          top: statusPanel.style.top
-        };
-        saveToStorage('fabPosition', fabPosition);
-      }
-      isDragging = false;
-      startX = null;
-      startY = null;
-    });
-  }
 
   // ============================================
   // POLL DETECTION
