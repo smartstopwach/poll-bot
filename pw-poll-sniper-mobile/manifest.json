@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "PW Poll Sniper Mobile",
-  "version": "5.4.5",
-  "description": "Auto-answer Physics Wallah polls on mobile (Kiwi Browser). 9 bugs fixed, stable, works on LIVE + RECORDED. Smart FAB with 5 buttons, 17s timeout.",
+  "version": "5.4.6",
+  "description": "Auto-answer Physics Wallah polls on mobile (Kiwi Browser). All critical bugs fixed, battery optimized, memory leak free. Smart FAB with 5 buttons, 17s timeout.",
   "permissions": ["storage"],
   "host_permissions": [
     "https://www.pw.live/*",

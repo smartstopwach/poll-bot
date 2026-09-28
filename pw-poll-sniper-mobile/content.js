@@ -1,5 +1,5 @@
-// content.js - PW Poll Sniper Mobile v5.4.5 (Touch-Friendly for Kiwi Browser)
-// 15 BUGS FIXED | Works on LIVE + RECORDED | Race condition fix | First poll fix | Mobile touch optimized
+// content.js - PW Poll Sniper Mobile v5.4.6 (Touch-Friendly for Kiwi Browser)
+// ALL CRITICAL BUGS FIXED | Battery optimization | Memory leak fixes | Position validation | Touch ID fix
 
 (function () {
   'use strict';
@@ -58,6 +58,8 @@
   let collapseTimeout = null; // FIX #9: Store 300ms collapse timeout
   let processingSafetyTimer = null; // FIX #3: Safety timeout for isProcessing
   let fabPosition = null; // FIX #15: Store FAB position
+  let fabWasDragged = false; // FIX #17: Moved to top with other state variables
+  let touchIdCounter = 0; // FIX #36: Use counter instead of Date.now() for touch IDs
 
   // UI elements
   let statusPanel = null;
@@ -72,7 +74,9 @@
   }
 
   function savePollHistory() {
-    saveToStorage('pollHistory', pollHistory.slice(-50));
+    // FIX #18: Trim in-memory array too (prevent unbounded growth)
+    pollHistory = pollHistory.slice(-50);
+    saveToStorage('pollHistory', pollHistory);
   }
 
   function saveErrorLog() {
@@ -122,13 +126,16 @@
           pollHistory = result.pollHistory || [];
           errorLog = result.errorLog || [];
           pollCount = result.pollCount || 0;
-          pollDelay = (result.pollDelay !== undefined && result.pollDelay !== null) ? result.pollDelay : PW.POLL_DELAY;
-          submitDelay = (result.submitDelay !== undefined && result.submitDelay !== null) ? result.submitDelay : PW.SUBMIT_DELAY;
-          humanDelayMin = (result.humanDelayMin !== undefined && result.humanDelayMin !== null) ? result.humanDelayMin : PW.HUMAN_DELAY_MIN;
-          humanDelayMax = (result.humanDelayMax !== undefined && result.humanDelayMax !== null) ? result.humanDelayMax : PW.HUMAN_DELAY_MAX;
+          // FIX #35: Validate all storage values to prevent corrupted data
+          pollDelay = (result.pollDelay !== undefined && result.pollDelay !== null) ? Math.max(0, parseInt(result.pollDelay) || PW.POLL_DELAY) : PW.POLL_DELAY;
+          submitDelay = (result.submitDelay !== undefined && result.submitDelay !== null) ? Math.max(0, parseInt(result.submitDelay) || PW.SUBMIT_DELAY) : PW.SUBMIT_DELAY;
+          humanDelayMin = (result.humanDelayMin !== undefined && result.humanDelayMin !== null) ? Math.max(0, parseInt(result.humanDelayMin) || PW.HUMAN_DELAY_MIN) : PW.HUMAN_DELAY_MIN;
+          humanDelayMax = (result.humanDelayMax !== undefined && result.humanDelayMax !== null) ? Math.max(humanDelayMin, parseInt(result.humanDelayMax) || PW.HUMAN_DELAY_MAX) : PW.HUMAN_DELAY_MAX;
+          pollCount = Math.max(0, parseInt(result.pollCount) || 0); // FIX #35: Validate pollCount
           useHumanDelay = result.useHumanDelay !== false;
           extensionActive = result.extensionActive !== false; // Default to true if not set
-          pollDetectionInterval = (result.pollDetectionInterval !== undefined && result.pollDetectionInterval !== null) ? result.pollDetectionInterval : PW.POLL_INTERVAL;
+          // FIX #35: Validate pollDetectionInterval (minimum 50ms to prevent CPU overload)
+          pollDetectionInterval = (result.pollDetectionInterval !== undefined && result.pollDetectionInterval !== null) ? Math.max(50, parseInt(result.pollDetectionInterval) || PW.POLL_INTERVAL) : PW.POLL_INTERVAL;
           fabPosition = result.fabPosition || null; // FIX #15: Load FAB position
           
           updateUI();
@@ -136,6 +143,33 @@
           // FIX #1: Use pollDetectionInterval variable instead of constant
           if (checkInterval) clearInterval(checkInterval);
           checkInterval = setInterval(checkForPoll, pollDetectionInterval);
+          
+          // FIX #19-20: Clean up all timers on page unload to prevent memory leaks
+          window.addEventListener('beforeunload', () => {
+            if (checkInterval) clearInterval(checkInterval);
+            if (expandTimeout) clearTimeout(expandTimeout);
+            if (collapseTimeout) clearTimeout(collapseTimeout);
+            if (processingSafetyTimer) clearTimeout(processingSafetyTimer);
+            if (resizeTimer) clearTimeout(resizeTimer);
+          });
+          
+          // FIX #23: Re-validate FAB position on orientation/resize changes
+          let resizeTimer = null;
+          window.addEventListener('resize', () => {
+            if (resizeTimer) clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+              if (statusPanel && fabPosition) {
+                const maxLeft = window.innerWidth - 70;
+                const maxTop = window.innerHeight - 70;
+                const left = parseInt(fabPosition.left) || 0;
+                const top = parseInt(fabPosition.top) || 0;
+                const newLeft = Math.max(0, Math.min(maxLeft, left));
+                const newTop = Math.max(0, Math.min(maxTop, top));
+                statusPanel.style.left = newLeft + 'px';
+                statusPanel.style.top = newTop + 'px';
+              }
+            }, 200);
+          });
         }
       );
 
@@ -155,6 +189,18 @@
         if (changes.autoOpen !== undefined) autoOpen = changes.autoOpen.newValue;
         if (changes.extensionActive !== undefined) {
           extensionActive = changes.extensionActive.newValue;
+          // FIX #31-32: Clear polling interval when disabled to save battery
+          if (!extensionActive) {
+            if (checkInterval) {
+              clearInterval(checkInterval);
+              checkInterval = null;
+            }
+          } else {
+            // Re-enable polling when extension is activated
+            if (!checkInterval) {
+              checkInterval = setInterval(checkForPoll, pollDetectionInterval);
+            }
+          }
           updateUI();
         }
         if (changes.pollDelay !== undefined) pollDelay = changes.pollDelay.newValue;
@@ -212,7 +258,6 @@
     
     try {
       const answer = selectedOption || '_';
-      const pollCountDisplay = pollCount > 0 ? pollCount : '';
       
       // Green circle color
       let mainColor = '#10b981'; // Green (active)
@@ -379,8 +424,14 @@
           
           // FIX #15: Apply saved FAB position
           if (fabPosition) {
-            statusPanel.style.left = fabPosition.left;
-            statusPanel.style.top = fabPosition.top;
+            // FIX #22: Validate position is within current viewport bounds
+            const maxLeft = window.innerWidth - 70;
+            const maxTop = window.innerHeight - 70;
+            const left = parseInt(fabPosition.left) || 0;
+            const top = parseInt(fabPosition.top) || 0;
+            
+            statusPanel.style.left = Math.max(0, Math.min(maxLeft, left)) + 'px';
+            statusPanel.style.top = Math.max(0, Math.min(maxTop, top)) + 'px';
             statusPanel.style.right = 'auto';
             statusPanel.style.bottom = 'auto';
           }
@@ -456,9 +507,6 @@
   // ============================================
   // TOUCH DRAG FUNCTIONALITY FOR FAB
   // ============================================
-  // FIX #8: Prevent click after drag by using a flag
-  let fabWasDragged = false;
-  
   function setupFABDrag(fab) {
     let isDragging = false;
     let startX, startY, initialX, initialY;
@@ -1040,7 +1088,7 @@
       
       // FIX #10: Wrap Touch constructor in try-catch for older browsers
       try {
-        const touch = new Touch({ identifier: Date.now(), target: el, clientX: el.getBoundingClientRect().left + 10, clientY: el.getBoundingClientRect().top + 10 });
+        const touch = new Touch({ identifier: ++touchIdCounter, target: el, clientX: el.getBoundingClientRect().left + 10, clientY: el.getBoundingClientRect().top + 10 });
         el.dispatchEvent(new TouchEvent('touchstart', { bubbles: true, cancelable: true, touches: [touch], targetTouches: [touch] }));
         el.dispatchEvent(new TouchEvent('touchend', { bubbles: true, cancelable: true, changedTouches: [touch] }));
       } catch(te) {
@@ -1081,7 +1129,7 @@
       try {
         const rect = el.getBoundingClientRect();
         const touch = new Touch({ 
-          identifier: Date.now(), 
+          identifier: ++touchIdCounter, 
           target: el, 
           clientX: rect.left + rect.width / 2, 
           clientY: rect.top + rect.height / 2 
@@ -1201,19 +1249,21 @@
 
         case 'SET_TIMING':
           if (msg.pollDelay !== undefined) {
-            pollDelay = msg.pollDelay;
+            pollDelay = Math.max(0, parseInt(msg.pollDelay) || PW.POLL_DELAY);
             saveToStorage('pollDelay', pollDelay);
           }
           if (msg.submitDelay !== undefined) {
-            submitDelay = msg.submitDelay;
+            submitDelay = Math.max(0, parseInt(msg.submitDelay) || PW.SUBMIT_DELAY);
             saveToStorage('submitDelay', submitDelay);
           }
           if (msg.humanDelayMin !== undefined) {
-            humanDelayMin = msg.humanDelayMin;
+            // FIX #27: Validate humanDelayMin is non-negative
+            humanDelayMin = Math.max(0, parseInt(msg.humanDelayMin) || PW.HUMAN_DELAY_MIN);
             saveToStorage('humanDelayMin', humanDelayMin);
           }
           if (msg.humanDelayMax !== undefined) {
-            humanDelayMax = msg.humanDelayMax;
+            // FIX #27: Validate humanDelayMax >= humanDelayMin
+            humanDelayMax = Math.max(humanDelayMin, parseInt(msg.humanDelayMax) || PW.HUMAN_DELAY_MAX);
             saveToStorage('humanDelayMax', humanDelayMax);
           }
           if (msg.useHumanDelay !== undefined) {
