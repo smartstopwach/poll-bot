@@ -283,17 +283,9 @@
   }
 
   function updateUI() {
-    // Check if we're on a lecture page (has video player or lecture URL)
-    const hasVideo = document.querySelector('video, .video-js, .vjs-tech') !== null;
-    const isLectureURL = /\/(batch|study|subject|lecture|class)\//i.test(window.location.href);
-    const isLecturePage = hasVideo || isLectureURL;
-    
-    // FIX: Always show FAB on lecture pages (even when inactive) so user can toggle back ON
-    if (statusPanel) {
-      statusPanel.style.display = isLecturePage ? 'block' : 'none';
-    }
-    
-    if (!statusPanel || !isLecturePage) return;
+    // FIX: Don't check isLecturePage here — only in checkForPoll interval
+    // This prevents the orb from disappearing when React temporarily removes video element
+    if (!statusPanel) return;
     
     try {
       const answer = selectedOption || '_';
