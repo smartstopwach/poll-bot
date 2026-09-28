@@ -775,7 +775,8 @@
 
         isProcessing = true;
         lastPollTime = Date.now();
-        lastAnsweredPollHash = pollHash;
+        // FIX #E: Don't set hash here — set it AFTER successful answer
+        // This allows retry if submit fails
         
         // FIX #3: Safety timeout - force reset isProcessing after 15 seconds
         if (processingSafetyTimer) clearTimeout(processingSafetyTimer);
@@ -921,10 +922,9 @@
   }
 
   function getCurrentAnswer() {
+    // FIX #G: Don't consume nextPollAnswer here — consume only after success
     if (nextPollAnswer) {
-      const answer = nextPollAnswer;
-      nextPollAnswer = null;
-      return answer;
+      return nextPollAnswer;
     }
     return selectedOption ? selectedOption.toUpperCase() : null;
   }
@@ -1008,6 +1008,20 @@
               option.radio.dispatchEvent(new Event('change', { bubbles: true }));
               option.radio.dispatchEvent(new Event('input', { bubbles: true }));
             }
+            
+            // FIX #D: Verify click registered — retry once if not selected
+            const isNowSelected = option.button.classList.contains('bg-blue') || 
+                                  option.button.getAttribute('aria-checked') === 'true' ||
+                                  (option.radio && option.radio.checked) ||
+                                  option.button.querySelector('input[type="radio"]:checked');
+            if (!isNowSelected) {
+              // Retry click with native method
+              dispatchClick(option.button);
+              if (option.radio) {
+                option.radio.checked = true;
+                option.radio.dispatchEvent(new Event('change', { bubbles: true }));
+              }
+            }
 
             if (autoSubmit) {
               if (pollAnswerTimer3) clearTimeout(pollAnswerTimer3);
@@ -1046,6 +1060,9 @@
                     });
                     
                     showNotification(`✓ #${pollCount} ${time}ms`, '#10b981'); // FIX #12: Add notification
+                    
+                    // FIX #E: Set hash only AFTER successful answer
+                    lastAnsweredPollHash = generatePollHash(options);
                     
                     // Reset answer to blank after successful poll
                     selectedOption = null;
