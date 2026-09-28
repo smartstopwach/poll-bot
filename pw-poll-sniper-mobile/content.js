@@ -1,5 +1,5 @@
-// content.js - PW Poll Sniper Mobile v5.4.7 (Touch-Friendly for Kiwi Browser)
-// ALL BUGS FIXED | 30+ bugs squashed | Battery optimized | Memory leak free | Zero double-clicks
+// content.js - PW Poll Sniper Mobile v5.4.8 (Touch-Friendly for Kiwi Browser)
+// ALL BUGS FIXED + KIWI SPA FIX | Green dot now appears on lecture pages | URL-based detection | SPA navigation support
 
 (function () {
   'use strict';
@@ -159,6 +159,22 @@
             if (pollAnswerTimer1) clearTimeout(pollAnswerTimer1);
             if (pollAnswerTimer2) clearTimeout(pollAnswerTimer2);
             if (pollAnswerTimer3) clearTimeout(pollAnswerTimer3);
+            if (urlChangeCheck) clearInterval(urlChangeCheck);
+          });
+          
+          // FIX: Detect SPA navigation (URL changes without page reload)
+          let lastURL = window.location.href;
+          const urlChangeCheck = setInterval(() => {
+            if (window.location.href !== lastURL) {
+              lastURL = window.location.href;
+              // URL changed! Re-evaluate lecture page status immediately
+              updateUI();
+            }
+          }, 500);
+          
+          // Also listen for popstate (back/forward navigation)
+          window.addEventListener('popstate', () => {
+            setTimeout(updateUI, 100); // Small delay for DOM to update
           });
           
           // FIX #23: Re-validate FAB position on orientation/resize changes
@@ -234,6 +250,17 @@
   // ============================================
   function createStatusPanel() {
     try {
+      // FIX: Retry if document.body is not ready (Kiwi Browser SPA issue)
+      if (!document.body) {
+        console.log('[PW Sniper Mobile] document.body not ready, retrying in 500ms...');
+        setTimeout(createStatusPanel, 500);
+        return;
+      }
+      
+      // Remove existing panel if any
+      const existing = document.getElementById('pw-sniper-panel');
+      if (existing) existing.remove();
+      
       statusPanel = document.createElement('div');
       statusPanel.id = 'pw-sniper-panel';
       statusPanel.style.cssText = `
@@ -250,12 +277,16 @@
       updateUI();
     } catch (e) {
       console.error('[PW Sniper Mobile] Panel creation error:', e);
+      // Retry once after 1 second on error
+      setTimeout(createStatusPanel, 1000);
     }
   }
 
   function updateUI() {
-    // Check if we're on a lecture page (has video player)
-    const isLecturePage = document.querySelector('video, .video-js, .vjs-tech') !== null;
+    // Check if we're on a lecture page (has video player or lecture URL)
+    const hasVideo = document.querySelector('video, .video-js, .vjs-tech') !== null;
+    const isLectureURL = /\/(batch|study|subject|lecture|class)\//i.test(window.location.href);
+    const isLecturePage = hasVideo || isLectureURL;
     
     // FIX #16: Check if statusPanel exists before accessing it
     if (statusPanel) {
@@ -574,6 +605,17 @@
   // POLL DETECTION
   // ============================================
   function checkForPoll() {
+    // FIX: Always re-check if we're on a lecture page (SPA navigation in Kiwi Browser)
+    // Check 1: Video element exists
+    // Check 2: URL matches lecture patterns (fallback for slow-loading pages)
+    const hasVideo = document.querySelector('video, .video-js, .vjs-tech') !== null;
+    const isLectureURL = /\/(batch|study|subject|lecture|class)\//i.test(window.location.href);
+    const isLecturePage = hasVideo || isLectureURL;
+    
+    if (statusPanel) {
+      statusPanel.style.display = (isLecturePage && extensionActive) ? 'block' : 'none';
+    }
+    
     if (!extensionActive || isProcessing || isCheckRunning) return;
     isCheckRunning = true;
 
