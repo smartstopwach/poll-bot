@@ -954,6 +954,9 @@
       updateUI();
       showNotification(`⏳ ${target}...`, '#fbbf24'); // FIX #12: Add notification
 
+      // FIX: Set startTime HERE — before any delays — for accurate total time
+      const startTime = performance.now();
+
       // Calculate human-like delay if enabled
       let humanDelay = 0;
       if (useHumanDelay) {
@@ -969,7 +972,6 @@
         pollAnswerTimer2 = setTimeout(() => {
           pollAnswerTimer2 = null;
           try {
-            const startTime = performance.now();
             showNotification(`🎯 ${target}...`, '#3b82f6'); // FIX #12: Add notification
 
             let clickMethod = 'DOM';
@@ -1015,7 +1017,7 @@
                       dispatchClick(submitBtn);
                     }
 
-                    const time = Math.round(performance.now() - startTime + pollDelay + humanDelay);
+                    const time = Math.round(performance.now() - startTime);
 
                     // FIX #6: Increment pollCount ONLY on success
                     pollCount++;
@@ -1046,7 +1048,7 @@
                     nextPollAnswer = null;
                     saveToStorage('selectedOption', null);
                   } else {
-                    const time = Math.round(performance.now() - startTime + pollDelay + humanDelay);
+                    const time = Math.round(performance.now() - startTime);
                     addError(`Poll #${pollCount}: Submit button not found`);
                     addPollResult({
                       poll: pollCount,
