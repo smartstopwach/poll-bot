@@ -1,5 +1,5 @@
-// content.js - PW Poll Sniper Mobile v5.4.4 (Touch-Friendly for Kiwi Browser)
-// STABLE: All bugs fixed | Works on LIVE + RECORDED | Race condition fix | First poll fix | Mobile touch optimized
+// content.js - PW Poll Sniper Mobile v5.4.5 (Touch-Friendly for Kiwi Browser)
+// 15 BUGS FIXED | Works on LIVE + RECORDED | Race condition fix | First poll fix | Mobile touch optimized
 
 (function () {
   'use strict';
@@ -51,10 +51,13 @@
   let humanDelayMin = PW.HUMAN_DELAY_MIN;
   let humanDelayMax = PW.HUMAN_DELAY_MAX;
   let useHumanDelay = true;
+  let pollDetectionInterval = PW.POLL_INTERVAL; // FIX #1: Configurable detection interval
   let panelOpening = false; // Prevent double-clicking poll icon
   let isExpanded = false; // Track if overlay is expanded
   let expandTimeout = null; // Auto-collapse timeout (17 seconds)
+  let collapseTimeout = null; // FIX #9: Store 300ms collapse timeout
   let processingSafetyTimer = null; // FIX #3: Safety timeout for isProcessing
+  let fabPosition = null; // FIX #15: Store FAB position
 
   // UI elements
   let statusPanel = null;
@@ -110,7 +113,7 @@
 
       // Load settings from storage FIRST, then start polling
       chrome.storage.local.get(
-        ['autoSubmit', 'autoOpen', 'pollHistory', 'errorLog', 'pollCount', 'pollDelay', 'submitDelay', 'humanDelayMin', 'humanDelayMax', 'useHumanDelay', 'extensionActive'],
+        ['autoSubmit', 'autoOpen', 'pollHistory', 'errorLog', 'pollCount', 'pollDelay', 'submitDelay', 'humanDelayMin', 'humanDelayMax', 'useHumanDelay', 'extensionActive', 'pollDetectionInterval', 'fabPosition'],
         (result) => {
           selectedOption = null; // Always start blank - NO DEFAULT
           nextPollAnswer = null;
@@ -125,12 +128,14 @@
           humanDelayMax = (result.humanDelayMax !== undefined && result.humanDelayMax !== null) ? result.humanDelayMax : PW.HUMAN_DELAY_MAX;
           useHumanDelay = result.useHumanDelay !== false;
           extensionActive = result.extensionActive !== false; // Default to true if not set
+          pollDetectionInterval = (result.pollDetectionInterval !== undefined && result.pollDetectionInterval !== null) ? result.pollDetectionInterval : PW.POLL_INTERVAL;
+          fabPosition = result.fabPosition || null; // FIX #15: Load FAB position
           
           updateUI();
           
-          // NOW start polling (after storage is loaded)
+          // FIX #1: Use pollDetectionInterval variable instead of constant
           if (checkInterval) clearInterval(checkInterval);
-          checkInterval = setInterval(checkForPoll, PW.POLL_INTERVAL);
+          checkInterval = setInterval(checkForPoll, pollDetectionInterval);
         }
       );
 
@@ -157,6 +162,12 @@
         if (changes.humanDelayMin !== undefined) humanDelayMin = changes.humanDelayMin.newValue;
         if (changes.humanDelayMax !== undefined) humanDelayMax = changes.humanDelayMax.newValue;
         if (changes.useHumanDelay !== undefined) useHumanDelay = changes.useHumanDelay.newValue;
+        // FIX #2: Add pollDetectionInterval listener
+        if (changes.pollDetectionInterval !== undefined) {
+          pollDetectionInterval = changes.pollDetectionInterval.newValue;
+          if (checkInterval) clearInterval(checkInterval);
+          checkInterval = setInterval(checkForPoll, pollDetectionInterval);
+        }
       });
 
     } catch (e) {
@@ -192,7 +203,7 @@
     // Check if we're on a lecture page (has video player)
     const isLecturePage = document.querySelector('video, .video-js, .vjs-tech') !== null;
     
-    // Show panel only if: lecture page AND extension is active
+    // FIX #16: Check if statusPanel exists before accessing it
     if (statusPanel) {
       statusPanel.style.display = (isLecturePage && extensionActive) ? 'block' : 'none';
     }
@@ -244,7 +255,9 @@
               clearTimeout(expandTimeout);
               expandTimeout = null;
             }
-            setTimeout(() => {
+            // FIX #9: Store collapse timeout to prevent memory leak
+            if (collapseTimeout) clearTimeout(collapseTimeout);
+            collapseTimeout = setTimeout(() => {
               isExpanded = false;
               updateUI();
             }, 300);
@@ -259,7 +272,8 @@
               clearTimeout(expandTimeout);
               expandTimeout = null;
             }
-            setTimeout(() => {
+            if (collapseTimeout) clearTimeout(collapseTimeout);
+            collapseTimeout = setTimeout(() => {
               isExpanded = false;
               updateUI();
             }, 300);
@@ -274,7 +288,8 @@
               clearTimeout(expandTimeout);
               expandTimeout = null;
             }
-            setTimeout(() => {
+            if (collapseTimeout) clearTimeout(collapseTimeout);
+            collapseTimeout = setTimeout(() => {
               isExpanded = false;
               updateUI();
             }, 300);
@@ -289,7 +304,8 @@
               clearTimeout(expandTimeout);
               expandTimeout = null;
             }
-            setTimeout(() => {
+            if (collapseTimeout) clearTimeout(collapseTimeout);
+            collapseTimeout = setTimeout(() => {
               isExpanded = false;
               updateUI();
             }, 300);
@@ -307,7 +323,8 @@
               clearTimeout(expandTimeout);
               expandTimeout = null;
             }
-            setTimeout(() => {
+            if (collapseTimeout) clearTimeout(collapseTimeout);
+            collapseTimeout = setTimeout(() => {
               isExpanded = false;
               updateUI();
             }, 300);
@@ -341,6 +358,11 @@
         if (fab) {
           fab.addEventListener('click', (e) => {
             e.stopPropagation();
+            // FIX #8: Don't expand if user just dragged
+            if (fabWasDragged) {
+              fabWasDragged = false;
+              return;
+            }
             isExpanded = true;
             updateUI();
             
@@ -354,11 +376,74 @@
           
           // Add drag functionality
           setupFABDrag(fab);
+          
+          // FIX #15: Apply saved FAB position
+          if (fabPosition) {
+            statusPanel.style.left = fabPosition.left;
+            statusPanel.style.top = fabPosition.top;
+            statusPanel.style.right = 'auto';
+            statusPanel.style.bottom = 'auto';
+          }
         }
       }
     } catch (e) {
       console.error('[PW Sniper Mobile] updateUI error:', e);
     }
+  }
+
+  // ============================================
+  // NOTIFICATION SYSTEM (FIX #12)
+  // ============================================
+  let activeNotification = null;
+  
+  function showNotification(text, color = '#4ade80') {
+    if (!statusPanel || statusPanel.style.display === 'none') return;
+    
+    try {
+      // Remove existing notification
+      if (activeNotification && activeNotification.parentNode) {
+        activeNotification.remove();
+        activeNotification = null;
+      }
+      
+      const notif = document.createElement('div');
+      notif.style.cssText = `
+        position: absolute;
+        top: -40px;
+        left: 0;
+        right: 0;
+        background: ${color};
+        color: white;
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        text-align: center;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.3s ease;
+        pointer-events: none;
+        white-space: nowrap;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      `;
+      notif.textContent = text;
+      statusPanel.appendChild(notif);
+      activeNotification = notif;
+      
+      setTimeout(() => {
+        notif.style.opacity = '1';
+        notif.style.transform = 'translateY(0)';
+      }, 10);
+      
+      setTimeout(() => {
+        notif.style.opacity = '0';
+        notif.style.transform = 'translateY(-10px)';
+        setTimeout(() => {
+          if (notif.parentNode) notif.remove();
+          if (activeNotification === notif) activeNotification = null;
+        }, 300);
+      }, PW.NOTIFICATION_DURATION);
+    } catch (e) {}
   }
 
   function handleLetterPress(letter) {
@@ -368,21 +453,19 @@
     updateUI();
   }
 
-  function handlePToggle() {
-    extensionActive = !extensionActive;
-    saveToStorage('extensionActive', extensionActive);
-    updateUI();
-  }
-
   // ============================================
   // TOUCH DRAG FUNCTIONALITY FOR FAB
   // ============================================
+  // FIX #8: Prevent click after drag by using a flag
+  let fabWasDragged = false;
+  
   function setupFABDrag(fab) {
     let isDragging = false;
     let startX, startY, initialX, initialY;
     
     fab.addEventListener('touchstart', (e) => {
       isDragging = false;
+      fabWasDragged = false; // Reset drag flag
       const touch = e.touches[0];
       startX = touch.clientX;
       startY = touch.clientY;
@@ -401,6 +484,7 @@
       // Only start dragging if moved more than 10px
       if (Math.abs(deltaX) > 10 || Math.abs(deltaY) > 10) {
         isDragging = true;
+        fabWasDragged = true; // Mark as dragged
         e.preventDefault();
         
         const newX = Math.max(0, Math.min(window.innerWidth - 56, initialX + deltaX));
@@ -417,6 +501,12 @@
       if (isDragging) {
         e.preventDefault();
         e.stopPropagation();
+        // FIX #15: Save FAB position to storage
+        fabPosition = {
+          left: statusPanel.style.left,
+          top: statusPanel.style.top
+        };
+        saveToStorage('fabPosition', fabPosition);
       }
       isDragging = false;
       startX = null;
@@ -597,9 +687,9 @@
   }
 
   function generatePollHash(options) {
-    // FIX #2: Use pollCount + timestamp for unique hash (no collision)
+    // FIX #5: Use pollCount + 1 and timestamp for unique hash (no collision)
     const timeBucket = Math.floor(Date.now() / 3000); // 3-second window
-    return `poll_${pollCount}_${timeBucket}`;
+    return `poll_${pollCount + 1}_${timeBucket}`;
   }
 
   function getCurrentAnswer() {
@@ -612,11 +702,29 @@
   }
 
   // ============================================
-  // ANSWER POLL
+  // ANSWER POLL (FIX #14: Keep answer on failure for retry)
   // ============================================
   function answerPoll(options) {
     try {
       const target = getCurrentAnswer();
+      
+      // NEW BUG FIX: Check if target is null
+      if (!target) {
+        addError(`Poll #${pollCount}: No answer selected`);
+        addPollResult({
+          poll: pollCount,
+          answer: 'NONE',
+          status: 'FAILED',
+          reason: 'No answer selected',
+          time: '-'
+        });
+        showNotification('⚠ No answer selected', '#f59e0b'); // FIX #12: Add notification
+        isProcessing = false;
+        if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
+        updateUI();
+        return;
+      }
+      
       const option = options.find(o => o.letter === target);
 
       if (!option) {
@@ -628,6 +736,7 @@
           reason: 'Option not found',
           time: '-'
         });
+        showNotification(`✗ Option ${target} not found`, '#ef4444'); // FIX #12: Add notification
         selectedOption = null;
         nextPollAnswer = null;
         saveToStorage('selectedOption', null);
@@ -637,6 +746,7 @@
       }
 
       updateUI();
+      showNotification(`⏳ ${target}...`, '#fbbf24'); // FIX #12: Add notification
 
       // Calculate human-like delay if enabled
       let humanDelay = 0;
@@ -649,6 +759,7 @@
         setTimeout(() => {
           try {
             const startTime = performance.now();
+            showNotification(`🎯 ${target}...`, '#3b82f6'); // FIX #12: Add notification
 
             let clickMethod = 'DOM';
             const reactClicked = clickViaReact(option.button);
@@ -698,6 +809,8 @@
                       pollCount: pollCount
                     });
                     
+                    showNotification(`✓ #${pollCount} ${time}ms`, '#10b981'); // FIX #12: Add notification
+                    
                     // Reset answer to blank after successful poll
                     selectedOption = null;
                     nextPollAnswer = null;
@@ -712,9 +825,9 @@
                       reason: 'No submit button',
                       time: time + 'ms'
                     });
-                    selectedOption = null;
+                    showNotification(`⚠ #${pollCount} No submit`, '#f59e0b'); // FIX #12: Add notification
+                    // FIX #14: Keep selectedOption for retry (don't reset to null)
                     nextPollAnswer = null;
-                    saveToStorage('selectedOption', null);
                   }
                 } catch (e) {
                   addError(`Poll #${pollCount} submit: ${e.message}`);
@@ -725,9 +838,9 @@
                     reason: 'Submit error: ' + e.message,
                     time: '-'
                   });
-                  selectedOption = null;
+                  showNotification(`✗ #${pollCount} Error`, '#ef4444'); // FIX #12: Add notification
+                  // FIX #14: Keep selectedOption for retry (don't reset to null)
                   nextPollAnswer = null;
-                  saveToStorage('selectedOption', null);
                 } finally {
                   isProcessing = false;
                   if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
@@ -764,9 +877,9 @@
               reason: 'Answer error: ' + e.message,
               time: '-'
             });
-            selectedOption = null;
+            showNotification(`✗ #${pollCount} Error`, '#ef4444'); // FIX #12: Add notification
+            // FIX #14: Keep selectedOption for retry (don't reset to null)
             nextPollAnswer = null;
-            saveToStorage('selectedOption', null);
             isProcessing = false;
             if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
             updateUI();
@@ -775,9 +888,9 @@
       }, humanDelay);
     } catch (e) {
       addError(`Poll #${pollCount}: ${e.message}`);
-      selectedOption = null;
+      showNotification(`✗ Error`, '#ef4444'); // FIX #12: Add notification
+      // FIX #14: Keep selectedOption for retry (don't reset to null)
       nextPollAnswer = null;
-      saveToStorage('selectedOption', null);
       isProcessing = false;
       if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
       updateUI();
@@ -857,10 +970,10 @@
         if (clicked) {
           pollIconClickedAt = now;
           
-          // Reset flag after 2 seconds
+          // FIX #3: Use PW.PANEL_OPEN_TIMEOUT instead of hardcoded 2000
           setTimeout(() => {
             panelOpening = false;
-          }, 2000);
+          }, PW.PANEL_OPEN_TIMEOUT);
         } else {
           panelOpening = false;
         }
@@ -925,7 +1038,7 @@
     try {
       const opts = { bubbles: true, cancelable: true, view: window, button: 0 };
       
-      // Simulate touch events (mobile)
+      // FIX #10: Wrap Touch constructor in try-catch for older browsers
       try {
         const touch = new Touch({ identifier: Date.now(), target: el, clientX: el.getBoundingClientRect().left + 10, clientY: el.getBoundingClientRect().top + 10 });
         el.dispatchEvent(new TouchEvent('touchstart', { bubbles: true, cancelable: true, touches: [touch], targetTouches: [touch] }));
@@ -1062,9 +1175,12 @@
           pollHistory = [];
           errorLog = [];
           pollCount = 0;
+          selectedOption = null; // FIX #11: Reset selectedOption
+          nextPollAnswer = null; // FIX #11: Reset nextPollAnswer
           savePollHistory();
           saveErrorLog();
           saveToStorage('pollCount', 0);
+          saveToStorage('selectedOption', null); // FIX #11: Save reset
           updateUI();
           if (sendResponse) sendResponse({ ok: true });
           break;
