@@ -16,6 +16,7 @@ function loadSettings() {
       'pollDelay',
       'submitDelay',
       'pollDetectionInterval',
+      'fabOpacity',
       'autoSubmit',
       'autoOpen',
       'useHumanDelay',
@@ -55,6 +56,12 @@ function loadSettings() {
       const detectionSpeed = result.pollDetectionInterval !== undefined ? result.pollDetectionInterval : 100;
       document.querySelectorAll('#detectionSpeedGrid .speed-btn').forEach(btn => {
         btn.classList.toggle('active', parseInt(btn.dataset.value) === detectionSpeed);
+      });
+      
+      // FAB opacity
+      const fabOpacity = result.fabOpacity !== undefined ? result.fabOpacity : 1;
+      document.querySelectorAll('#opacityGrid .speed-btn').forEach(btn => {
+        btn.classList.toggle('active', parseFloat(btn.dataset.value) === fabOpacity);
       });
       
       // Toggles
@@ -142,6 +149,18 @@ function setupEventListeners() {
       
       // Update UI
       document.querySelectorAll('#detectionSpeedGrid .speed-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+  
+  // FAB opacity buttons
+  document.querySelectorAll('#opacityGrid .speed-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const value = parseFloat(btn.dataset.value);
+      chrome.storage.local.set({ fabOpacity: value });
+      
+      // Update UI
+      document.querySelectorAll('#opacityGrid .speed-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
     });
   });

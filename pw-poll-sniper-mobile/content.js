@@ -60,6 +60,7 @@
   let fabPosition = null; // FIX #15: Store FAB position
   let fabWasDragged = false; // FIX #17: Moved to top with other state variables
   let touchIdCounter = 0; // FIX #36: Use counter instead of Date.now() for touch IDs
+  let fabOpacity = 1; // Orb opacity (0.25 to 1)
   let pollAnswerTimer1 = null; // FIX #K: Track nested setTimeout IDs for cleanup
   let pollAnswerTimer2 = null; // FIX #K: Track nested setTimeout IDs for cleanup
   let pollAnswerTimer3 = null; // FIX #K: Track submit setTimeout ID for cleanup
@@ -122,7 +123,7 @@
 
       // Load settings from storage FIRST, then start polling
       chrome.storage.local.get(
-        ['autoSubmit', 'autoOpen', 'pollHistory', 'errorLog', 'pollCount', 'pollDelay', 'submitDelay', 'humanDelayMin', 'humanDelayMax', 'useHumanDelay', 'extensionActive', 'pollDetectionInterval', 'fabPosition'],
+        ['autoSubmit', 'autoOpen', 'pollHistory', 'errorLog', 'pollCount', 'pollDelay', 'submitDelay', 'humanDelayMin', 'humanDelayMax', 'useHumanDelay', 'extensionActive', 'pollDetectionInterval', 'fabPosition', 'fabOpacity'],
         (result) => {
           selectedOption = null; // Always start blank - NO DEFAULT
           nextPollAnswer = null;
@@ -142,6 +143,7 @@
           // FIX #35: Validate pollDetectionInterval (minimum 50ms to prevent CPU overload)
           pollDetectionInterval = (result.pollDetectionInterval !== undefined && result.pollDetectionInterval !== null) ? Math.max(50, parseInt(result.pollDetectionInterval) || PW.POLL_INTERVAL) : PW.POLL_INTERVAL;
           fabPosition = result.fabPosition || null; // FIX #15: Load FAB position
+          fabOpacity = (result.fabOpacity !== undefined && result.fabOpacity !== null) ? Math.max(0.1, Math.min(1, parseFloat(result.fabOpacity))) : 1;
           
           updateUI();
           
@@ -238,6 +240,10 @@
           if (checkInterval) clearInterval(checkInterval);
           checkInterval = setInterval(checkForPoll, pollDetectionInterval);
         }
+        if (changes.fabOpacity !== undefined) {
+          fabOpacity = Math.max(0.1, Math.min(1, parseFloat(changes.fabOpacity.newValue) || 1));
+          updateUI();
+        }
       });
 
     } catch (e) {
@@ -286,6 +292,9 @@
     // FIX: Don't check isLecturePage here — only in checkForPoll interval
     // This prevents the orb from disappearing when React temporarily removes video element
     if (!statusPanel) return;
+    
+    // Apply opacity to FAB
+    statusPanel.style.opacity = fabOpacity;
     
     try {
       const answer = selectedOption || '_';
