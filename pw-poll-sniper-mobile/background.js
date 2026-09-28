@@ -13,7 +13,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // Dashboard opener - opens dashboard in new tab
     if (msg.type === 'OPEN_DASHBOARD') {
       const dashboardURL = chrome.runtime.getURL('dashboard.html');
-      chrome.tabs.create({ url: dashboardURL });
+      chrome.tabs.create({ url: dashboardURL }, () => {
+        if (sendResponse) sendResponse({ ok: true });
+      });
+      return true; // Keep message channel open for async response
     }
   } catch (e) {
     console.error('[PW Sniper Mobile BG] Error:', e);

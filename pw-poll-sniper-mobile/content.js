@@ -277,8 +277,8 @@
       statusPanel.id = 'pw-sniper-panel';
       statusPanel.style.cssText = `
         position: fixed;
-        bottom: 20px;
-        right: 20px;
+        bottom: 80px;
+        right: 16px;
         z-index: 2147483647;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         user-select: none;
@@ -434,11 +434,21 @@
         if (btnDashboard) {
           btnDashboard.addEventListener('click', (e) => {
             e.stopPropagation();
-            // Open dashboard in new tab via background script
+            // Open dashboard — try background script first, fallback to window.open
             try {
-              chrome.runtime.sendMessage({ type: 'OPEN_DASHBOARD' });
+              chrome.runtime.sendMessage({ type: 'OPEN_DASHBOARD' }, (response) => {
+                // If service worker is dead (no response), fallback
+                if (chrome.runtime.lastError || !response) {
+                  try {
+                    window.open(chrome.runtime.getURL('dashboard.html'), '_blank');
+                  } catch(e2) {}
+                }
+              });
             } catch(err) {
-              console.error('[PW Sniper] Failed to open dashboard:', err);
+              // Extension context invalidated — try direct URL
+              try {
+                window.open(chrome.runtime.getURL('dashboard.html'), '_blank');
+              } catch(e2) {}
             }
           });
         }
