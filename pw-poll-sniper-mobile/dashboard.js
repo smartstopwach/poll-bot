@@ -31,13 +31,16 @@ function loadSettings() {
       const selectedOption = result.selectedOption;
       document.querySelectorAll('.answer-btn').forEach(btn => {
         btn.classList.remove('active');
-        if (btn.dataset.option === selectedOption) {
+        // FIX #1 & #4: Handle "None" button (data-option="") when selectedOption is null
+        if (!selectedOption && btn.dataset.option === '') {
+          btn.classList.add('active');
+        } else if (selectedOption && btn.dataset.option === selectedOption) {
           btn.classList.add('active');
         }
       });
       
-      // Poll delay
-      const pollDelay = result.pollDelay !== undefined ? result.pollDelay : 260;
+      // Poll delay - FIX #2: Default matches content.js (50ms)
+      const pollDelay = result.pollDelay !== undefined ? result.pollDelay : 50;
       document.querySelectorAll('#pollDelayGrid .speed-btn').forEach(btn => {
         btn.classList.toggle('active', parseInt(btn.dataset.value) === pollDelay);
       });
@@ -156,31 +159,70 @@ function setupEventListeners() {
     chrome.storage.local.set({ useHumanDelay: e.target.checked });
   });
   
-  // Clear history
+  // Clear history - FIX #5: Custom confirm instead of native confirm() (broken in Kiwi)
   document.getElementById('clearHistoryBtn').addEventListener('click', () => {
-    if (confirm('Clear all poll history and error logs?')) {
-      chrome.storage.local.set({
-        pollHistory: [],
-        errorLog: [],
-        pollCount: 0,
-        selectedOption: null
-      });
+    const btn = document.getElementById('clearHistoryBtn');
+    
+    // First click: show confirmation state
+    if (!btn.dataset.confirming) {
+      btn.dataset.confirming = 'true';
+      btn.textContent = '⚠️ Tap again to confirm';
+      btn.style.background = 'rgba(239, 68, 68, 0.4)';
       
-      // Update UI
-      document.getElementById('statPolls').textContent = '0';
-      document.getElementById('statSuccess').textContent = '0';
-      document.getElementById('statAvgTime').textContent = '-';
-      document.getElementById('historyList').innerHTML = '<div class="empty-state">No polls yet</div>';
-      document.getElementById('errorList').innerHTML = '<div class="empty-state">No errors</div>';
-      document.querySelectorAll('.answer-btn').forEach(b => b.classList.remove('active'));
+      // Reset after 3 seconds if not confirmed
+      setTimeout(() => {
+        if (btn.dataset.confirming) {
+          btn.dataset.confirming = '';
+          btn.textContent = '🗑️ Clear All History';
+          btn.style.background = 'rgba(239, 68, 68, 0.15)';
+        }
+      }, 3000);
+      return;
     }
+    
+    // Second click: actually clear
+    btn.dataset.confirming = '';
+    btn.textContent = '🗑️ Clear All History';
+    btn.style.background = 'rgba(239, 68, 68, 0.15)';
+    
+    chrome.storage.local.set({
+      pollHistory: [],
+      errorLog: [],
+      pollCount: 0,
+      selectedOption: null
+    });
+    
+    // Update UI
+    document.getElementById('statPolls').textContent = '0';
+    document.getElementById('statSuccess').textContent = '0';
+    document.getElementById('statAvgTime').textContent = '-';
+    document.getElementById('historyList').innerHTML = '<div class="empty-state">No polls yet</div>';
+    document.getElementById('errorList').innerHTML = '<div class="empty-state">No errors</div>';
+    document.querySelectorAll('.answer-btn').forEach(b => b.classList.remove('active'));
+    // Highlight "None" button
+    document.querySelector('.answer-btn[data-option=""]').classList.add('active');
   });
   
   // Listen for storage changes
   chrome.storage.onChanged.addListener((changes) => {
     if (changes.pollHistory) {
-      renderHistory(changes.pollHistory.newValue || []);
-      loadSettings(); // Reload stats
+      const history = changes.pollHistory.newValue || [];
+      renderHistory(history);
+      // FIX #3: Only update stats, don't reload everything
+      const successCount = history.filter(p => p.status === 'SUCCESS').length;
+      document.getElementById('statSuccess').textContent = successCount;
+      
+      const successPolls = history.filter(p => p.status === 'SUCCESS' && p.time);
+      if (successPolls.length > 0) {
+        const totalTime = successPolls.reduce((sum, p) => {
+          const time = parseInt(p.time);
+          return sum + (isNaN(time) ? 0 : time);
+        }, 0);
+        document.getElementById('statAvgTime').textContent = Math.round(totalTime / successPolls.length) + 'ms';
+      }
+    }
+    if (changes.pollCount) {
+      document.getElementById('statPolls').textContent = changes.pollCount.newValue || 0;
     }
     if (changes.errorLog) {
       renderErrors(changes.errorLog.newValue || []);
@@ -188,7 +230,14 @@ function setupEventListeners() {
     if (changes.selectedOption) {
       const option = changes.selectedOption.newValue;
       document.querySelectorAll('.answer-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.option === option);
+        // FIX #4: Handle null selectedOption with "None" button
+        if (!option && btn.dataset.option === '') {
+          btn.classList.add('active');
+        } else if (option && btn.dataset.option === option) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
       });
     }
   });
