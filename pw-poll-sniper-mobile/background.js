@@ -1,4 +1,4 @@
-// background.js - v5.4.5 Service Worker (FIX #8: Badge persists, FIX #9: Version updated)
+// background.js - v5.4.9 Service Worker (FIX #8: Badge persists, FIX #9: Version updated, Dashboard opener)
 
 // Listen for messages from content script
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
@@ -8,6 +8,12 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       // Update badge with poll count
       chrome.action.setBadgeText({ text: count > 0 ? String(count) : '' });
       chrome.action.setBadgeBackgroundColor({ color: '#22c55e' });
+    }
+    
+    // Dashboard opener - opens dashboard in new tab
+    if (msg.type === 'OPEN_DASHBOARD') {
+      const dashboardURL = chrome.runtime.getURL('dashboard.html');
+      chrome.tabs.create({ url: dashboardURL });
     }
   } catch (e) {
     console.error('[PW Sniper Mobile BG] Error:', e);

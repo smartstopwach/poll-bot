@@ -419,13 +419,64 @@
         if (btnDashboard) {
           btnDashboard.addEventListener('click', (e) => {
             e.stopPropagation();
-            // Open dashboard in new tab
+            // Open dashboard in new tab via background script
             try {
-              const dashboardURL = chrome.runtime.getURL('dashboard.html');
-              window.open(dashboardURL, '_blank');
+              chrome.runtime.sendMessage({ type: 'OPEN_DASHBOARD' });
             } catch(err) {
               console.error('[PW Sniper] Failed to open dashboard:', err);
             }
+          });
+        }
+        
+        // EXPANDED PANEL DRAG - make entire panel movable
+        const expandedPanel = statusPanel.firstElementChild;
+        if (expandedPanel) {
+          let panelDragStart = 0;
+          let panelWasDragged = false;
+          
+          expandedPanel.addEventListener('touchstart', function(e) {
+            // Only start drag if touch is on the panel background, not on buttons
+            if (e.target.tagName === 'BUTTON') return;
+            
+            panelWasDragged = false;
+            panelDragStart = Date.now();
+            const touch = e.touches[0];
+            this._startX = touch.clientX;
+            this._startY = touch.clientY;
+            const rect = statusPanel.getBoundingClientRect();
+            this._initialLeft = rect.left;
+            this._initialTop = rect.top;
+          }, { passive: true });
+          
+          expandedPanel.addEventListener('touchmove', function(e) {
+            if (!this._startX || e.target.tagName === 'BUTTON') return;
+            const touch = e.touches[0];
+            const dx = touch.clientX - this._startX;
+            const dy = touch.clientY - this._startY;
+            
+            if (Math.abs(dx) > 8 || Math.abs(dy) > 8) {
+              panelWasDragged = true;
+              e.preventDefault();
+              const panelWidth = this.offsetWidth || 220;
+              const panelHeight = this.offsetHeight || 100;
+              const newX = Math.max(0, Math.min(window.innerWidth - panelWidth, this._initialLeft + dx));
+              const newY = Math.max(0, Math.min(window.innerHeight - panelHeight, this._initialTop + dy));
+              statusPanel.style.left = newX + 'px';
+              statusPanel.style.top = newY + 'px';
+              statusPanel.style.right = 'auto';
+              statusPanel.style.bottom = 'auto';
+            }
+          }, { passive: false });
+          
+          expandedPanel.addEventListener('touchend', function(e) {
+            if (panelWasDragged) {
+              // Save position
+              fabPosition = { left: statusPanel.style.left, top: statusPanel.style.top };
+              saveToStorage('fabPosition', fabPosition);
+              panelWasDragged = false;
+            }
+            this._startX = null;
+            this._startY = null;
           });
         }
         
