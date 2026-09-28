@@ -111,9 +111,9 @@ function setupEventListeners() {
       const option = btn.dataset.option || null;
       chrome.storage.local.set({ selectedOption: option });
       
-      // Update UI
+      // Update UI - always highlight the clicked button
       document.querySelectorAll('.answer-btn').forEach(b => b.classList.remove('active'));
-      if (option) btn.classList.add('active');
+      btn.classList.add('active');
     });
   });
   
@@ -218,12 +218,16 @@ function setupEventListeners() {
     document.getElementById('historyList').innerHTML = '<div class="empty-state">No polls yet</div>';
     document.getElementById('errorList').innerHTML = '<div class="empty-state">No errors</div>';
     document.querySelectorAll('.answer-btn').forEach(b => b.classList.remove('active'));
-    // Highlight "None" button
-    document.querySelector('.answer-btn[data-option=""]').classList.add('active');
+    // Highlight "None" button (if exists)
+    const noneBtn = document.querySelector('.answer-btn[data-option=""]');
+    if (noneBtn) noneBtn.classList.add('active');
   });
   
   // Listen for storage changes
   chrome.storage.onChanged.addListener((changes) => {
+    if (changes.extensionActive) {
+      document.getElementById('extensionToggle').checked = changes.extensionActive.newValue !== false;
+    }
     if (changes.pollHistory) {
       const history = changes.pollHistory.newValue || [];
       renderHistory(history);
