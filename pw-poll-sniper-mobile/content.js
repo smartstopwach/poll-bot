@@ -37,7 +37,7 @@
   let nextPollAnswer = null;
   let autoSubmit = true;
   let autoOpen = true;
-  let extensionActive = false; // Default OFF - user must enable
+  let extensionActive = true; // Default ON for mobile - always active
   let lastPollTime = 0;
   let lastAnsweredPollHash = '';
   let pollCount = 0;
@@ -124,7 +124,7 @@
           humanDelayMin = (result.humanDelayMin !== undefined && result.humanDelayMin !== null) ? result.humanDelayMin : PW.HUMAN_DELAY_MIN;
           humanDelayMax = (result.humanDelayMax !== undefined && result.humanDelayMax !== null) ? result.humanDelayMax : PW.HUMAN_DELAY_MAX;
           useHumanDelay = result.useHumanDelay !== false;
-          extensionActive = result.extensionActive === true;
+          extensionActive = result.extensionActive !== false; // Default to true if not set
           
           updateUI();
           
