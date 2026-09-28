@@ -288,38 +288,67 @@
     const isLectureURL = /\/(batch|study|subject|lecture|class)\//i.test(window.location.href);
     const isLecturePage = hasVideo || isLectureURL;
     
-    // FIX #16: Check if statusPanel exists before accessing it
+    // FIX: Always show FAB on lecture pages (even when inactive) so user can toggle back ON
     if (statusPanel) {
-      statusPanel.style.display = (isLecturePage && extensionActive) ? 'block' : 'none';
+      statusPanel.style.display = isLecturePage ? 'block' : 'none';
     }
     
-    if (!statusPanel || !isLecturePage || !extensionActive) return;
+    if (!statusPanel || !isLecturePage) return;
     
     try {
       const answer = selectedOption || '_';
       
-      // Green circle color
-      let mainColor = '#10b981'; // Green (active)
-      let glowColor = 'rgba(16, 185, 129, 0.4)';
+      // FAB color based on active/inactive status
+      let mainColor = extensionActive ? '#10b981' : '#ef4444'; // Green when ON, Red when OFF
+      let glowColor = extensionActive ? 'rgba(16, 185, 129, 0.4)' : 'rgba(239, 68, 68, 0.3)';
       
       if (isExpanded) {
-        // Expanded view - just buttons (minimal for mobile)
+        // Expanded view - Answer buttons + Settings controls
         statusPanel.innerHTML = `
           <div style="
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0, 0, 0, 0.92);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border-radius: 12px;
-            padding: 8px;
+            border-radius: 16px;
+            padding: 10px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.4), 0 0 30px ${glowColor};
             border: 2px solid ${mainColor};
+            min-width: 220px;
           ">
-            <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px;">
-              <button id="pw-btn-a" style="padding: 12px 6px; background: ${selectedOption === 'A' ? '#3b82f6' : 'rgba(255,255,255,0.15)'}; border: none; border-radius: 8px; color: white; font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.2s;">A</button>
-              <button id="pw-btn-b" style="padding: 12px 6px; background: ${selectedOption === 'B' ? '#3b82f6' : 'rgba(255,255,255,0.15)'}; border: none; border-radius: 8px; color: white; font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.2s;">B</button>
-              <button id="pw-btn-c" style="padding: 12px 6px; background: ${selectedOption === 'C' ? '#3b82f6' : 'rgba(255,255,255,0.15)'}; border: none; border-radius: 8px; color: white; font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.2s;">C</button>
-              <button id="pw-btn-d" style="padding: 12px 6px; background: ${selectedOption === 'D' ? '#3b82f6' : 'rgba(255,255,255,0.15)'}; border: none; border-radius: 8px; color: white; font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.2s;">D</button>
-              <button id="pw-btn-blank" style="padding: 12px 6px; background: ${!selectedOption ? '#6b7280' : 'rgba(255,255,255,0.15)'}; border: none; border-radius: 8px; color: white; font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.2s;">_</button>
+            <!-- Row 1: Answer Buttons -->
+            <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-bottom: 8px;">
+              <button id="pw-btn-a" style="padding: 14px 6px; background: ${selectedOption === 'A' ? '#3b82f6' : 'rgba(255,255,255,0.15)'}; border: none; border-radius: 10px; color: white; font-weight: 700; font-size: 15px; cursor: pointer;">A</button>
+              <button id="pw-btn-b" style="padding: 14px 6px; background: ${selectedOption === 'B' ? '#3b82f6' : 'rgba(255,255,255,0.15)'}; border: none; border-radius: 10px; color: white; font-weight: 700; font-size: 15px; cursor: pointer;">B</button>
+              <button id="pw-btn-c" style="padding: 14px 6px; background: ${selectedOption === 'C' ? '#3b82f6' : 'rgba(255,255,255,0.15)'}; border: none; border-radius: 10px; color: white; font-weight: 700; font-size: 15px; cursor: pointer;">C</button>
+              <button id="pw-btn-d" style="padding: 14px 6px; background: ${selectedOption === 'D' ? '#3b82f6' : 'rgba(255,255,255,0.15)'}; border: none; border-radius: 10px; color: white; font-weight: 700; font-size: 15px; cursor: pointer;">D</button>
+              <button id="pw-btn-blank" style="padding: 14px 6px; background: ${!selectedOption ? '#6b7280' : 'rgba(255,255,255,0.15)'}; border: none; border-radius: 10px; color: white; font-weight: 700; font-size: 15px; cursor: pointer;">_</button>
+            </div>
+            <!-- Row 2: Controls -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px;">
+              <button id="pw-btn-power" style="padding: 10px 6px; background: ${extensionActive ? '#10b981' : '#ef4444'}; border: none; border-radius: 10px; color: white; font-weight: 700; font-size: 11px; cursor: pointer;">${extensionActive ? '● ON' : '○ OFF'}</button>
+              <button id="pw-btn-autosubmit" style="padding: 10px 6px; background: ${autoSubmit ? '#8b5cf6' : 'rgba(255,255,255,0.15)'}; border: none; border-radius: 10px; color: white; font-weight: 600; font-size: 11px; cursor: pointer;">${autoSubmit ? '✓ Submit' : '✗ Submit'}</button>
+              <button id="pw-btn-speed" style="padding: 10px 6px; background: rgba(255,255,255,0.15); border: none; border-radius: 10px; color: white; font-weight: 600; font-size: 11px; cursor: pointer;">⚡ ${pollDelay}ms</button>
+            </div>
+            <!-- Row 3: Speed Controls -->
+            <div id="pw-speed-panel" style="display: none; margin-top: 8px; padding: 8px; background: rgba(255,255,255,0.05); border-radius: 10px;">
+              <div style="color: #94a3b8; font-size: 11px; margin-bottom: 6px; font-weight: 600;">POLL DELAY</div>
+              <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-bottom: 8px;">
+                <button class="pw-speed-btn" data-delay="50" style="padding: 8px 4px; background: ${pollDelay === 50 ? '#3b82f6' : 'rgba(255,255,255,0.1)'}; border: none; border-radius: 8px; color: white; font-size: 11px; cursor: pointer;">50ms</button>
+                <button class="pw-speed-btn" data-delay="100" style="padding: 8px 4px; background: ${pollDelay === 100 ? '#3b82f6' : 'rgba(255,255,255,0.1)'}; border: none; border-radius: 8px; color: white; font-size: 11px; cursor: pointer;">100ms</button>
+                <button class="pw-speed-btn" data-delay="260" style="padding: 8px 4px; background: ${pollDelay === 260 ? '#3b82f6' : 'rgba(255,255,255,0.1)'}; border: none; border-radius: 8px; color: white; font-size: 11px; cursor: pointer;">260ms</button>
+                <button class="pw-speed-btn" data-delay="500" style="padding: 8px 4px; background: ${pollDelay === 500 ? '#3b82f6' : 'rgba(255,255,255,0.1)'}; border: none; border-radius: 8px; color: white; font-size: 11px; cursor: pointer;">500ms</button>
+              </div>
+              <div style="color: #94a3b8; font-size: 11px; margin-bottom: 6px; font-weight: 600;">SUBMIT DELAY</div>
+              <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px;">
+                <button class="pw-submit-btn" data-delay="10" style="padding: 8px 4px; background: ${submitDelay === 10 ? '#8b5cf6' : 'rgba(255,255,255,0.1)'}; border: none; border-radius: 8px; color: white; font-size: 11px; cursor: pointer;">10ms</button>
+                <button class="pw-submit-btn" data-delay="25" style="padding: 8px 4px; background: ${submitDelay === 25 ? '#8b5cf6' : 'rgba(255,255,255,0.1)'}; border: none; border-radius: 8px; color: white; font-size: 11px; cursor: pointer;">25ms</button>
+                <button class="pw-submit-btn" data-delay="50" style="padding: 8px 4px; background: ${submitDelay === 50 ? '#8b5cf6' : 'rgba(255,255,255,0.1)'}; border: none; border-radius: 8px; color: white; font-size: 11px; cursor: pointer;">50ms</button>
+                <button class="pw-submit-btn" data-delay="100" style="padding: 8px 4px; background: ${submitDelay === 100 ? '#8b5cf6' : 'rgba(255,255,255,0.1)'}; border: none; border-radius: 8px; color: white; font-size: 11px; cursor: pointer;">100ms</button>
+              </div>
+            </div>
+            <!-- Poll Count -->
+            <div style="text-align: center; margin-top: 6px; color: #64748b; font-size: 10px;">
+              Polls: ${pollCount} | ${selectedOption ? 'Ans: ' + selectedOption : 'No answer'}
             </div>
           </div>
         `;
@@ -415,8 +444,123 @@
           });
         }
         
+        // Power button - toggle extension active/inactive
+        const btnPower = document.getElementById('pw-btn-power');
+        if (btnPower) {
+          btnPower.addEventListener('click', (e) => {
+            e.stopPropagation();
+            extensionActive = !extensionActive;
+            saveToStorage('extensionActive', extensionActive);
+            // Reset expand timeout
+            if (expandTimeout) {
+              clearTimeout(expandTimeout);
+              expandTimeout = null;
+            }
+            updateUI();
+            // Re-set expand timeout since we're still expanded
+            if (isExpanded) {
+              expandTimeout = setTimeout(() => {
+                isExpanded = false;
+                updateUI();
+              }, 17000);
+            }
+          });
+        }
+        
+        // Auto-submit button - toggle auto-submit
+        const btnAutoSubmit = document.getElementById('pw-btn-autosubmit');
+        if (btnAutoSubmit) {
+          btnAutoSubmit.addEventListener('click', (e) => {
+            e.stopPropagation();
+            autoSubmit = !autoSubmit;
+            saveToStorage('autoSubmit', autoSubmit);
+            // Reset expand timeout
+            if (expandTimeout) {
+              clearTimeout(expandTimeout);
+              expandTimeout = null;
+            }
+            updateUI();
+            // Re-set expand timeout
+            if (isExpanded) {
+              expandTimeout = setTimeout(() => {
+                isExpanded = false;
+                updateUI();
+              }, 17000);
+            }
+          });
+        }
+        
+        // Speed button - toggle speed panel
+        const btnSpeed = document.getElementById('pw-btn-speed');
+        const speedPanel = document.getElementById('pw-speed-panel');
+        if (btnSpeed && speedPanel) {
+          btnSpeed.addEventListener('click', (e) => {
+            e.stopPropagation();
+            speedPanel.style.display = speedPanel.style.display === 'none' ? 'block' : 'none';
+            // Reset expand timeout
+            if (expandTimeout) {
+              clearTimeout(expandTimeout);
+              expandTimeout = null;
+            }
+            if (isExpanded) {
+              expandTimeout = setTimeout(() => {
+                isExpanded = false;
+                updateUI();
+              }, 17000);
+            }
+          });
+        }
+        
+        // Speed buttons
+        const speedBtns = document.querySelectorAll('.pw-speed-btn');
+        speedBtns.forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const delay = parseInt(btn.dataset.delay);
+            pollDelay = delay;
+            saveToStorage('pollDelay', pollDelay);
+            // Reset expand timeout
+            if (expandTimeout) {
+              clearTimeout(expandTimeout);
+              expandTimeout = null;
+            }
+            updateUI();
+            // Re-set expand timeout
+            if (isExpanded) {
+              expandTimeout = setTimeout(() => {
+                isExpanded = false;
+                updateUI();
+              }, 17000);
+            }
+          });
+        });
+        
+        // Submit delay buttons
+        const submitBtns = document.querySelectorAll('.pw-submit-btn');
+        submitBtns.forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const delay = parseInt(btn.dataset.delay);
+            submitDelay = delay;
+            saveToStorage('submitDelay', submitDelay);
+            // Reset expand timeout
+            if (expandTimeout) {
+              clearTimeout(expandTimeout);
+              expandTimeout = null;
+            }
+            updateUI();
+            // Re-set expand timeout
+            if (isExpanded) {
+              expandTimeout = setTimeout(() => {
+                isExpanded = false;
+                updateUI();
+              }, 17000);
+            }
+          });
+        });
+        
       } else {
-        // Collapsed view - minimal green circle with answer in blue
+        // Collapsed view - circle with answer (green=ON, red=OFF)
         statusPanel.innerHTML = `
           <div id="pw-fab" style="
             width: 56px;
@@ -432,21 +576,31 @@
             transition: all 0.3s ease;
             border: 2px solid rgba(255,255,255,0.3);
           ">
-            <span style="font-size: 20px; font-weight: 700; color: #3b82f6; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">${answer}</span>
-            <span style="position: absolute; top: 2px; right: 2px; width: 10px; height: 10px; border-radius: 50%; background: rgba(34, 197, 94, 0.6); box-shadow: 0 0 4px rgba(34, 197, 94, 0.4);"></span>
+            <span style="font-size: 20px; font-weight: 700; color: ${extensionActive ? '#3b82f6' : '#ffffff'}; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">${extensionActive ? answer : 'OFF'}</span>
+            <span style="position: absolute; top: 2px; right: 2px; width: 10px; height: 10px; border-radius: 50%; background: ${extensionActive ? 'rgba(34, 197, 94, 0.6)' : 'rgba(239, 68, 68, 0.4)'}; box-shadow: 0 0 4px ${extensionActive ? 'rgba(34, 197, 94, 0.4)' : 'rgba(239, 68, 68, 0.3)'};"></span>
           </div>
         `;
         
         // Add click listener to expand
         const fab = document.getElementById('pw-fab');
         if (fab) {
-          fab.addEventListener('click', (e) => {
-            e.stopPropagation();
+          // FIX: Use BOTH click and touchend for Kiwi Browser compatibility
+          // In Kiwi Browser, click event sometimes doesn't fire after touch events
+          let fabTouchHandled = false;
+          
+          function expandFAB(e) {
+            if (e) e.stopPropagation();
             // FIX #8: Don't expand if user just dragged
             if (fabWasDragged) {
               fabWasDragged = false;
+              fabTouchHandled = false;
               return;
             }
+            // Prevent double-fire (touchend + click)
+            if (fabTouchHandled) return;
+            fabTouchHandled = true;
+            setTimeout(() => { fabTouchHandled = false; }, 500);
+            
             isExpanded = true;
             updateUI();
             
@@ -456,7 +610,18 @@
               isExpanded = false;
               updateUI();
             }, 17000);
+          }
+          
+          // Touch event (primary for Kiwi Browser)
+          fab.addEventListener('touchend', (e) => {
+            if (!fabWasDragged) {
+              e.preventDefault(); // Prevent click event from also firing
+              expandFAB(e);
+            }
           });
+          
+          // Click event (fallback for desktop)
+          fab.addEventListener('click', expandFAB);
           
           // Add drag functionality
           setupFABDrag(fab);
@@ -612,8 +777,9 @@
     const isLectureURL = /\/(batch|study|subject|lecture|class)\//i.test(window.location.href);
     const isLecturePage = hasVideo || isLectureURL;
     
+    // Always show FAB on lecture pages (even when OFF) so user can re-enable
     if (statusPanel) {
-      statusPanel.style.display = (isLecturePage && extensionActive) ? 'block' : 'none';
+      statusPanel.style.display = isLecturePage ? 'block' : 'none';
     }
     
     if (!extensionActive || isProcessing || isCheckRunning) return;
