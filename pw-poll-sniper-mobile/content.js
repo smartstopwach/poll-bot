@@ -14,8 +14,10 @@
     LIVE_POLL_ICON: '#poll-icon',
     POLL_IMAGE: '#poll-image',
     OPTION_SPAN: 'span.line-clamp-1',
+    OPTION_SPAN_FALLBACK: 'span[class*="line-clamp"], span[class*="truncate"], span[class*="overflow-hidden"]',
     SUBMIT_TEXT: 'Submit Answer',
-    RESULT_TEXTS: ['Correct Answer is', 'Not Participated', 'Answered Correctly', 'You did not attempt'],
+    SUBMIT_TEXTS: ['Submit Answer', 'Submit', 'SUBMIT', 'Submit answer'],
+    RESULT_TEXTS: ['Correct Answer is', 'Not Participated', 'Answered Correctly', 'You did not attempt', 'Wrong Answer', 'Incorrect'],
     POLL_DELAY: 50,
     SUBMIT_DELAY: 25,
     HUMAN_DELAY_MIN: 500,
@@ -768,7 +770,11 @@
   // ============================================
   function findOptions() {
     try {
-      const spans = document.querySelectorAll(PW.OPTION_SPAN);
+      // Primary selector first, fallback if nothing found
+      let spans = document.querySelectorAll(PW.OPTION_SPAN);
+      if (spans.length === 0) {
+        spans = document.querySelectorAll(PW.OPTION_SPAN_FALLBACK);
+      }
       const options = [];
 
       for (const span of spans) {
@@ -789,7 +795,7 @@
           
           let pollLike = 0;
           for (const sib of siblingButtons) {
-            const sibSpan = sib.querySelector('span.line-clamp-1');
+            const sibSpan = sib.querySelector(PW.OPTION_SPAN) || sib.querySelector(PW.OPTION_SPAN_FALLBACK);
             if (sibSpan && /^[A-D]$/.test(sibSpan.textContent.trim().toUpperCase())) {
               pollLike++;
             }
@@ -816,7 +822,15 @@
       const btn = options[0].button;
       const classes = btn.className || '';
 
+      // Check for result-state Tailwind classes (fragile but kept as first check)
       if (classes.includes('w-[83%]')) return false;
+      
+      // Check if button looks disabled (result state)
+      if (btn.disabled || btn.getAttribute('aria-disabled') === 'true') return false;
+      
+      // Check for reduced opacity (result state indicator)
+      const btnStyle = window.getComputedStyle(btn);
+      if (parseFloat(btnStyle.opacity) < 0.5) return false;
 
       const submitBtn = findSubmitButton();
       
@@ -826,6 +840,7 @@
 
       if (submitBtn) return true;
 
+      // Check container text for result messages
       const pollContainer = btn.closest('[role="dialog"], .modal, [class*="poll"]') || btn.parentElement?.parentElement;
       if (pollContainer) {
         const containerText = pollContainer.textContent || '';
@@ -846,7 +861,10 @@
   // ============================================
   function findSubmitButton() {
     try {
-      const spans = document.querySelectorAll(PW.OPTION_SPAN);
+      let spans = document.querySelectorAll(PW.OPTION_SPAN);
+      if (spans.length === 0) {
+        spans = document.querySelectorAll(PW.OPTION_SPAN_FALLBACK);
+      }
       for (const span of spans) {
         if (!/^[A-D]$/.test(span.textContent.trim().toUpperCase())) continue;
         
@@ -857,14 +875,14 @@
         const buttons = container.querySelectorAll('button');
         for (const btn of buttons) {
           const text = btn.textContent.trim();
-          if (text === PW.SUBMIT_TEXT) return btn;
+          if (PW.SUBMIT_TEXTS.includes(text)) return btn;
         }
       }
 
       const allButtons = document.querySelectorAll('button');
       for (const btn of allButtons) {
         const text = btn.textContent.trim();
-        if (text === PW.SUBMIT_TEXT && isVisible(btn)) return btn;
+        if (PW.SUBMIT_TEXTS.includes(text) && isVisible(btn)) return btn;
       }
 
       return null;
