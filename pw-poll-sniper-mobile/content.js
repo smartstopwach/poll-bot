@@ -131,7 +131,6 @@
           autoOpen = result.autoOpen !== false;
           pollHistory = result.pollHistory || [];
           errorLog = result.errorLog || [];
-          pollCount = result.pollCount || 0;
           // FIX #35: Validate all storage values to prevent corrupted data
           pollDelay = (result.pollDelay !== undefined && result.pollDelay !== null) ? Math.max(0, parseInt(result.pollDelay) || PW.POLL_DELAY) : PW.POLL_DELAY;
           submitDelay = (result.submitDelay !== undefined && result.submitDelay !== null) ? Math.max(0, parseInt(result.submitDelay) || PW.SUBMIT_DELAY) : PW.SUBMIT_DELAY;
@@ -145,7 +144,8 @@
           fabPosition = result.fabPosition || null; // FIX #15: Load FAB position
           fabOpacity = (result.fabOpacity !== undefined && result.fabOpacity !== null) ? Math.max(0.1, Math.min(1, parseFloat(result.fabOpacity))) : 1;
           
-          updateUI();
+          // FIX: Create panel AFTER settings loaded (prevent flash of defaults)
+          createStatusPanel();
           
           // FIX #1: Use pollDetectionInterval variable instead of constant
           if (checkInterval) clearInterval(checkInterval);
@@ -178,6 +178,9 @@
           
           // Also listen for popstate (back/forward navigation)
           window.addEventListener('popstate', () => {
+            // Reset flags immediately on navigation
+            panelOpening = false;
+            pollIconClickedAt = 0;
             setTimeout(updateUI, 100); // Small delay for DOM to update
           });
           
@@ -200,8 +203,6 @@
           });
         }
       );
-
-      createStatusPanel();
 
       chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         handleMessage(msg, sendResponse);
@@ -239,8 +240,11 @@
         // FIX #2: Add pollDetectionInterval listener
         if (changes.pollDetectionInterval !== undefined) {
           pollDetectionInterval = changes.pollDetectionInterval.newValue;
-          if (checkInterval) clearInterval(checkInterval);
-          checkInterval = setInterval(checkForPoll, pollDetectionInterval);
+          // Only restart interval if extension is active
+          if (extensionActive) {
+            if (checkInterval) clearInterval(checkInterval);
+            checkInterval = setInterval(checkForPoll, pollDetectionInterval);
+          }
         }
         if (changes.fabOpacity !== undefined) {
           fabOpacity = Math.max(0.1, Math.min(1, parseFloat(changes.fabOpacity.newValue) || 1));
