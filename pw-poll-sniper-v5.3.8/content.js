@@ -947,6 +947,9 @@
           waitingForAnswerTimeout = setTimeout(() => {
             waitingForAnswer = false;
             waitingForAnswerTimeout = null;
+            nextPollAnswer = null;
+            selectedOption = null;
+            saveToStorage('selectedOption', null);
             showNotification('⏱️ Q mode expired', '#ef4444');
             updateUI();
           }, 30000);
@@ -961,6 +964,8 @@
             e.preventDefault();
             waitingForAnswer = false;
             nextPollAnswer = null;
+            selectedOption = null;
+            saveToStorage('selectedOption', null);
             
             if (waitingForAnswerTimeout) {
               clearTimeout(waitingForAnswerTimeout);
