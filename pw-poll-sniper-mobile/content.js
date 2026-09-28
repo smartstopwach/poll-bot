@@ -324,10 +324,11 @@
               <button id="pw-btn-blank" style="padding: 14px 6px; background: ${!selectedOption ? '#6b7280' : 'rgba(255,255,255,0.15)'}; border: none; border-radius: 10px; color: white; font-weight: 700; font-size: 15px; cursor: pointer;">_</button>
             </div>
             <!-- Row 2: Controls -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 5px;">
               <button id="pw-btn-power" style="padding: 10px 6px; background: ${extensionActive ? '#10b981' : '#ef4444'}; border: none; border-radius: 10px; color: white; font-weight: 700; font-size: 11px; cursor: pointer;">${extensionActive ? '● ON' : '○ OFF'}</button>
               <button id="pw-btn-autosubmit" style="padding: 10px 6px; background: ${autoSubmit ? '#8b5cf6' : 'rgba(255,255,255,0.15)'}; border: none; border-radius: 10px; color: white; font-weight: 600; font-size: 11px; cursor: pointer;">${autoSubmit ? '✓ Submit' : '✗ Submit'}</button>
               <button id="pw-btn-speed" style="padding: 10px 6px; background: rgba(255,255,255,0.15); border: none; border-radius: 10px; color: white; font-weight: 600; font-size: 11px; cursor: pointer;">⚡ ${pollDelay}ms</button>
+              <button id="pw-btn-dashboard" style="padding: 10px 6px; background: rgba(59,130,246,0.3); border: none; border-radius: 10px; color: white; font-weight: 600; font-size: 11px; cursor: pointer;">📊 Full</button>
             </div>
             <!-- Row 3: Speed Controls -->
             <div id="pw-speed-panel" style="display: none; margin-top: 8px; padding: 8px; background: rgba(255,255,255,0.05); border-radius: 10px;">
@@ -507,6 +508,21 @@
                 isExpanded = false;
                 updateUI();
               }, 17000);
+            }
+          });
+        }
+        
+        // Dashboard button - open full dashboard in new tab
+        const btnDashboard = document.getElementById('pw-btn-dashboard');
+        if (btnDashboard) {
+          btnDashboard.addEventListener('click', (e) => {
+            e.stopPropagation();
+            // Open dashboard in new tab
+            try {
+              const dashboardURL = chrome.runtime.getURL('dashboard.html');
+              window.open(dashboardURL, '_blank');
+            } catch(err) {
+              console.error('[PW Sniper] Failed to open dashboard:', err);
             }
           });
         }
