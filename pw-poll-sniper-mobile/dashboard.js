@@ -15,6 +15,7 @@ function loadSettings() {
       'selectedOption',
       'pollDelay',
       'submitDelay',
+      'pollDetectionInterval',
       'autoSubmit',
       'autoOpen',
       'useHumanDelay',
@@ -45,6 +46,12 @@ function loadSettings() {
       const submitDelay = result.submitDelay !== undefined ? result.submitDelay : 25;
       document.querySelectorAll('#submitDelayGrid .speed-btn').forEach(btn => {
         btn.classList.toggle('active', parseInt(btn.dataset.value) === submitDelay);
+      });
+      
+      // Poll detection speed
+      const detectionSpeed = result.pollDetectionInterval !== undefined ? result.pollDetectionInterval : 100;
+      document.querySelectorAll('#detectionSpeedGrid .speed-btn').forEach(btn => {
+        btn.classList.toggle('active', parseInt(btn.dataset.value) === detectionSpeed);
       });
       
       // Toggles
@@ -120,6 +127,18 @@ function setupEventListeners() {
       
       // Update UI
       document.querySelectorAll('#submitDelayGrid .speed-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+  
+  // Poll detection speed buttons
+  document.querySelectorAll('#detectionSpeedGrid .speed-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const value = parseInt(btn.dataset.value);
+      chrome.storage.local.set({ pollDetectionInterval: value });
+      
+      // Update UI
+      document.querySelectorAll('#detectionSpeedGrid .speed-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
     });
   });

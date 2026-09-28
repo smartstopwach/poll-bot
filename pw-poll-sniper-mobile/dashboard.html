@@ -264,9 +264,22 @@
     </div>
   </div>
   
-  <!-- Poll Delay -->
+  <!-- Poll Detection Speed -->
   <div class="section">
-    <div class="section-title">⚡ Poll Delay (click answer wait)</div>
+    <div class="section-title">🔍 Poll Detection Speed</div>
+    <div style="color:#94a3b8;font-size:12px;margin-bottom:8px;">How often to check for polls (lower = faster detection)</div>
+    <div class="speed-grid" id="detectionSpeedGrid">
+      <button class="speed-btn" data-value="50">50ms</button>
+      <button class="speed-btn" data-value="100">100ms</button>
+      <button class="speed-btn" data-value="200">200ms</button>
+      <button class="speed-btn" data-value="500">500ms</button>
+    </div>
+  </div>
+  
+  <!-- Answer Delay -->
+  <div class="section">
+    <div class="section-title">⚡ Answer Delay</div>
+    <div style="color:#94a3b8;font-size:12px;margin-bottom:8px;">Wait time after options appear before clicking answer</div>
     <div class="speed-grid" id="pollDelayGrid">
       <button class="speed-btn" data-value="50">50ms</button>
       <button class="speed-btn" data-value="100">100ms</button>
@@ -277,7 +290,8 @@
   
   <!-- Submit Delay -->
   <div class="section">
-    <div class="section-title">🚀 Submit Delay (after click wait)</div>
+    <div class="section-title">🚀 Submit Delay</div>
+    <div style="color:#94a3b8;font-size:12px;margin-bottom:8px;">Wait time after clicking answer before submitting</div>
     <div class="speed-grid" id="submitDelayGrid">
       <button class="speed-btn" data-value="25">25ms</button>
       <button class="speed-btn" data-value="50">50ms</button>
