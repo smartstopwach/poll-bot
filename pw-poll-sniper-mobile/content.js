@@ -1,5 +1,5 @@
-// content.js - PW Poll Sniper Mobile v5.4.8 (Touch-Friendly for Kiwi Browser)
-// ALL BUGS FIXED + KIWI SPA FIX | Green dot now appears on lecture pages | URL-based detection | SPA navigation support
+// content.js - PW Poll Sniper Mobile v5.4.9 (Touch-Friendly for Kiwi Browser)
+// KIWI TAP FIX: FAB tap now works reliably | Unified touch handler (tap + drag in one) | All settings in FAB
 
 (function () {
   'use strict';
@@ -584,27 +584,13 @@
         // Add click listener to expand
         const fab = document.getElementById('pw-fab');
         if (fab) {
-          // FIX: Use BOTH click and touchend for Kiwi Browser compatibility
-          // In Kiwi Browser, click event sometimes doesn't fire after touch events
-          let fabTouchHandled = false;
+          // KIWI FIX: Single combined touch handler — most reliable for mobile
+          // Detects tap vs drag in ONE handler, no conflicts
+          let fabTouchStart = 0;
           
-          function expandFAB(e) {
-            if (e) e.stopPropagation();
-            // FIX #8: Don't expand if user just dragged
-            if (fabWasDragged) {
-              fabWasDragged = false;
-              fabTouchHandled = false;
-              return;
-            }
-            // Prevent double-fire (touchend + click)
-            if (fabTouchHandled) return;
-            fabTouchHandled = true;
-            setTimeout(() => { fabTouchHandled = false; }, 500);
-            
+          function doExpand() {
             isExpanded = true;
             updateUI();
-            
-            // Set 17-second auto-collapse timeout
             if (expandTimeout) clearTimeout(expandTimeout);
             expandTimeout = setTimeout(() => {
               isExpanded = false;
@@ -612,19 +598,66 @@
             }, 17000);
           }
           
-          // Touch event (primary for Kiwi Browser)
-          fab.addEventListener('touchend', (e) => {
-            if (!fabWasDragged) {
-              e.preventDefault(); // Prevent click event from also firing
-              expandFAB(e);
+          // TOUCH: Combined tap + drag detection (works in Kiwi, Chrome, all browsers)
+          fab.addEventListener('touchstart', function(e) {
+            fabWasDragged = false;
+            fabTouchStart = Date.now();
+            const touch = e.touches[0];
+            this._startX = touch.clientX;
+            this._startY = touch.clientY;
+            const rect = statusPanel.getBoundingClientRect();
+            this._initialLeft = rect.left;
+            this._initialTop = rect.top;
+          }, { passive: true });
+          
+          fab.addEventListener('touchmove', function(e) {
+            if (!this._startX) return;
+            const touch = e.touches[0];
+            const dx = touch.clientX - this._startX;
+            const dy = touch.clientY - this._startY;
+            
+            if (Math.abs(dx) > 10 || Math.abs(dy) > 10) {
+              fabWasDragged = true;
+              e.preventDefault();
+              const newX = Math.max(0, Math.min(window.innerWidth - 56, this._initialLeft + dx));
+              const newY = Math.max(0, Math.min(window.innerHeight - 56, this._initialTop + dy));
+              statusPanel.style.left = newX + 'px';
+              statusPanel.style.top = newY + 'px';
+              statusPanel.style.right = 'auto';
+              statusPanel.style.bottom = 'auto';
+            }
+          }, { passive: false });
+          
+          fab.addEventListener('touchend', function(e) {
+            const elapsed = Date.now() - fabTouchStart;
+            const wasDrag = fabWasDragged;
+            
+            // Save position if dragged
+            if (wasDrag) {
+              fabPosition = { left: statusPanel.style.left, top: statusPanel.style.top };
+              saveToStorage('fabPosition', fabPosition);
+              fabWasDragged = false;
+            }
+            
+            // Reset
+            this._startX = null;
+            this._startY = null;
+            
+            // TAP detected: short duration + no drag
+            if (!wasDrag && elapsed < 500) {
+              e.preventDefault();
+              doExpand();
             }
           });
           
-          // Click event (fallback for desktop)
-          fab.addEventListener('click', expandFAB);
-          
-          // Add drag functionality
-          setupFABDrag(fab);
+          // CLICK fallback (for desktop / mouse)
+          fab.addEventListener('click', function(e) {
+            if (!fabWasDragged) {
+              e.stopPropagation();
+              doExpand();
+            }
+            fabWasDragged = false;
+          });
           
           // FIX #15: Apply saved FAB position
           if (fabPosition) {
