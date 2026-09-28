@@ -740,8 +740,8 @@
         answerPoll(options);
       } else {
         // No poll options - try to open poll panel
-        // FIX #5: Pass options to tryOpenPoll (avoid redundant findOptions call)
-        if (autoOpen) {
+        // FIX: Only open if user has selected an answer (saves click + cooldown)
+        if (autoOpen && (nextPollAnswer || selectedOption)) {
           tryOpenPoll(options);
         }
       }
@@ -1369,6 +1369,19 @@
       switch (msg.type) {
         case 'OPTION_CHANGED':
           selectedOption = msg.option;
+          nextPollAnswer = msg.option;
+          updateUI();
+          if (sendResponse) sendResponse({ ok: true });
+          break;
+
+        case 'EXTENSION_TOGGLED':
+          extensionActive = !!msg.active;
+          saveToStorage('extensionActive', extensionActive);
+          if (!extensionActive) {
+            if (checkInterval) { clearInterval(checkInterval); checkInterval = null; }
+          } else if (!checkInterval) {
+            checkInterval = setInterval(checkForPoll, pollDetectionInterval);
+          }
           updateUI();
           if (sendResponse) sendResponse({ ok: true });
           break;
