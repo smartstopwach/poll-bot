@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0">
+  <title>PW Poll Sniper Mobile — User Manual v5.4.9</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --border: #334155;
+      --green: #10b981;
+      --blue: #3b82f6;
+      --red: #ef4444;
+      --yellow: #f59e0b;
+      --purple: #8b5cf6;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --dim: #64748b;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 16px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    
+    /* Header */
+    .hero {
+      text-align: center;
+      padding: 30px 20px;
+      background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(59,130,246,0.15));
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: 26px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .hero .version {
+      display: inline-block;
+      background: var(--green);
+      color: white;
+      padding: 3px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .hero p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+    
+    /* Table of Contents */
+    .toc {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 24px;
+      border: 1px solid var(--border);
+    }
+    .toc h2 {
+      font-size: 14px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+    .toc a {
+      display: block;
+      color: var(--blue);
+      text-decoration: none;
+      padding: 8px 0;
+      font-size: 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .toc a:last-child { border-bottom: none; }
+    .toc a:hover { color: #60a5fa; }
+    
+    /* Section */
+    .section {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+    }
+    .section h2 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--green);
+      margin: 16px 0 8px;
+    }
+    .section p, .section li {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .section ul, .section ol {
+      padding-left: 20px;
+    }
+    .section li {
+      margin-bottom: 6px;
+    }
+    
+    /* Step Cards */
+    .step {
+      background: rgba(255,255,255,0.03);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 10px;
+      border-left: 3px solid var(--green);
+    }
+    .step-num {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      background: var(--green);
+      color: white;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 24px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-right: 8px;
+    }
+    .step-title {
+      font-weight: 600;
+      color: var(--text);
+    }
+    .step-desc {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 4px;
+      padding-left: 32px;
+    }
+    
+    /* FAB Diagram */
+    .fab-diagram {
+      background: rgba(0,0,0,0.3);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      margin: 16px 0;
+    }
+    .fab-circle {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #10b981, #10b981dd);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 800;
+      color: #3b82f6;
+      box-shadow: 0 4px 16px rgba(16,185,129,0.4);
+      margin-bottom: 10px;
+      border: 2px solid rgba(255,255,255,0.3);
+    }
+    .fab-circle.off {
+      background: linear-gradient(135deg, #ef4444, #ef4444dd);
+      color: white;
+      box-shadow: 0 4px 16px rgba(239,68,68,0.3);
+    }
+    .fab-expanded {
+      display: inline-grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 6px;
+      margin-top: 12px;
+    }
+    .fab-btn {
+      padding: 10px 8px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 14px;
+      color: white;
+    }
+    .fab-btn.active { background: var(--blue); }
+    .fab-btn.blank { background: var(--dim); }
+    .fab-btn.dash { background: rgba(59,130,246,0.3); }
+    
+    /* Info Box */
+    .info-box {
+      background: rgba(59,130,246,0.1);
+      border: 1px solid rgba(59,130,246,0.3);
+      border-radius: 12px;
+      padding: 14px;
+      margin: 12px 0;
+      font-size: 13px;
+    }
+    .info-box.warn {
+      background: rgba(245,158,11,0.1);
+      border-color: rgba(245,158,11,0.3);
+    }
+    .info-box.danger {
+      background: rgba(239,68,68,0.1);
+      border-color: rgba(239,68,68,0.3);
+    }
+    .info-box strong {
+      color: var(--text);
+    }
+    
+    /* Settings Table */
+    .settings-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin: 12px 0;
+    }
+    .settings-table th {
+      text-align: left;
+      padding: 10px 8px;
+      background: rgba(255,255,255,0.05);
+      color: var(--muted);
+      font-weight: 600;
+      border-bottom: 1px solid var(--border);
+    }
+    .settings-table td {
+      padding: 10px 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      color: var(--text);
+    }
+    .settings-table tr:last-child td { border-bottom: none; }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .badge-green { background: rgba(16,185,129,0.2); color: var(--green); }
+    .badge-blue { background: rgba(59,130,246,0.2); color: var(--blue); }
+    .badge-yellow { background: rgba(245,158,11,0.2); color: var(--yellow); }
+    .badge-red { background: rgba(239,68,68,0.2); color: var(--red); }
+    
+    /* FAQ */
+    .faq-item {
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-q {
+      font-weight: 600;
+      color: var(--text);
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+    .faq-a {
+      font-size: 13px;
+      color: var(--muted);
+    }
+    
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 20px;
+      color: var(--dim);
+      font-size: 12px;
+    }
+    
+    /* Arrow */
+    .arrow { color: var(--green); font-weight: 700; }
+    
+    /* Code */
+    code {
+      background: rgba(255,255,255,0.08);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+      color: var(--yellow);
+    }
+  </style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="version">v5.4.9 FINAL</div>
+  <h1>⚡ PW Poll Sniper Mobile</h1>
+  <p>Kiwi Browser ke liye auto poll answer extension</p>
+  <p style="margin-top:8px;font-size:12px;">Live + Recorded Lectures | 40+ Bugs Fixed | Production Ready</p>
+</div>
+
+<!-- Table of Contents -->
+<div class="toc">
+  <h2>📑 Contents</h2>
+  <a href="#install">1. 📥 Installation (Kiwi Browser)</a>
+  <a href="#quickstart">2. 🚀 Quick Start Guide</a>
+  <a href="#fab">3. 🟢 Green Orb (FAB) — How It Works</a>
+  <a href="#dashboard">4. 📊 Dashboard — Full Settings</a>
+  <a href="#settings">5. ⚙️ Settings Explained</a>
+  <a href="#live">6. 🔴 Live Class — Step by Step</a>
+  <a href="#recorded">7. 📹 Recorded Class — Step by Step</a>
+  <a href="#tips">8. 💡 Pro Tips</a>
+  <a href="#timing">9. ⏱️ Timing Explained</a>
+  <a href="#faq">10. ❓ FAQ (Common Questions)</a>
+  <a href="#troubleshoot">11. 🔧 Troubleshooting</a>
+</div>
+
+<!-- 1. Installation -->
+<div class="section" id="install">
+  <h2>📥 1. Installation</h2>
+  
+  <div class="step">
+    <span class="step-num">1</span>
+    <span class="step-title">Kiwi Browser Install karo</span>
+    <div class="step-desc">Play Store se Kiwi Browser download karo (free hai)</div>
+  </div>
+  
+  <div class="step">
+    <span class="step-num">2</span>
+    <span class="step-title">Extension ZIP download karo</span>
+    <div class="step-desc"><code>pw-poll-sniper-mobile.zip</code> file download karo</div>
+  </div>
+  
+  <div class="step">
+    <span class="step-num">3</span>
+    <span class="step-title">Kiwi me Extensions kholo</span>
+    <div class="step-desc">Kiwi Menu (⋮) → Extensions → Developer Mode ON karo</div>
+  </div>
+  
+  <div class="step">
+    <span class="step-num">4</span>
+    <span class="step-title">"Load unpacked" ya ZIP se install karo</span>
+    <div class="step-desc">"+ (from .zip/.crx/.user.js)" pe tap karo → ZIP file select karo</div>
+  </div>
+  
+  <div class="step">
+    <span class="step-num">5</span>
+    <span class="step-title">PW.live kholo aur login karo</span>
+    <div class="step-desc">pw.live pe jao → login karo → koi bhi lecture kholo → Green Orb dikhega! ✅</div>
+  </div>
+  
+  <div class="info-box">
+    <strong>💡 Tip:</strong> Extension ko "allow in incognito" bhi kar do toh better hai. Kiwi Menu → Extensions → PW Poll Sniper → Details → "Allow in incognito" ON
+  </div>
+</div>
+
+<!-- 2. Quick Start -->
+<div class="section" id="quickstart">
+  <h2>🚀 2. Quick Start</h2>
+  <p>Bas 3 steps me poll answer hona shuru:</p>
+  
+  <div class="step">
+    <span class="step-num">1</span>
+    <span class="step-title">Lecture kholo</span>
+    <div class="step-desc">Koi bhi Live ya Recorded lecture kholo → Green Orb dikhai dega</div>
+  </div>
+  
+  <div class="step">
+    <span class="step-num">2</span>
+    <span class="step-title">Orb tap karo → Answer select karo</span>
+    <div class="step-desc">Green dot tap karo → A/B/C/D me se answer choose karo → Orb chhota ho jayega</div>
+  </div>
+  
+  <div class="step">
+    <span class="step-num">3</span>
+    <span class="step-title">Poll aane do — Auto answer!</span>
+    <div class="step-desc">Jab bhi poll aaye, extension automatically answer select + submit karega ✅</div>
+  </div>
+  
+  <div class="info-box">
+    <strong>⚡ Default Settings:</strong> Poll Delay: 50ms | Submit Delay: 25ms | Human Delay: OFF — Ye sabse fast + safe settings hain!
+  </div>
+</div>
+
+<!-- 3. FAB -->
+<div class="section" id="fab">
+  <h2>🟢 3. Green Orb (FAB)</h2>
+  
+  <h3>Collapsed (Normal) View:</h3>
+  <div class="fab-diagram">
+    <div class="fab-circle">A</div>
+    <p style="font-size:12px;color:var(--muted);">Green = Extension ON | Selected Answer: "A"</p>
+    <div style="margin-top:12px;">
+      <div class="fab-circle off" style="width:50px;height:50px;font-size:14px;">OFF</div>
+      <p style="font-size:12px;color:var(--muted);">Red = Extension OFF | Tap to open & re-enable</p>
+    </div>
+  </div>
+  
+  <h3>Expanded View (Tap karne pe):</h3>
+  <div class="fab-diagram">
+    <div class="fab-expanded">
+      <div class="fab-btn active">A</div>
+      <div class="fab-btn">B</div>
+      <div class="fab-btn">C</div>
+      <div class="fab-btn">D</div>
+      <div class="fab-btn blank">_</div>
+      <div class="fab-btn dash">📊</div>
+    </div>
+    <p style="font-size:11px;color:var(--dim);margin-top:8px;">Polls: 5 | Ans: A | ● ON</p>
+  </div>
+  
+  <table class="settings-table">
+    <tr><th>Button</th><th>Kaam</th></tr>
+    <tr><td><strong>A / B / C / D</strong></td><td>Answer select karo — next poll ke liye</td></tr>
+    <tr><td><strong>_</strong></td><td>Answer clear karo (koi answer nahi)</td></tr>
+    <tr><td><strong>📊</strong></td><td>Full Dashboard kholo (new tab me)</td></tr>
+  </table>
+  
+  <h3>Orb Features:</h3>
+  <ul>
+    <li>👆 <strong>Tap</strong> → Expand hota hai (6 buttons dikhte hain)</li>
+    <li>👆 <strong>Drag</strong> → Orb ko kahin bhi move karo (position save hota hai)</li>
+    <li>⏱️ <strong>Auto-collapse</strong> → 17 second baad automatically band</li>
+    <li>🎯 <strong>Button press</strong> → 300ms baad collapse hota hai</li>
+    <li>👁️ <strong>Opacity</strong> → Dashboard se 25%-100% set karo</li>
+  </ul>
+</div>
+
+<!-- 4. Dashboard -->
+<div class="section" id="dashboard">
+  <h2>📊 4. Dashboard</h2>
+  <p>Dashboard me saari settings, history, aur controls hain.</p>
+  
+  <h3>Kaise Kholiye:</h3>
+  <ul>
+    <li>Orb tap karo → 📊 button tap karo → New tab me khulega</li>
+    <li>YA Kiwi Menu → Extensions → PW Poll Sniper icon tap karo</li>
+  </ul>
+  
+  <h3>Dashboard Sections:</h3>
+  
+  <table class="settings-table">
+    <tr><th>Section</th><th>Kya Hai</th></tr>
+    <tr><td><strong>⚡ ON/OFF</strong></td><td>Extension toggle (top right switch)</td></tr>
+    <tr><td><strong>📈 Stats</strong></td><td>Total Polls, Success count, Avg response time</td></tr>
+    <tr><td><strong>🎯 Pre-Select</strong></td><td>A/B/C/D/None — answer pre-select karo</td></tr>
+    <tr><td><strong>🔍 Detection Speed</strong></td><td>Kitne time me poll check kare (50-500ms)</td></tr>
+    <tr><td><strong>⚡ Answer Delay</strong></td><td>Option click se pehle wait (50-500ms)</td></tr>
+    <tr><td><strong>🚀 Submit Delay</strong></td><td>Submit click se pehle wait (25-200ms)</td></tr>
+    <tr><td><strong>⚙️ Settings</strong></td><td>Auto Submit, Auto Open, Human Delay toggles</td></tr>
+    <tr><td><strong>👁️ Opacity</strong></td><td>Orb transparency (25%-100%)</td></tr>
+    <tr><td><strong>📋 History</strong></td><td>Last 20 polls ka record</td></tr>
+    <tr><td><strong>🐛 Error Log</strong></td><td>Last 10 errors (debugging ke liye)</td></tr>
+  </table>
+</div>
+
+<!-- 5. Settings -->
+<div class="section" id="settings">
+  <h2>⚙️ 5. Settings Explained</h2>
+  
+  <h3>🔍 Poll Detection Speed</h3>
+  <p>Kitne milliseconds me poll check kare.</p>
+  <table class="settings-table">
+    <tr><th>Value</th><th>Effect</th><th>Recommended</th></tr>
+    <tr><td><strong>50ms</strong></td><td>Sabse fast detection</td><td><span class="badge badge-green">✅ Best</span></td></tr>
+    <tr><td>100ms</td><td>Balanced</td><td><span class="badge badge-blue">Good</span></td></tr>
+    <tr><td>200ms</td><td>Slow device ke liye</td><td><span class="badge badge-yellow">OK</span></td></tr>
+    <tr><td>500ms</td><td>Battery save</td><td><span class="badge badge-red">Slow</span></td></tr>
+  </table>
+  
+  <h3>⚡ Answer Delay</h3>
+  <p>Poll options dikhne ke baad kitna wait kare answer click karne se pehle.</p>
+  <table class="settings-table">
+    <tr><th>Value</th><th>Effect</th></tr>
+    <tr><td><strong>50ms</strong></td><td>Fastest — React ko time milta hai <span class="badge badge-green">✅ Default</span></td></tr>
+    <tr><td>100ms</td><td>Safe — agar 50ms pe fail ho</td></tr>
+    <tr><td>260ms</td><td>Extra safe — slow internet pe</td></tr>
+    <tr><td>500ms</td><td>Maximum safety</td></tr>
+  </table>
+  
+  <h3>🚀 Submit Delay</h3>
+  <p>Answer click karne ke baad kitna wait kare submit click karne se pehle.</p>
+  <table class="settings-table">
+    <tr><th>Value</th><th>Effect</th></tr>
+    <tr><td><strong>25ms</strong></td><td>Fastest — answer register hone ka time <span class="badge badge-green">✅ Default</span></td></tr>
+    <tr><td>50ms</td><td>Safe</td></tr>
+    <tr><td>100ms</td><td>Extra safe</td></tr>
+    <tr><td>200ms</td><td>Maximum safety</td></tr>
+  </table>
+  
+  <h3>⚙️ Toggles</h3>
+  <table class="settings-table">
+    <tr><th>Setting</th><th>Kaam</th><th>Default</th></tr>
+    <tr><td><strong>Auto Submit</strong></td><td>Answer select ke baad auto-submit kare</td><td><span class="badge badge-green">ON</span></td></tr>
+    <tr><td><strong>Auto Open Poll</strong></td><td>Poll icon auto-click kare jab poll detect ho</td><td><span class="badge badge-green">ON</span></td></tr>
+    <tr><td><strong>Human-like Delay</strong></td><td>500-1500ms random extra delay</td><td><span class="badge badge-red">OFF</span></td></tr>
+  </table>
+  
+  <div class="info-box warn">
+    <strong>⚠️ Note:</strong> Human-like Delay OFF rakho fastest speed ke liye. ON karoge toh har poll me 500-1500ms extra lagega.
+  </div>
+</div>
+
+<!-- 6. Live Class -->
+<div class="section" id="live">
+  <h2>🔴 6. Live Class Guide</h2>
+  
+  <div class="step">
+    <span class="step-num">1</span>
+    <span class="step-title">Live lecture kholo</span>
+    <div class="step-desc">PW pe live class join karo → Green Orb dikhai dega (bottom right)</div>
+  </div>
+  
+  <div class="step">
+    <span class="step-num">2</span>
+    <span class="step-title">Answer pre-select karo</span>
+    <div class="step-desc">Orb tap karo → A/B/C/D select karo (jo answer sahi lagta hai)</div>
+  </div>
+  
+  <div class="step">
+    <span class="step-num">3</span>
+    <span class="step-title">Poll aane ka wait karo</span>
+    <div class="step-desc">Teacher poll bhejega → Extension automatically:
+      <br>① Poll icon click karega (panel kholega)
+      <br>② Answer option click karega
+      <br>③ Submit button click karega
+      <br>④ Green notification dikhega: "✓ #1 110ms"
+    </div>
+  </div>
+  
+  <div class="step">
+    <span class="step-num">4</span>
+    <span class="step-title">Next poll ke liye dobara answer select karo</span>
+    <div class="step-desc">Har poll ke baad answer reset ho jata hai → Naya answer select karo</div>
+  </div>
+  
+  <div class="info-box">
+    <strong>🎯 Live Class Tip:</strong> Agar same answer baar baar aa raha hai (e.g., "B"), toh har poll ke baad bas dobara "B" select karo. 1 second ka kaam hai.
+  </div>
+</div>
+
+<!-- 7. Recorded Class -->
+<div class="section" id="recorded">
+  <h2>📹 7. Recorded Class Guide</h2>
+  
+  <div class="step">
+    <span class="step-num">1</span>
+    <span class="step-title">Recorded lecture kholo</span>
+    <div class="step-desc">Koi bhi recorded class kholo → Green Orb dikhai dega</div>
+  </div>
+  
+  <div class="step">
+    <span class="step-num">2</span>
+    <span class="step-title">Answer select karo</span>
+    <div class="step-desc">Orb tap karo → A/B/C/D select karo</div>
+  </div>
+  
+  <div class="step">
+    <span class="step-num">3</span>
+    <span class="step-title">Video play karo — polls auto-answer honge</span>
+    <div class="step-desc">Jab bhi poll aaye video me, extension automatically handle karega</div>
+  </div>
+  
+  <div class="info-box warn">
+    <strong>⚠️ Recorded Class Note:</strong> Extension poll icon ko sirf ek baar click karta hai (baar baar nahi). Agar poll miss ho jaye toh video rewind karo aur dobara try karo.
+  </div>
+</div>
+
+<!-- 8. Pro Tips -->
+<div class="section" id="tips">
+  <h2>💡 8. Pro Tips</h2>
+  
+  <div class="info-box">
+    <strong>🏎️ Fastest Setup:</strong><br>
+    Detection: 50ms | Answer: 50ms | Submit: 25ms | Human Delay: OFF<br>
+    = Total ~110ms response time!
+  </div>
+  
+  <div class="info-box">
+    <strong>🔋 Battery Save Setup:</strong><br>
+    Detection: 200ms | Answer: 100ms | Submit: 50ms<br>
+    = Slower but less battery usage
+  </div>
+  
+  <ul>
+    <li>📱 <strong>Orb ko drag karke</strong> video controls ke upar rakh do taaki video controls accessible rahein</li>
+    <li>👁️ <strong>Opacity 50% set karo</strong> agar orb distracting lagta hai</li>
+    <li>📊 <strong>Dashboard me History check karo</strong> — dekho kitne polls successful huye</li>
+    <li>🐛 <strong>Error Log dekho</strong> agar polls miss ho rahe hain — reason samajh aayega</li>
+    <li>🔄 <strong>Extension OFF mat karo</strong> — bas answer select mat karo jab poll nahi chahiye</li>
+    <li>⚡ <strong>WiFi use karo</strong> — mobile data pe ~200ms extra lagta hai internet latency se</li>
+  </ul>
+</div>
+
+<!-- 9. Timing -->
+<div class="section" id="timing">
+  <h2>⏱️ 9. Timing Explained</h2>
+  
+  <p>Extension me jo time dikhta hai (e.g., "110ms") wo sirf <strong>extension ka apna processing time</strong> hai.</p>
+  
+  <h3>Extension ka Timer:</h3>
+  <div class="fab-diagram" style="text-align:left;padding:16px;">
+    <p style="font-size:12px;color:var(--muted);">
+      <span class="arrow">→</span> Poll detect hua (startTime)<br>
+      <span class="arrow">→</span> 50ms wait (pollDelay)<br>
+      <span class="arrow">→</span> Option click kiya<br>
+      <span class="arrow">→</span> 25ms wait (submitDelay)<br>
+      <span class="arrow">→</span> Submit click kiya (endTime)<br>
+      <br>
+      <strong style="color:var(--green);">Total = endTime - startTime = ~110ms</strong>
+    </p>
+  </div>
+  
+  <h3>PW ka Timer (jo PW dikhata hai):</h3>
+  <div class="fab-diagram" style="text-align:left;padding:16px;">
+    <p style="font-size:12px;color:var(--muted);">
+      <span class="arrow">→</span> Teacher poll bhejta hai<br>
+      <span class="arrow">→</span> ~300ms: Internet (server → tumhara device)<br>
+      <span class="arrow">→</span> ~200ms: React rendering (poll screen pe aata hai)<br>
+      <span class="arrow">→</span> <strong style="color:var(--green);">~110ms: Extension ka kaam</strong><br>
+      <span class="arrow">→</span> ~200ms: Internet (submit → PW server)<br>
+      <br>
+      <strong style="color:var(--yellow);">PW Total = ~810ms</strong>
+    </p>
+  </div>
+  
+  <div class="info-box">
+    <strong>💡 Summary:</strong> Extension ~110ms me kaam karta hai. PW ka total ~800ms hai. Difference (~700ms) internet + PW rendering ka hai — extension ke control me nahi.
+  </div>
+</div>
+
+<!-- 10. FAQ -->
+<div class="section" id="faq">
+  <h2>❓ 10. FAQ</h2>
+  
+  <div class="faq-item">
+    <div class="faq-q">Q: Green Orb nahi dikh raha?</div>
+    <div class="faq-a">A: Check karo: 1) Lecture page pe ho? 2) Extension enabled hai? 3) Page refresh karo. Orb 50-500ms me detect ho jata hai.</div>
+  </div>
+  
+  <div class="faq-item">
+    <div class="faq-q">Q: Orb tap karne pe expand nahi hota?</div>
+    <div class="faq-a">A: Ek baar zor se tap karo (drag mat karo). Agar phir bhi na ho toh page refresh karo.</div>
+  </div>
+  
+  <div class="faq-item">
+    <div class="faq-q">Q: Poll miss ho gaya — kya kare?</div>
+    <div class="faq-a">A: Error Log check karo dashboard me. Reason dikhai dega. Usually: answer select nahi tha ya submit button nahi mila.</div>
+  </div>
+  
+  <div class="faq-item">
+    <div class="faq-q">Q: Extension poll answer karta hai but PW me mark nahi hota?</div>
+    <div class="faq-a">A: Answer Delay badhao (100ms ya 260ms try karo). Slow internet pe 50ms kabhi-kabhi enough nahi hota.</div>
+  </div>
+  
+  <div class="faq-item">
+    <div class="faq-q">Q: 📊 Dashboard button kaam nahi karta?</div>
+    <div class="faq-a">A: Kiwi Menu → Extensions → PW Poll Sniper icon tap karo — dashboard khulega. Ya browser restart karo.</div>
+  </div>
+  
+  <div class="faq-item">
+    <div class="faq-q">Q: Har poll ke baad answer reset kyu hota hai?</div>
+    <div class="faq-a">A: Ye by design hai — har poll ka answer alag ho sakta hai. Poll ke baad dobara select karo.</div>
+  </div>
+  
+  <div class="faq-item">
+    <div class="faq-q">Q: Battery bahut khaata hai?</div>
+    <div class="faq-a">A: Detection Speed 200ms ya 500ms set karo. Jab lecture nahi dekh rahe, extension OFF kar do.</div>
+  </div>
+  
+  <div class="faq-item">
+    <div class="faq-q">Q: Kya ye safe hai? PW pakdega toh?</div>
+    <div class="faq-a">A: Extension normal user ki tarah click karta hai (React events use karta hai). Koi network interception nahi karta. But use at your own risk.</div>
+  </div>
+</div>
+
+<!-- 11. Troubleshooting -->
+<div class="section" id="troubleshoot">
+  <h2>🔧 11. Troubleshooting</h2>
+  
+  <table class="settings-table">
+    <tr><th>Problem</th><th>Solution</th></tr>
+    <tr>
+      <td>Orb nahi dikha</td>
+      <td>Page refresh karo → Extension enabled check karo → Lecture URL pe ho confirm karo</td>
+    </tr>
+    <tr>
+      <td>Orb tap pe expand nahi hota</td>
+      <td>Zor se tap karo (drag nahi) → Extension reload karo (Kiwi → Extensions → reload icon)</td>
+    </tr>
+    <tr>
+      <td>Poll answer nahi hota</td>
+      <td>Answer select hai check karo (Orb pe letter dikhna chahiye) → Error Log dekho</td>
+    </tr>
+    <tr>
+      <td>Submit fail hota hai</td>
+      <td>Submit Delay badhao (50ms ya 100ms) → Auto Submit ON hai check karo</td>
+    </tr>
+    <tr>
+      <td>Dashboard nahi khulta</td>
+      <td>Kiwi Menu → Extensions → PW icon tap karo → Dashboard khulega</td>
+    </tr>
+    <tr>
+      <td>Extension slow hai</td>
+      <td>Detection 50ms, Answer 50ms, Submit 25ms set karo → Human Delay OFF</td>
+    </tr>
+    <tr>
+      <td>Battery drain</td>
+      <td>Detection 200ms+ set karo → Jab lecture na ho toh OFF karo</td>
+    </tr>
+    <tr>
+      <td>Recorded lecture me poll miss</td>
+      <td>Video rewind karo poll se pehle → Answer select karo → Play karo</td>
+    </tr>
+  </table>
+  
+  <div class="info-box danger">
+    <strong>🆘 Still not working?</strong><br>
+    Dashboard kholo → Error Log dekho → Screenshot lo → Error message ke saath report karo
+  </div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <p>⚡ PW Poll Sniper Mobile v5.4.9</p>
+  <p>40+ bugs fixed | Kiwi Browser optimized | Production ready</p>
+  <p style="margin-top:8px;">Made for PW students ❤️</p>
+</div>
+
+</body>
+</html>
