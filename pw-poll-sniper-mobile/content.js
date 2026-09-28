@@ -22,7 +22,9 @@
     HUMAN_DELAY_MAX: 1500,
     POLL_INTERVAL: 100,
     PROCESSING_LOCK: 3000,
-    ICON_RESET_TIME: 1800000,
+    ICON_RESET_TIME: 5000, // FIX #1: Was 1800000 (30 min!) → Now 5 seconds
+    PANEL_OPEN_TIMEOUT: 3000, // FIX #4: Was 2000 → Now 3 seconds
+    PROCESSING_SAFETY_TIMEOUT: 15000, // FIX #3: Force reset isProcessing after 15s
     NOTIFICATION_DURATION: 2500
   };
 
@@ -52,6 +54,7 @@
   let panelOpening = false; // Prevent double-clicking poll icon
   let isExpanded = false; // Track if overlay is expanded
   let expandTimeout = null; // Auto-collapse timeout (17 seconds)
+  let processingSafetyTimer = null; // FIX #3: Safety timeout for isProcessing
 
   // UI elements
   let statusPanel = null;
@@ -123,13 +126,11 @@
           useHumanDelay = result.useHumanDelay !== false;
           extensionActive = result.extensionActive === true;
           
-          console.log('[PW Sniper Mobile] Settings loaded, extensionActive:', extensionActive);
           updateUI();
           
           // NOW start polling (after storage is loaded)
           if (checkInterval) clearInterval(checkInterval);
           checkInterval = setInterval(checkForPoll, PW.POLL_INTERVAL);
-          console.log('[PW Sniper Mobile] Polling started');
         }
       );
 
@@ -158,7 +159,6 @@
         if (changes.useHumanDelay !== undefined) useHumanDelay = changes.useHumanDelay.newValue;
       });
 
-      console.log('[PW Sniper Mobile] Initialized, waiting for storage...');
     } catch (e) {
       addError('Init error: ' + e.message);
     }
@@ -459,14 +459,23 @@
         isProcessing = true;
         lastPollTime = Date.now();
         lastAnsweredPollHash = pollHash;
-        pollCount++;
-        saveToStorage('pollCount', pollCount);
+        
+        // FIX #3: Safety timeout - force reset isProcessing after 15 seconds
+        if (processingSafetyTimer) clearTimeout(processingSafetyTimer);
+        processingSafetyTimer = setTimeout(() => {
+          if (isProcessing) {
+            isProcessing = false;
+            addError('isProcessing force-reset after 15s timeout');
+            updateUI();
+          }
+        }, PW.PROCESSING_SAFETY_TIMEOUT);
 
         answerPoll(options);
       } else {
         // No poll options - try to open poll panel
+        // FIX #5: Pass options to tryOpenPoll (avoid redundant findOptions call)
         if (autoOpen) {
-          tryOpenPoll();
+          tryOpenPoll(options);
         }
       }
     } catch (e) {
@@ -548,9 +557,10 @@
         }
       }
 
-      return false;
+      // FIX #9: Default to TRUE (safer - try to answer rather than miss a poll)
+      return true;
     } catch (e) {
-      return false;
+      return true; // FIX #9: On error, assume active (safer)
     }
   }
 
@@ -587,9 +597,9 @@
   }
 
   function generatePollHash(options) {
-    const letters = options.map(o => o.letter).join('');
-    const parentInfo = options[0]?.button?.parentElement?.className?.substring(0, 20) || 'unknown';
-    return `${letters}_${parentInfo}_${Math.floor(Date.now() / 20000)}`;
+    // FIX #2: Use pollCount + timestamp for unique hash (no collision)
+    const timeBucket = Math.floor(Date.now() / 3000); // 3-second window
+    return `poll_${pollCount}_${timeBucket}`;
   }
 
   function getCurrentAnswer() {
@@ -632,7 +642,6 @@
       let humanDelay = 0;
       if (useHumanDelay) {
         humanDelay = Math.floor(Math.random() * (humanDelayMax - humanDelayMin + 1)) + humanDelayMin;
-        console.log(`[PW Sniper Mobile] Human delay: ${humanDelay}ms`);
       }
 
       // Wait human delay first, then poll delay
@@ -669,6 +678,10 @@
                     }
 
                     const time = Math.round(performance.now() - startTime + pollDelay + humanDelay);
+
+                    // FIX #6: Increment pollCount ONLY on success
+                    pollCount++;
+                    saveToStorage('pollCount', pollCount);
 
                     addPollResult({
                       poll: pollCount,
@@ -717,10 +730,15 @@
                   saveToStorage('selectedOption', null);
                 } finally {
                   isProcessing = false;
+                  if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
                   updateUI();
                 }
               }, submitDelay);
             } else {
+              // FIX #6: Increment pollCount for SELECTED status
+              pollCount++;
+              saveToStorage('pollCount', pollCount);
+              
               addPollResult({
                 poll: pollCount,
                 answer: target,
@@ -734,6 +752,7 @@
               saveToStorage('selectedOption', null);
               
               isProcessing = false;
+              if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
               updateUI();
             }
           } catch (e) {
@@ -749,6 +768,7 @@
             nextPollAnswer = null;
             saveToStorage('selectedOption', null);
             isProcessing = false;
+            if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
             updateUI();
           }
         }, pollDelay);
@@ -759,24 +779,22 @@
       nextPollAnswer = null;
       saveToStorage('selectedOption', null);
       isProcessing = false;
+      if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
       updateUI();
     }
   }
 
   // ============================================
-  // TRY OPEN POLL (First poll bug fix: single click only!)
+  // TRY OPEN POLL (FIX #5: Accept options param to avoid redundant findOptions call)
   // ============================================
-  function tryOpenPoll() {
-    // FIRST: Check if panel is already open
-    const existingOptions = findOptions();
-    if (existingOptions.length >= 2) {
-      console.log('[PW Sniper Mobile] Panel already open, skipping click');
+  function tryOpenPoll(existingOptions) {
+    // FIX #5: Use passed options instead of calling findOptions() again
+    if (existingOptions && existingOptions.length >= 2) {
       return;
     }
     
     // SECOND: Check if we're in the middle of opening the panel
     if (panelOpening) {
-      console.log('[PW Sniper Mobile] Panel is opening, waiting...');
       return;
     }
     
@@ -814,7 +832,6 @@
           
           if (!isWhite) {
             pollDetected = true;
-            console.log('[PW Sniper Mobile] 🎯 POLL DETECTED! Icon color:', fillColor);
             break;
           }
         }
@@ -826,7 +843,6 @@
           const computedFill = window.getComputedStyle(svgPaths[0]).fill;
           if (computedFill && !computedFill.includes('255, 255, 255') && computedFill !== 'white') {
             pollDetected = true;
-            console.log('[PW Sniper Mobile] 🎯 POLL DETECTED via computed style! Fill:', computedFill);
           }
         } catch(e) {}
       }
@@ -836,7 +852,6 @@
         panelOpening = true;
         
         // Click ONCE only!
-        console.log('[PW Sniper Mobile] Clicking poll icon (ONCE)...');
         const clicked = clickPollIcon(pollIcon);
         
         if (clicked) {
@@ -845,11 +860,9 @@
           // Reset flag after 2 seconds
           setTimeout(() => {
             panelOpening = false;
-            console.log('[PW Sniper Mobile] Panel opening flag reset');
           }, 2000);
         } else {
           panelOpening = false;
-          console.log('[PW Sniper Mobile] Click failed, flag reset');
         }
       } else {
         pollIconClickedAt = 0;
@@ -871,7 +884,6 @@
     // Try React onClick FIRST
     const props = getReactProps(el);
     if (props && typeof props.onClick === 'function') {
-      console.log('[PW Sniper Mobile] Using React onClick');
       try {
         props.onClick({
           preventDefault: () => {},
@@ -884,7 +896,6 @@
         });
         return true;
       } catch(e) {
-        console.log('[PW Sniper Mobile] React onClick failed:', e.message);
       }
     }
     
@@ -893,7 +904,6 @@
     for (let i = 0; i < 3 && parent; i++) {
       const parentProps = getReactProps(parent);
       if (parentProps && typeof parentProps.onClick === 'function') {
-        console.log('[PW Sniper Mobile] Using parent React onClick');
         try {
           parentProps.onClick({
             preventDefault: () => {},
@@ -906,14 +916,12 @@
           });
           return true;
         } catch(e) {
-          console.log('[PW Sniper Mobile] Parent React onClick failed:', e.message);
         }
       }
       parent = parent.parentElement;
     }
     
     // MOBILE OPTIMIZED: Dispatch touch events first (for Kiwi Browser)
-    console.log('[PW Sniper Mobile] Using touch + click events (mobile optimized)');
     try {
       const opts = { bubbles: true, cancelable: true, view: window, button: 0 };
       
@@ -934,18 +942,15 @@
       el.dispatchEvent(new MouseEvent('click', opts));
       return true;
     } catch(e) {
-      console.log('[PW Sniper Mobile] Touch+click failed:', e.message);
     }
     
     // LAST RESORT: Native click
     try {
       if (typeof el.click === 'function') {
-        console.log('[PW Sniper Mobile] Using native click (last resort)');
         el.click();
         return true;
       }
     } catch(e) {
-      console.log('[PW Sniper Mobile] Native click failed:', e.message);
     }
     
     return false;

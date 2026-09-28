@@ -1,46 +1,21 @@
-// background.js - Service worker for PW Poll Sniper
+// background.js - v5.4.5 Service Worker (FIX #8: Badge persists, FIX #9: Version updated)
 
-// Listen for installation
-chrome.runtime.onInstalled.addListener((details) => {
-  if (details.reason === 'install') {
-    chrome.storage.local.set({
-      selectedOption: 'A',
-      autoSubmit: true,
-      autoOpen: true,
-      soundAlert: true,
-      debugMode: true,
-      pollsAnswered: 0,
-      totalResponseTime: 0
-    });
-
-    console.log('[PW Poll Sniper] Extension installed successfully!');
-    console.log('[PW Poll Sniper] Debug mode is ENABLED by default to help find PW poll selectors');
+// Listen for messages from content script
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  try {
+    if (msg.type === 'POLL_ANSWERED') {
+      const count = msg.pollCount || 0;
+      // Update badge with poll count
+      chrome.action.setBadgeText({ text: count > 0 ? String(count) : '' });
+      chrome.action.setBadgeBackgroundColor({ color: '#22c55e' });
+    }
+  } catch (e) {
+    console.error('[PW Sniper Mobile BG] Error:', e);
   }
 });
 
-// Listen for messages from content script or popup
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.type === 'POLL_ANSWERED') {
-    chrome.storage.local.get(['pollsAnswered', 'totalResponseTime'], (result) => {
-      const pollsAnswered = (result.pollsAnswered || 0) + 1;
-      const totalResponseTime = (result.totalResponseTime || 0) + message.responseTime;
-
-      chrome.storage.local.set({
-        pollsAnswered,
-        totalResponseTime
-      });
-
-      console.log(`[PW Poll Sniper] Poll #${pollsAnswered} answered in ${message.responseTime}ms`);
-    });
-  }
-
-  if (sender.tab) {
-    chrome.runtime.sendMessage(message).catch(() => {
-      // Popup might not be open
-    });
-  }
+// FIX #8: Don't reset badge on navigation - keep poll count visible
+// Only reset badge when extension is first installed or updated
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.action.setBadgeText({ text: '' });
 });
-
-// Badge text to show active status
-chrome.action.setBadgeText({ text: '⚡' });
-chrome.action.setBadgeBackgroundColor({ color: '#7c4dff' });
