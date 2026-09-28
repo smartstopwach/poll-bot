@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Settings
       autoSubmit.checked = result.autoSubmit !== false;
       autoOpen.checked = result.autoOpen !== false;
-      humanDelay.checked = result.useHumanDelay !== false;
+      humanDelay.checked = result.useHumanDelay === true;
 
       // Selected answer
       if (result.selectedOption) {

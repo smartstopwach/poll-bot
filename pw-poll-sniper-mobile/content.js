@@ -16,8 +16,8 @@
     OPTION_SPAN: 'span.line-clamp-1',
     SUBMIT_TEXT: 'Submit Answer',
     RESULT_TEXTS: ['Correct Answer is', 'Not Participated', 'Answered Correctly', 'You did not attempt'],
-    POLL_DELAY: 260,
-    SUBMIT_DELAY: 25,
+    POLL_DELAY: 0,
+    SUBMIT_DELAY: 0,
     HUMAN_DELAY_MIN: 500,
     HUMAN_DELAY_MAX: 1500,
     POLL_INTERVAL: 100,
@@ -50,7 +50,7 @@
   let submitDelay = PW.SUBMIT_DELAY;
   let humanDelayMin = PW.HUMAN_DELAY_MIN;
   let humanDelayMax = PW.HUMAN_DELAY_MAX;
-  let useHumanDelay = true;
+  let useHumanDelay = false;
   let pollDetectionInterval = PW.POLL_INTERVAL; // FIX #1: Configurable detection interval
   let panelOpening = false; // Prevent double-clicking poll icon
   let isExpanded = false; // Track if overlay is expanded
@@ -137,7 +137,7 @@
           humanDelayMin = (result.humanDelayMin !== undefined && result.humanDelayMin !== null) ? Math.max(0, parseInt(result.humanDelayMin) || PW.HUMAN_DELAY_MIN) : PW.HUMAN_DELAY_MIN;
           humanDelayMax = (result.humanDelayMax !== undefined && result.humanDelayMax !== null) ? Math.max(humanDelayMin, parseInt(result.humanDelayMax) || PW.HUMAN_DELAY_MAX) : PW.HUMAN_DELAY_MAX;
           pollCount = Math.max(0, parseInt(result.pollCount) || 0); // FIX #35: Validate pollCount
-          useHumanDelay = result.useHumanDelay !== false;
+          useHumanDelay = result.useHumanDelay === true; // Default OFF for fastest speed
           extensionActive = result.extensionActive !== false; // Default to true if not set
           // FIX #35: Validate pollDetectionInterval (minimum 50ms to prevent CPU overload)
           pollDetectionInterval = (result.pollDetectionInterval !== undefined && result.pollDetectionInterval !== null) ? Math.max(50, parseInt(result.pollDetectionInterval) || PW.POLL_INTERVAL) : PW.POLL_INTERVAL;
@@ -303,7 +303,7 @@
       let glowColor = extensionActive ? 'rgba(16, 185, 129, 0.4)' : 'rgba(239, 68, 68, 0.3)';
       
       if (isExpanded) {
-        // Expanded view - Answer buttons + Settings controls
+        // Expanded view - 6 buttons only (A, B, C, D, _, Dashboard)
         statusPanel.innerHTML = `
           <div style="
             background: rgba(0, 0, 0, 0.92);
@@ -315,41 +315,18 @@
             border: 2px solid ${mainColor};
             min-width: 220px;
           ">
-            <!-- Row 1: Answer Buttons -->
-            <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-bottom: 8px;">
+            <!-- 6 Buttons: A, B, C, D, _, Dashboard -->
+            <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px;">
               <button id="pw-btn-a" style="padding: 14px 6px; background: ${selectedOption === 'A' ? '#3b82f6' : 'rgba(255,255,255,0.15)'}; border: none; border-radius: 10px; color: white; font-weight: 700; font-size: 15px; cursor: pointer;">A</button>
               <button id="pw-btn-b" style="padding: 14px 6px; background: ${selectedOption === 'B' ? '#3b82f6' : 'rgba(255,255,255,0.15)'}; border: none; border-radius: 10px; color: white; font-weight: 700; font-size: 15px; cursor: pointer;">B</button>
               <button id="pw-btn-c" style="padding: 14px 6px; background: ${selectedOption === 'C' ? '#3b82f6' : 'rgba(255,255,255,0.15)'}; border: none; border-radius: 10px; color: white; font-weight: 700; font-size: 15px; cursor: pointer;">C</button>
               <button id="pw-btn-d" style="padding: 14px 6px; background: ${selectedOption === 'D' ? '#3b82f6' : 'rgba(255,255,255,0.15)'}; border: none; border-radius: 10px; color: white; font-weight: 700; font-size: 15px; cursor: pointer;">D</button>
               <button id="pw-btn-blank" style="padding: 14px 6px; background: ${!selectedOption ? '#6b7280' : 'rgba(255,255,255,0.15)'}; border: none; border-radius: 10px; color: white; font-weight: 700; font-size: 15px; cursor: pointer;">_</button>
-            </div>
-            <!-- Row 2: Controls -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 5px;">
-              <button id="pw-btn-power" style="padding: 10px 6px; background: ${extensionActive ? '#10b981' : '#ef4444'}; border: none; border-radius: 10px; color: white; font-weight: 700; font-size: 11px; cursor: pointer;">${extensionActive ? '● ON' : '○ OFF'}</button>
-              <button id="pw-btn-autosubmit" style="padding: 10px 6px; background: ${autoSubmit ? '#8b5cf6' : 'rgba(255,255,255,0.15)'}; border: none; border-radius: 10px; color: white; font-weight: 600; font-size: 11px; cursor: pointer;">${autoSubmit ? '✓ Submit' : '✗ Submit'}</button>
-              <button id="pw-btn-speed" style="padding: 10px 6px; background: rgba(255,255,255,0.15); border: none; border-radius: 10px; color: white; font-weight: 600; font-size: 11px; cursor: pointer;">⚡ ${pollDelay}ms</button>
-              <button id="pw-btn-dashboard" style="padding: 10px 6px; background: rgba(59,130,246,0.3); border: none; border-radius: 10px; color: white; font-weight: 600; font-size: 11px; cursor: pointer;">📊 Full</button>
-            </div>
-            <!-- Row 3: Speed Controls -->
-            <div id="pw-speed-panel" style="display: none; margin-top: 8px; padding: 8px; background: rgba(255,255,255,0.05); border-radius: 10px;">
-              <div style="color: #94a3b8; font-size: 11px; margin-bottom: 6px; font-weight: 600;">POLL DELAY</div>
-              <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-bottom: 8px;">
-                <button class="pw-speed-btn" data-delay="50" style="padding: 8px 4px; background: ${pollDelay === 50 ? '#3b82f6' : 'rgba(255,255,255,0.1)'}; border: none; border-radius: 8px; color: white; font-size: 11px; cursor: pointer;">50ms</button>
-                <button class="pw-speed-btn" data-delay="100" style="padding: 8px 4px; background: ${pollDelay === 100 ? '#3b82f6' : 'rgba(255,255,255,0.1)'}; border: none; border-radius: 8px; color: white; font-size: 11px; cursor: pointer;">100ms</button>
-                <button class="pw-speed-btn" data-delay="260" style="padding: 8px 4px; background: ${pollDelay === 260 ? '#3b82f6' : 'rgba(255,255,255,0.1)'}; border: none; border-radius: 8px; color: white; font-size: 11px; cursor: pointer;">260ms</button>
-                <button class="pw-speed-btn" data-delay="500" style="padding: 8px 4px; background: ${pollDelay === 500 ? '#3b82f6' : 'rgba(255,255,255,0.1)'}; border: none; border-radius: 8px; color: white; font-size: 11px; cursor: pointer;">500ms</button>
-              </div>
-              <div style="color: #94a3b8; font-size: 11px; margin-bottom: 6px; font-weight: 600;">SUBMIT DELAY</div>
-              <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px;">
-                <button class="pw-submit-btn" data-delay="10" style="padding: 8px 4px; background: ${submitDelay === 10 ? '#8b5cf6' : 'rgba(255,255,255,0.1)'}; border: none; border-radius: 8px; color: white; font-size: 11px; cursor: pointer;">10ms</button>
-                <button class="pw-submit-btn" data-delay="25" style="padding: 8px 4px; background: ${submitDelay === 25 ? '#8b5cf6' : 'rgba(255,255,255,0.1)'}; border: none; border-radius: 8px; color: white; font-size: 11px; cursor: pointer;">25ms</button>
-                <button class="pw-submit-btn" data-delay="50" style="padding: 8px 4px; background: ${submitDelay === 50 ? '#8b5cf6' : 'rgba(255,255,255,0.1)'}; border: none; border-radius: 8px; color: white; font-size: 11px; cursor: pointer;">50ms</button>
-                <button class="pw-submit-btn" data-delay="100" style="padding: 8px 4px; background: ${submitDelay === 100 ? '#8b5cf6' : 'rgba(255,255,255,0.1)'}; border: none; border-radius: 8px; color: white; font-size: 11px; cursor: pointer;">100ms</button>
-              </div>
+              <button id="pw-btn-dashboard" style="padding: 14px 6px; background: rgba(59,130,246,0.3); border: none; border-radius: 10px; color: white; font-weight: 700; font-size: 15px; cursor: pointer;">📊</button>
             </div>
             <!-- Poll Count -->
             <div style="text-align: center; margin-top: 6px; color: #64748b; font-size: 10px;">
-              Polls: ${pollCount} | ${selectedOption ? 'Ans: ' + selectedOption : 'No answer'}
+              Polls: ${pollCount} | ${selectedOption ? 'Ans: ' + selectedOption : 'No answer'} | ${extensionActive ? '● ON' : '○ OFF'}
             </div>
           </div>
         `;
@@ -445,73 +422,6 @@
           });
         }
         
-        // Power button - toggle extension active/inactive
-        const btnPower = document.getElementById('pw-btn-power');
-        if (btnPower) {
-          btnPower.addEventListener('click', (e) => {
-            e.stopPropagation();
-            extensionActive = !extensionActive;
-            saveToStorage('extensionActive', extensionActive);
-            // Reset expand timeout
-            if (expandTimeout) {
-              clearTimeout(expandTimeout);
-              expandTimeout = null;
-            }
-            updateUI();
-            // Re-set expand timeout since we're still expanded
-            if (isExpanded) {
-              expandTimeout = setTimeout(() => {
-                isExpanded = false;
-                updateUI();
-              }, 17000);
-            }
-          });
-        }
-        
-        // Auto-submit button - toggle auto-submit
-        const btnAutoSubmit = document.getElementById('pw-btn-autosubmit');
-        if (btnAutoSubmit) {
-          btnAutoSubmit.addEventListener('click', (e) => {
-            e.stopPropagation();
-            autoSubmit = !autoSubmit;
-            saveToStorage('autoSubmit', autoSubmit);
-            // Reset expand timeout
-            if (expandTimeout) {
-              clearTimeout(expandTimeout);
-              expandTimeout = null;
-            }
-            updateUI();
-            // Re-set expand timeout
-            if (isExpanded) {
-              expandTimeout = setTimeout(() => {
-                isExpanded = false;
-                updateUI();
-              }, 17000);
-            }
-          });
-        }
-        
-        // Speed button - toggle speed panel
-        const btnSpeed = document.getElementById('pw-btn-speed');
-        const speedPanel = document.getElementById('pw-speed-panel');
-        if (btnSpeed && speedPanel) {
-          btnSpeed.addEventListener('click', (e) => {
-            e.stopPropagation();
-            speedPanel.style.display = speedPanel.style.display === 'none' ? 'block' : 'none';
-            // Reset expand timeout
-            if (expandTimeout) {
-              clearTimeout(expandTimeout);
-              expandTimeout = null;
-            }
-            if (isExpanded) {
-              expandTimeout = setTimeout(() => {
-                isExpanded = false;
-                updateUI();
-              }, 17000);
-            }
-          });
-        }
-        
         // Dashboard button - open full dashboard in new tab
         const btnDashboard = document.getElementById('pw-btn-dashboard');
         if (btnDashboard) {
@@ -526,54 +436,6 @@
             }
           });
         }
-        
-        // Speed buttons
-        const speedBtns = document.querySelectorAll('.pw-speed-btn');
-        speedBtns.forEach(btn => {
-          btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const delay = parseInt(btn.dataset.delay);
-            pollDelay = delay;
-            saveToStorage('pollDelay', pollDelay);
-            // Reset expand timeout
-            if (expandTimeout) {
-              clearTimeout(expandTimeout);
-              expandTimeout = null;
-            }
-            updateUI();
-            // Re-set expand timeout
-            if (isExpanded) {
-              expandTimeout = setTimeout(() => {
-                isExpanded = false;
-                updateUI();
-              }, 17000);
-            }
-          });
-        });
-        
-        // Submit delay buttons
-        const submitBtns = document.querySelectorAll('.pw-submit-btn');
-        submitBtns.forEach(btn => {
-          btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const delay = parseInt(btn.dataset.delay);
-            submitDelay = delay;
-            saveToStorage('submitDelay', submitDelay);
-            // Reset expand timeout
-            if (expandTimeout) {
-              clearTimeout(expandTimeout);
-              expandTimeout = null;
-            }
-            updateUI();
-            // Re-set expand timeout
-            if (isExpanded) {
-              expandTimeout = setTimeout(() => {
-                isExpanded = false;
-                updateUI();
-              }, 17000);
-            }
-          });
-        });
         
       } else {
         // Collapsed view - circle with answer (green=ON, red=OFF)

@@ -50,7 +50,7 @@ function loadSettings() {
       // Toggles
       document.getElementById('autoSubmitToggle').checked = result.autoSubmit !== false;
       document.getElementById('autoOpenToggle').checked = result.autoOpen !== false;
-      document.getElementById('humanDelayToggle').checked = result.useHumanDelay !== false;
+      document.getElementById('humanDelayToggle').checked = result.useHumanDelay === true;
       
       // Stats
       const pollCount = result.pollCount || 0;
