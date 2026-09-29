@@ -5,7 +5,7 @@
   'use strict';
 
   // ============================================
-  // CONSTANTS
+  // CONSTANTS — ULTRA FAST (LAPTOP OPTIMIZED)
   // ============================================
   const PW = {
     RECORDED_POLL_ICON: '#record-poll-icon',
@@ -18,17 +18,17 @@
     SUBMIT_TEXT: 'Submit Answer',
     SUBMIT_TEXTS: ['Submit Answer', 'Submit', 'SUBMIT', 'Submit answer'],
     RESULT_TEXTS: ['Correct Answer is', 'Not Participated', 'Answered Correctly', 'You did not attempt', 'Wrong Answer', 'Incorrect'],
-    POLL_DELAY: 25,         // Even faster for laptop (was 50ms)
-    SUBMIT_DELAY: 15,       // Even faster for laptop (was 25ms)
+    POLL_DELAY: 10,         // ULTRA FAST: 10ms (was 25ms)
+    SUBMIT_DELAY: 5,        // ULTRA FAST: 5ms (was 15ms)
     HUMAN_DELAY_MIN: 500,
     HUMAN_DELAY_MAX: 1500,
-    POLL_INTERVAL: 50,      // Faster polling for laptop
+    POLL_INTERVAL: 25,      // ULTRA FAST: 25ms polling (was 50ms)
     PROCESSING_LOCK: 3000,
     ICON_RESET_TIME: 5000,
-    PANEL_OPEN_TIMEOUT: 3000,
+    PANEL_OPEN_TIMEOUT: 2000,  // Faster timeout
     PROCESSING_SAFETY_TIMEOUT: 15000,
-    NOTIFICATION_DURATION: 3000,
-    WS_ADVANTAGE_DISPLAY: 5000  // Show WS advantage for 5 seconds
+    NOTIFICATION_DURATION: 2500,
+    WS_ADVANTAGE_DISPLAY: 5000
   };
 
   // ============================================
@@ -71,6 +71,8 @@
   let wsPollData = null;            // Raw poll data from WS
   let wsAdvantageMs = 0;            // How many ms WS was ahead of DOM
   let lastWsPollTime = 0;           // Debounce WS detections
+  let wsPreClickInterval = null;    // Ultra-fast watcher after WS detect
+  let wsPreClickStartTime = 0;      // When pre-click watcher started
 
   // UI elements
   let statusPanel = null;
@@ -140,6 +142,9 @@
         setTimeout(() => {
           tryOpenPollImmediate();
         }, 10);
+        
+        // ULTRA FAST: Start pre-click watcher — clicks answer the instant DOM renders
+        startWsPreClickWatcher();
       }
 
       // Clear WS flag after 10 seconds (in case DOM never renders)
@@ -195,6 +200,161 @@
     }
   }
 
+  // ULTRA FAST: Pre-click watcher — runs at 5ms after WS detects poll
+  // Clicks the answer the INSTANT DOM renders the options
+  function startWsPreClickWatcher() {
+    if (wsPreClickInterval) clearInterval(wsPreClickInterval);
+    wsPreClickStartTime = performance.now();
+    
+    const answer = getCurrentAnswer();
+    if (!answer) return; // No answer selected, skip pre-click
+    
+    let attempts = 0;
+    wsPreClickInterval = setInterval(() => {
+      attempts++;
+      
+      // Stop after 200 attempts (200 * 5ms = 1 second) or if already processing
+      if (attempts > 200 || isProcessing) {
+        clearInterval(wsPreClickInterval);
+        wsPreClickInterval = null;
+        return;
+      }
+      
+      try {
+        const options = findOptions();
+        if (options.length >= 2 && isPollActive(options)) {
+          // OPTIONS FOUND! Click IMMEDIATELY — no delays!
+          clearInterval(wsPreClickInterval);
+          wsPreClickInterval = null;
+          
+          const pollHash = generatePollHash(options);
+          if (pollHash === lastAnsweredPollHash) return;
+          
+          // Calculate WS advantage
+          if (wsPollTimestamp > 0) {
+            wsAdvantageMs = Math.round(performance.now() - wsPollTimestamp);
+            wsPollDetected = false;
+            setTimeout(() => { wsAdvantageMs = 0; updateUI(); }, PW.WS_ADVANTAGE_DISPLAY);
+          }
+          
+          // Trigger answerPoll with ULTRA FAST mode
+          isProcessing = true;
+          lastPollTime = Date.now();
+          
+          if (processingSafetyTimer) clearTimeout(processingSafetyTimer);
+          processingSafetyTimer = setTimeout(() => {
+            if (isProcessing) {
+              isProcessing = false;
+              addError('isProcessing force-reset after 15s timeout');
+              updateUI();
+            }
+          }, PW.PROCESSING_SAFETY_TIMEOUT);
+          
+          answerPollUltraFast(options);
+        }
+      } catch(e) {}
+    }, 5); // 5ms — ultra fast!
+  }
+
+  // ULTRA FAST answer — skips pollDelay, goes straight to click + submit
+  function answerPollUltraFast(options) {
+    try {
+      const target = getCurrentAnswer();
+      if (!target) {
+        isProcessing = false;
+        if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
+        updateUI();
+        return;
+      }
+
+      const option = options.find(o => o.letter === target);
+      if (!option) {
+        addError(`Poll #${pollCount}: WS Pre-click - option ${target} not found`);
+        isProcessing = false;
+        if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
+        updateUI();
+        return;
+      }
+
+      const startTime = performance.now();
+      showNotification(`⚡ WS Pre-click: ${target}`, '#fbbf24');
+
+      // CLICK IMMEDIATELY — no poll delay!
+      let clickMethod = 'DOM';
+      const reactClicked = clickViaReact(option.button);
+      if (reactClicked) clickMethod = 'React';
+      else dispatchClick(option.button);
+
+      if (option.radio) {
+        option.radio.checked = true;
+        option.radio.dispatchEvent(new Event('change', { bubbles: true }));
+        option.radio.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+
+      // Submit after minimal delay (5ms)
+      if (autoSubmit) {
+        if (pollAnswerTimer3) clearTimeout(pollAnswerTimer3);
+        pollAnswerTimer3 = setTimeout(() => {
+          pollAnswerTimer3 = null;
+          try {
+            const submitBtn = findSubmitButton();
+            if (submitBtn) {
+              let submitMethod = 'DOM';
+              const submitReactClicked = clickViaReact(submitBtn);
+              if (submitReactClicked) submitMethod = 'React';
+              else dispatchClick(submitBtn);
+
+              const time = Math.round(performance.now() - startTime);
+              pollCount++;
+              saveToStorage('pollCount', pollCount);
+
+              const wsInfo = wsAdvantageMs > 0 ? `${wsAdvantageMs}ms` : '-';
+              addPollResult({
+                poll: pollCount, answer: target, status: 'SUCCESS',
+                click: clickMethod + '+WS', submit: submitMethod,
+                time: time + 'ms', ws: wsInfo
+              });
+
+              sendToBackground({ type: 'POLL_ANSWERED', responseTime: time, pollCount });
+              showNotification(`⚡ #${pollCount} ${time}ms (WS +${wsAdvantageMs}ms)`, '#10b981');
+              
+              lastAnsweredPollHash = generatePollHash(options);
+              selectedOption = null;
+              nextPollAnswer = null;
+              saveToStorage('selectedOption', null);
+            } else {
+              addError(`Poll #${pollCount} WS: Submit not found`);
+              addPollResult({ poll: pollCount, answer: target, status: 'FAILED', reason: 'No submit (WS)', time: '-', ws: '-' });
+              showNotification(`⚠ No submit`, '#f59e0b');
+              nextPollAnswer = null;
+            }
+          } catch(e) {
+            addError(`Poll #${pollCount} WS submit: ${e.message}`);
+            nextPollAnswer = null;
+          } finally {
+            isProcessing = false;
+            if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
+            updateUI();
+          }
+        }, submitDelay); // 5ms submit delay
+      } else {
+        pollCount++;
+        saveToStorage('pollCount', pollCount);
+        addPollResult({ poll: pollCount, answer: target, status: 'SELECTED', reason: 'WS Pre-click', time: '-', ws: '-' });
+        selectedOption = null; nextPollAnswer = null;
+        saveToStorage('selectedOption', null);
+        isProcessing = false;
+        if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
+        updateUI();
+      }
+    } catch(e) {
+      addError(`Poll #${pollCount} WS: ${e.message}`);
+      isProcessing = false;
+      if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
+      updateUI();
+    }
+  }
+
   // ============================================
   // INIT
   // ============================================
@@ -240,6 +400,7 @@
             if (pollAnswerTimer1) clearTimeout(pollAnswerTimer1);
             if (pollAnswerTimer2) clearTimeout(pollAnswerTimer2);
             if (pollAnswerTimer3) clearTimeout(pollAnswerTimer3);
+            if (wsPreClickInterval) clearInterval(wsPreClickInterval);
             if (urlChangeCheck) clearInterval(urlChangeCheck);
             window.removeEventListener('message', handleWebSocketMessage);
           });
@@ -790,9 +951,9 @@
         humanDelay = Math.floor(Math.random() * (humanDelayMax - humanDelayMin + 1)) + humanDelayMin;
       }
 
-      if (pollAnswerTimer1) clearTimeout(pollAnswerTimer1);
-      pollAnswerTimer1 = setTimeout(() => {
-        pollAnswerTimer1 = null;
+      // ULTRA FAST: Single execution with minimal delays
+      const executeAnswer = () => {
+        // Poll delay (10ms default)
         if (pollAnswerTimer2) clearTimeout(pollAnswerTimer2);
         pollAnswerTimer2 = setTimeout(() => {
           pollAnswerTimer2 = null;
@@ -909,7 +1070,15 @@
             updateUI();
           }
         }, pollDelay);
-      }, humanDelay);
+      };
+
+      // Execute: with human delay if enabled, else immediately
+      if (humanDelay > 0) {
+        if (pollAnswerTimer1) clearTimeout(pollAnswerTimer1);
+        pollAnswerTimer1 = setTimeout(() => { pollAnswerTimer1 = null; executeAnswer(); }, humanDelay);
+      } else {
+        executeAnswer();
+      }
     } catch(e) {
       addError(`Poll #${pollCount}: ${e.message}`);
       showNotification('✗ Error', '#ef4444');

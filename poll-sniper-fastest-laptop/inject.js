@@ -1,62 +1,33 @@
 // inject.js — Runs in MAIN world to intercept WebSocket messages
 // PW Poll Sniper Laptop v1.0.0 — WebSocket Intercept for 300-400ms faster detection
+// ULTRA FAST: Optimized for minimum latency
 (function() {
   'use strict';
   
   // ============================================
-  // WEBSOCKET INTERCEPT
+  // WEBSOCKET INTERCEPT — ULTRA FAST
   // ============================================
   const OriginalWebSocket = window.WebSocket;
-  const originalSend = OriginalWebSocket.prototype.send;
   
-  // Track WebSocket connections related to PW polls
-  let pollSocket = null;
+  // Pre-compiled regex for fast poll detection
+  const POLL_REGEX = /poll|quiz|question|mcq|answer|pollStarted|pollCreated|newPoll|livePoll|startPoll/i;
   
   function interceptMessage(data) {
-    try {
-      // Parse the message (could be string or ArrayBuffer)
-      let parsed = null;
-      if (typeof data === 'string') {
-        try {
-          parsed = JSON.parse(data);
-        } catch(e) {
-          // Not JSON, check for poll-related keywords
-          if (data.includes('poll') || data.includes('quiz') || data.includes('question')) {
-            window.postMessage({ 
-              type: 'PW_POLL_WS_RAW', 
-              data: data 
-            }, '*');
-          }
-          return;
-        }
-      }
-      
-      if (!parsed) return;
-      
-      // Check if this message contains poll data
-      // PW uses various event names for polls
-      const pollIndicators = [
-        'poll', 'quiz', 'question', 'mcq', 'answer',
-        'pollStarted', 'pollCreated', 'newPoll', 'livePoll',
-        'startPoll', 'POLL', 'Quiz'
-      ];
-      
-      const dataStr = JSON.stringify(parsed).toLowerCase();
-      const isPollRelated = pollIndicators.some(ind => dataStr.includes(ind.toLowerCase()));
-      
-      if (isPollRelated) {
-        // Send poll data to content script
+    // Fast path: string data
+    if (typeof data === 'string') {
+      // Quick regex check before expensive JSON parse
+      if (POLL_REGEX.test(data)) {
+        // Notify content script immediately
         window.postMessage({ 
           type: 'PW_POLL_WS_DETECTED', 
-          data: parsed,
+          data: data,
           timestamp: performance.now()
         }, '*');
-        
-        console.log('[PW Sniper WS] Poll data intercepted:', parsed);
       }
-    } catch(e) {
-      // Silent fail
+      return;
     }
+    
+    // ArrayBuffer/Blob — skip for now (PW uses string messages)
   }
   
   // Override WebSocket constructor
