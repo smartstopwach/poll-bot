@@ -18,11 +18,11 @@
     SUBMIT_TEXT: 'Submit Answer',
     SUBMIT_TEXTS: ['Submit Answer', 'Submit', 'SUBMIT', 'Submit answer'],
     RESULT_TEXTS: ['Correct Answer is', 'Not Participated', 'Answered Correctly', 'You did not attempt', 'Wrong Answer', 'Incorrect'],
-    POLL_DELAY: 10,         // ULTRA FAST: 10ms (was 25ms)
-    SUBMIT_DELAY: 5,        // ULTRA FAST: 5ms (was 15ms)
+    POLL_DELAY: 10,         // ULTRA FAST: 10ms (minimum safe for React)
+    SUBMIT_DELAY: 5,        // ULTRA FAST: 5ms (minimum safe for React state)
     HUMAN_DELAY_MIN: 500,
     HUMAN_DELAY_MAX: 1500,
-    POLL_INTERVAL: 25,      // ULTRA FAST: 25ms polling (was 50ms)
+    POLL_INTERVAL: 10,      // MAXIMUM FAST: 10ms detection (laptop CPU can handle)
     PROCESSING_LOCK: 3000,
     ICON_RESET_TIME: 5000,
     PANEL_OPEN_TIMEOUT: 2000,  // Faster timeout
@@ -213,8 +213,8 @@
     wsPreClickInterval = setInterval(() => {
       attempts++;
       
-      // Stop after 200 attempts (200 * 5ms = 1 second) or if already processing
-      if (attempts > 200 || isProcessing) {
+      // Stop after 500 attempts (500 * 2ms = 1 second) or if already processing
+      if (attempts > 500 || isProcessing) {
         clearInterval(wsPreClickInterval);
         wsPreClickInterval = null;
         return;
@@ -253,7 +253,7 @@
           answerPollUltraFast(options);
         }
       } catch(e) {}
-    }, 5); // 5ms — ultra fast!
+    }, 2); // 2ms — MAXIMUM FAST (safe: only runs for 1 second max)
   }
 
   // ULTRA FAST answer — skips pollDelay, goes straight to click + submit
