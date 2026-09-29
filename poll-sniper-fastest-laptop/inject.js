@@ -103,7 +103,8 @@
   const originalXHRSend = XMLHttpRequest.prototype.send;
   
   XMLHttpRequest.prototype.open = function(method, url) {
-    this._pwUrl = url;
+    // FIX: Convert URL object to string for reliable .includes() check
+    this._pwUrl = (url != null) ? String(url) : '';
     return originalXHROpen.apply(this, arguments);
   };
   

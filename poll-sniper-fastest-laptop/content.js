@@ -120,6 +120,8 @@
   // WEBSOCKET MESSAGE HANDLER
   // ============================================
   function handleWebSocketMessage(event) {
+    // FIX: Only process messages from our own window (not iframes or other origins)
+    if (event.source !== window) return;
     if (!event.data || typeof event.data !== 'object') return;
 
     const msg = event.data;
@@ -201,7 +203,7 @@
     }
   }
 
-  // ULTRA FAST: Pre-click watcher — runs at 5ms after WS detects poll
+  // ULTRA FAST: Pre-click watcher — runs at 2ms after WS detects poll
   // Clicks the answer the INSTANT DOM renders the options
   function startWsPreClickWatcher() {
     if (wsPreClickInterval) clearInterval(wsPreClickInterval);
@@ -282,6 +284,17 @@
 
       const startTime = performance.now();
       showNotification(`⚡ WS Pre-click: ${target}`, '#fbbf24');
+
+      // FIX: Verify button still exists in DOM before clicking
+      if (!option.button || !document.body.contains(option.button)) {
+        addError(`Poll #${pollCount}: WS button not in DOM`);
+        addPollResult({ poll: pollCount, answer: target, status: 'FAILED', reason: 'Button gone (WS)', time: '-', ws: '-' });
+        showNotification(`✗ Button gone`, '#ef4444');
+        isProcessing = false;
+        if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
+        updateUI();
+        return;
+      }
 
       // CLICK IMMEDIATELY — no poll delay!
       let clickMethod = 'DOM';
