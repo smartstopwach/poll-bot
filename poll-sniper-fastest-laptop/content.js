@@ -76,6 +76,7 @@
 
   // UI elements
   let statusPanel = null;
+  let dragListenersAttached = false;  // FIX: Prevent memory leak — only attach drag listeners once
 
   // ============================================
   // STORAGE HELPERS
@@ -388,7 +389,7 @@
           pollCount = Math.max(0, parseInt(result.pollCount) || 0);
           useHumanDelay = result.useHumanDelay === true;
           extensionActive = result.extensionActive !== false;
-          pollDetectionInterval = (result.pollDetectionInterval !== undefined && result.pollDetectionInterval !== null) ? Math.max(25, parseInt(result.pollDetectionInterval) || PW.POLL_INTERVAL) : PW.POLL_INTERVAL;
+          pollDetectionInterval = (result.pollDetectionInterval !== undefined && result.pollDetectionInterval !== null) ? Math.max(5, parseInt(result.pollDetectionInterval) || PW.POLL_INTERVAL) : PW.POLL_INTERVAL;
           panelPosition = result.panelPosition || null;
 
           createStatusPanel();
@@ -444,8 +445,13 @@
           extensionActive = changes.extensionActive.newValue;
           if (!extensionActive) {
             if (checkInterval) { clearInterval(checkInterval); checkInterval = null; }
-            // FIX: Stop WS watcher when extension disabled
+            // FIX: Stop ALL timers when extension disabled
             if (wsPreClickInterval) { clearInterval(wsPreClickInterval); wsPreClickInterval = null; }
+            if (pollAnswerTimer1) { clearTimeout(pollAnswerTimer1); pollAnswerTimer1 = null; }
+            if (pollAnswerTimer2) { clearTimeout(pollAnswerTimer2); pollAnswerTimer2 = null; }
+            if (pollAnswerTimer3) { clearTimeout(pollAnswerTimer3); pollAnswerTimer3 = null; }
+            isProcessing = false;
+            if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
           } else if (!checkInterval) {
             checkInterval = setInterval(checkForPoll, pollDetectionInterval);
           }
@@ -490,6 +496,13 @@
           saveToStorage('extensionActive', extensionActive);
           if (!extensionActive) {
             if (checkInterval) { clearInterval(checkInterval); checkInterval = null; }
+            // FIX: Stop all timers when toggled OFF via keyboard
+            if (wsPreClickInterval) { clearInterval(wsPreClickInterval); wsPreClickInterval = null; }
+            if (pollAnswerTimer1) { clearTimeout(pollAnswerTimer1); pollAnswerTimer1 = null; }
+            if (pollAnswerTimer2) { clearTimeout(pollAnswerTimer2); pollAnswerTimer2 = null; }
+            if (pollAnswerTimer3) { clearTimeout(pollAnswerTimer3); pollAnswerTimer3 = null; }
+            isProcessing = false;
+            if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
           } else if (!checkInterval) {
             checkInterval = setInterval(checkForPoll, pollDetectionInterval);
           }
@@ -647,10 +660,17 @@
     const panel = document.getElementById('pw-desktop-panel');
     if (!panel) return;
 
+    // FIX: Only attach document-level listeners once (prevent memory leak)
+    if (dragListenersAttached) return;
+    dragListenersAttached = true;
+
     let isDragging = false;
     let startX, startY, initialLeft, initialTop;
 
-    panel.addEventListener('mousedown', (e) => {
+    // Panel mousedown — delegated via statusPanel (persists across updateUI calls)
+    statusPanel.addEventListener('mousedown', (e) => {
+      const panel = document.getElementById('pw-desktop-panel');
+      if (!panel) return;
       if (e.target.tagName === 'BUTTON') return;
       isDragging = false;
       startX = e.clientX;
@@ -768,9 +788,6 @@
       if (options.length >= 2) {
         pollIconClickedAt = 0;
 
-        // FIX: Stop WS pre-click watcher if running (checkForPoll takes over)
-        if (wsPreClickInterval) { clearInterval(wsPreClickInterval); wsPreClickInterval = null; }
-
         // Calculate WS advantage if applicable
         if (wsPollDetected && wsPollTimestamp > 0) {
           wsAdvantageMs = Math.round(performance.now() - wsPollTimestamp);
@@ -787,6 +804,9 @@
 
         const hasAnswer = nextPollAnswer || selectedOption;
         if (!hasAnswer) { isCheckRunning = false; return; }
+
+        // FIX: Stop WS watcher ONLY when we're actually going to process (not on early returns)
+        if (wsPreClickInterval) { clearInterval(wsPreClickInterval); wsPreClickInterval = null; }
 
         isProcessing = true;
         lastPollTime = Date.now();
@@ -1229,7 +1249,8 @@
       el.dispatchEvent(new PointerEvent('pointerup', opts));
       el.dispatchEvent(new MouseEvent('mouseup', opts));
       el.dispatchEvent(new MouseEvent('click', opts));
-      if (typeof el.click === 'function') el.click();
+      // NOTE: Do NOT call el.click() here — dispatched events already trigger the click
+      // Calling el.click() would cause double-click (double submission risk)
     } catch(e) {}
   }
 
@@ -1287,6 +1308,13 @@
           saveToStorage('extensionActive', extensionActive);
           if (!extensionActive) {
             if (checkInterval) { clearInterval(checkInterval); checkInterval = null; }
+            // FIX: Stop all timers when toggled OFF via dashboard
+            if (wsPreClickInterval) { clearInterval(wsPreClickInterval); wsPreClickInterval = null; }
+            if (pollAnswerTimer1) { clearTimeout(pollAnswerTimer1); pollAnswerTimer1 = null; }
+            if (pollAnswerTimer2) { clearTimeout(pollAnswerTimer2); pollAnswerTimer2 = null; }
+            if (pollAnswerTimer3) { clearTimeout(pollAnswerTimer3); pollAnswerTimer3 = null; }
+            isProcessing = false;
+            if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
           } else if (!checkInterval) {
             checkInterval = setInterval(checkForPoll, pollDetectionInterval);
           }
