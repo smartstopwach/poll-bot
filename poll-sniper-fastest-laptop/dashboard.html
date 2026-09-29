@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>PW Poll Sniper Laptop — Fastest (WS Intercept)</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      min-height: 100vh;
+      padding: 16px;
+      padding-bottom: 80px;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding: 16px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .header h1 {
+      font-size: 20px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .version { font-size: 12px; color: #64748b; }
+    
+    /* Toggle Switch */
+    .toggle-switch {
+      position: relative;
+      width: 56px;
+      height: 30px;
+      cursor: pointer;
+    }
+    .toggle-switch input { display: none; }
+    .toggle-slider {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: #374151;
+      border-radius: 30px;
+      transition: 0.3s;
+    }
+    .toggle-slider:before {
+      content: '';
+      position: absolute;
+      width: 24px; height: 24px;
+      left: 3px; bottom: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: 0.3s;
+    }
+    .toggle-switch input:checked + .toggle-slider {
+      background: #10b981;
+    }
+    .toggle-switch input:checked + .toggle-slider:before {
+      transform: translateX(26px);
+    }
+    
+    /* Stats */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .stat-card {
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      padding: 16px 12px;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .stat-value {
+      font-size: 28px;
+      font-weight: 800;
+      color: #10b981;
+    }
+    .stat-label {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    /* Sections */
+    .section {
+      background: rgba(255,255,255,0.05);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .section-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #94a3b8;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    /* Settings Row */
+    .setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .setting-row:last-child { border-bottom: none; }
+    .setting-label { font-size: 15px; font-weight: 500; }
+    .setting-desc { font-size: 12px; color: #64748b; margin-top: 2px; }
+    
+    /* Speed Buttons */
+    .speed-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .speed-btn {
+      padding: 12px 8px;
+      background: rgba(255,255,255,0.08);
+      border: 2px solid transparent;
+      border-radius: 10px;
+      color: white;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+    .speed-btn.active {
+      background: rgba(59, 130, 246, 0.2);
+      border-color: #3b82f6;
+      color: #60a5fa;
+    }
+    .speed-btn:active {
+      transform: scale(0.95);
+    }
+    
+    /* Answer Buttons */
+    .answer-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+    }
+    .answer-btn {
+      padding: 16px 8px;
+      background: rgba(255,255,255,0.08);
+      border: 2px solid transparent;
+      border-radius: 12px;
+      color: white;
+      font-size: 18px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .answer-btn.active {
+      background: rgba(59, 130, 246, 0.3);
+      border-color: #3b82f6;
+    }
+    .answer-btn:active { transform: scale(0.95); }
+    
+    /* History */
+    .history-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 13px;
+    }
+    .history-item:last-child { border-bottom: none; }
+    .history-status {
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .status-success { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+    .status-failed { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+    .status-selected { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
+    
+    /* Error Log */
+    .error-item {
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 12px;
+      color: #ef4444;
+    }
+    .error-time { color: #64748b; font-size: 10px; }
+    
+    /* Clear Button */
+    .clear-btn {
+      width: 100%;
+      padding: 14px;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 12px;
+      color: #ef4444;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+    .clear-btn:active { transform: scale(0.98); }
+    
+    .empty-state {
+      text-align: center;
+      padding: 20px;
+      color: #475569;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div class="header">
+    <div>
+      <h1>⚡ PW Poll Sniper Laptop</h1>
+      <div class="version">Fastest v1.0.0 (WS Intercept)</div>
+    </div>
+    <label class="toggle-switch">
+      <input type="checkbox" id="extensionToggle">
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+  
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat-card">
+      <div class="stat-value" id="statPolls">0</div>
+      <div class="stat-label">Total Polls</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="statSuccess">0</div>
+      <div class="stat-label">Success</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="statAvgTime">-</div>
+      <div class="stat-label">Avg Time</div>
+    </div>
+  </div>
+  
+  <!-- Quick Answer -->
+  <div class="section">
+    <div class="section-title">🎯 Pre-Select Answer</div>
+    <div class="answer-grid">
+      <button class="answer-btn" data-option="A">A</button>
+      <button class="answer-btn" data-option="B">B</button>
+      <button class="answer-btn" data-option="C">C</button>
+      <button class="answer-btn" data-option="D">D</button>
+      <button class="answer-btn" data-option="" style="font-size:14px;">None</button>
+    </div>
+  </div>
+  
+  <!-- Poll Detection Speed -->
+  <div class="section">
+    <div class="section-title">🔍 Poll Detection Speed</div>
+    <div style="color:#94a3b8;font-size:12px;margin-bottom:8px;">How often to check for polls (lower = faster detection)</div>
+    <div class="speed-grid" id="detectionSpeedGrid">
+      <button class="speed-btn" data-value="50">50ms</button>
+      <button class="speed-btn" data-value="100">100ms</button>
+      <button class="speed-btn" data-value="200">200ms</button>
+      <button class="speed-btn" data-value="500">500ms</button>
+    </div>
+  </div>
+  
+  <!-- Answer Delay -->
+  <div class="section">
+    <div class="section-title">⚡ Answer Delay</div>
+    <div style="color:#94a3b8;font-size:12px;margin-bottom:8px;">Wait time after options appear before clicking answer</div>
+    <div class="speed-grid" id="pollDelayGrid">
+      <button class="speed-btn" data-value="50">50ms</button>
+      <button class="speed-btn" data-value="100">100ms</button>
+      <button class="speed-btn" data-value="260">260ms</button>
+      <button class="speed-btn" data-value="500">500ms</button>
+    </div>
+  </div>
+  
+  <!-- Submit Delay -->
+  <div class="section">
+    <div class="section-title">🚀 Submit Delay</div>
+    <div style="color:#94a3b8;font-size:12px;margin-bottom:8px;">Wait time after clicking answer before submitting</div>
+    <div class="speed-grid" id="submitDelayGrid">
+      <button class="speed-btn" data-value="25">25ms</button>
+      <button class="speed-btn" data-value="50">50ms</button>
+      <button class="speed-btn" data-value="100">100ms</button>
+      <button class="speed-btn" data-value="200">200ms</button>
+    </div>
+  </div>
+  
+  <!-- Settings -->
+  <div class="section">
+    <div class="section-title">⚙️ Settings</div>
+    <div class="setting-row">
+      <div>
+        <div class="setting-label">Auto Submit</div>
+        <div class="setting-desc">Auto-submit after selecting answer</div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="autoSubmitToggle">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+    <div class="setting-row">
+      <div>
+        <div class="setting-label">Auto Open Poll</div>
+        <div class="setting-desc">Auto-click poll icon when detected</div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="autoOpenToggle">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+    <div class="setting-row">
+      <div>
+        <div class="setting-label">Human-like Delay</div>
+        <div class="setting-desc">Random delay (500-1500ms) before answer</div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="humanDelayToggle">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+  </div>
+  
+  <!-- FAB Opacity -->
+  <div class="section">
+    <div class="section-title">👁️ Orb Opacity</div>
+    <div style="color:#94a3b8;font-size:12px;margin-bottom:8px;">Adjust the green orb visibility (lower = more transparent)</div>
+    <div class="speed-grid" id="opacityGrid">
+      <button class="speed-btn" data-value="0.25">25%</button>
+      <button class="speed-btn" data-value="0.5">50%</button>
+      <button class="speed-btn" data-value="0.75">75%</button>
+      <button class="speed-btn" data-value="1">100%</button>
+    </div>
+  </div>
+  
+  <!-- Poll History -->
+  <div class="section">
+    <div class="section-title">📋 Poll History</div>
+    <div id="historyList">
+      <div class="empty-state">No polls yet</div>
+    </div>
+    <button class="clear-btn" id="clearHistoryBtn">🗑️ Clear All History</button>
+  </div>
+  
+  <!-- Error Log -->
+  <div class="section">
+    <div class="section-title">🐛 Error Log</div>
+    <div id="errorList">
+      <div class="empty-state">No errors</div>
+    </div>
+  </div>
+  
+  <script src="dashboard.js"></script>
+</body>
+</html>
