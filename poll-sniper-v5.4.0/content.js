@@ -1044,6 +1044,7 @@
 
         const letter = e.key.toUpperCase();
 
+        // P = Toggle extension ON/OFF
         if (e.code === 'KeyP' && !e.ctrlKey && !e.altKey && !e.metaKey) {
           e.preventDefault();
           extensionActive = !extensionActive;
@@ -1053,59 +1054,24 @@
           return;
         }
 
-        if (e.code === 'KeyQ' && !e.ctrlKey && !e.altKey && !e.metaKey) {
+        // H = Toggle human delay
+        if (e.code === 'KeyH' && !e.ctrlKey && !e.altKey && !e.metaKey) {
           e.preventDefault();
-          waitingForAnswer = true;
-          nextPollAnswer = null;
-          
-          if (waitingForAnswerTimeout) {
-            clearTimeout(waitingForAnswerTimeout);
-          }
-          waitingForAnswerTimeout = setTimeout(() => {
-            waitingForAnswer = false;
-            waitingForAnswerTimeout = null;
-            nextPollAnswer = null;
-            selectedOption = null;
-            saveToStorage('selectedOption', null);
-            showNotification('⏱️ Q mode expired', '#ef4444');
-            updateUI();
-          }, 30000);
-          
-          showNotification('⏳ A/B/C/D? (30s)', '#fbbf24');
+          useHumanDelay = !useHumanDelay;
+          saveToStorage('useHumanDelay', useHumanDelay);
+          showNotification(useHumanDelay ? '🐢 Human Delay ON' : '⚡ Human Delay OFF', useHumanDelay ? '#fbbf24' : '#22c55e');
           updateUI();
           return;
         }
 
-        if (e.code === 'Escape') {
-          if (waitingForAnswer) {
-            e.preventDefault();
-            waitingForAnswer = false;
-            nextPollAnswer = null;
-            selectedOption = null;
-            saveToStorage('selectedOption', null);
-            
-            if (waitingForAnswerTimeout) {
-              clearTimeout(waitingForAnswerTimeout);
-              waitingForAnswerTimeout = null;
-            }
-            
-            showNotification('❌ Cancel', '#6b7280');
-            updateUI();
-          }
-          return;
-        }
-
+        // A/B/C/D = Direct answer selection (no Q needed)
         if (['A', 'B', 'C', 'D'].includes(letter) && !e.ctrlKey && !e.altKey && !e.metaKey) {
           e.preventDefault();
-
-          if (!waitingForAnswer) {
-            return;
-          }
-
-          nextPollAnswer = letter;
-          selectedOption = letter;
           
-          showNotification(`→ ${letter} (can change)`, '#3b82f6');
+          selectedOption = letter;
+          saveToStorage('selectedOption', letter);
+          
+          showNotification(`→ ${letter}`, '#3b82f6');
           updateUI();
         }
       } catch (e) {}
