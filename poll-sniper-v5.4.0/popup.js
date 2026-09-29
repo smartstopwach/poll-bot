@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     'pollDetectionInterval', 'pollDelay', 'submitDelay', 'humanDelayMin', 'humanDelayMax', 'useHumanDelay'
   ], (result) => {
     // Extension toggle
-    const isActive = result.extensionActive === true;
+    const isActive = result.extensionActive !== false;  // Default ON
     extensionToggle.checked = isActive;
     updateStatus(isActive, result.pollCount || 0);
     
@@ -44,11 +44,11 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Timing settings
     const pollDetectionInterval = result.pollDetectionInterval || 100;
-    const pollDelay = result.pollDelay || 260;
+    const pollDelay = result.pollDelay || 50;  // Default 50ms
     const submitDelay = result.submitDelay || 25;
     const humanDelayMin = result.humanDelayMin || 500;
     const humanDelayMax = result.humanDelayMax || 1500;
-    const useHumanDelay = result.useHumanDelay !== false;
+    const useHumanDelay = result.useHumanDelay === true;  // Default OFF
     
     pollDetectionIntervalSlider.value = pollDetectionInterval;
     pollDetectionIntervalInput.value = pollDetectionInterval;

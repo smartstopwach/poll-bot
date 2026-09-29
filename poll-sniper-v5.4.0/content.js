@@ -17,11 +17,11 @@
     OPTION_SPAN: 'span.line-clamp-1',
     SUBMIT_TEXT: 'Submit Answer',
     RESULT_TEXTS: ['Correct Answer is', 'Not Participated', 'Answered Correctly', 'You did not attempt'],
-    POLL_DELAY: 260,
+    POLL_DELAY: 50,        // Fastest safe for React (was 260)
     SUBMIT_DELAY: 25,
     HUMAN_DELAY_MIN: 500,
     HUMAN_DELAY_MAX: 1500,
-    POLL_INTERVAL: 100,
+    POLL_INTERVAL: 50,     // Faster detection (was 100)
     PROCESSING_LOCK: 3000,
     ICON_RESET_TIME: 5000, // FIX #1: Was 1800000 (30 min!) → Now 5 seconds
     PANEL_OPEN_TIMEOUT: 3000, // FIX #4: Was 2000 → Now 3 seconds
@@ -129,8 +129,8 @@
           pollDetectionInterval = (result.pollDetectionInterval !== undefined && result.pollDetectionInterval !== null) ? result.pollDetectionInterval : PW.POLL_INTERVAL;
           humanDelayMin = (result.humanDelayMin !== undefined && result.humanDelayMin !== null) ? result.humanDelayMin : PW.HUMAN_DELAY_MIN;
           humanDelayMax = (result.humanDelayMax !== undefined && result.humanDelayMax !== null) ? result.humanDelayMax : PW.HUMAN_DELAY_MAX;
-          useHumanDelay = result.useHumanDelay !== false;
-          extensionActive = result.extensionActive === true;
+          useHumanDelay = result.useHumanDelay === true;  // Default OFF for speed
+          extensionActive = result.extensionActive !== false;  // Default ON
           
           // Apply panel opacity if saved
           if (result.panelOpacity !== undefined && statusPanel) {

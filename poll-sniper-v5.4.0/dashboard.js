@@ -29,13 +29,13 @@ document.addEventListener('DOMContentLoaded', () => {
       'extensionActive', 'autoSubmit', 'autoOpen', 'useHumanDelay',
       'pollDelay', 'panelOpacity'
     ], (result) => {
-      extensionToggle.checked = result.extensionActive === true;
+      extensionToggle.checked = result.extensionActive !== false;  // Default ON
       autoSubmitCheck.checked = result.autoSubmit !== false;
       autoOpenCheck.checked = result.autoOpen !== false;
-      useHumanDelayCheck.checked = result.useHumanDelay !== false;
+      useHumanDelayCheck.checked = result.useHumanDelay === true;  // Default OFF
       
       // Poll speed slider
-      const pollDelay = result.pollDelay !== undefined ? result.pollDelay : 260;
+      const pollDelay = result.pollDelay !== undefined ? result.pollDelay : 50;  // Default 50ms
       pollDelaySlider.value = pollDelay;
       pollDelayValue.textContent = pollDelay + 'ms';
       
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
       panelOpacitySlider.value = panelOpacity;
       panelOpacityValue.textContent = panelOpacity + '%';
       
-      updateStatusBadge(result.extensionActive === true);
+      updateStatusBadge(result.extensionActive !== false);  // Default ON
     });
   }
 
