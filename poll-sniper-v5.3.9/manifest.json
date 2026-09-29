@@ -2,14 +2,14 @@
   "manifest_version": 3,
   "name": "PW Poll Sniper",
   "version": "5.3.9",
-  "description": "Fastest safe auto-answer for Physics Wallah polls. Keyboard shortcuts: A/B/C/D to select, P to toggle.",
+  "description": "Fastest safe auto-answer for Physics Wallah polls. Press Q then A/B/C/D. Based on proven v5.3.8 with optimized speed.",
   "permissions": ["storage"],
   "host_permissions": [
     "https://www.pw.live/*",
     "https://pw.live/*"
   ],
   "action": {
-    "default_popup": "dashboard.html",
+    "default_popup": "popup.html",
     "default_icon": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",
@@ -31,6 +31,7 @@
         "https://pw.live/*"
       ],
       "js": ["content.js"],
+      "css": ["content.css"],
       "run_at": "document_idle",
       "all_frames": false
     }
