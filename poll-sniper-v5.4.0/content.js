@@ -115,7 +115,7 @@
       if (existing) existing.remove();
 
       chrome.storage.local.get(
-        ['autoSubmit', 'autoOpen', 'pollHistory', 'errorLog', 'pollCount', 'pollDelay', 'submitDelay', 'pollDetectionInterval', 'humanDelayMin', 'humanDelayMax', 'useHumanDelay', 'extensionActive'],
+        ['autoSubmit', 'autoOpen', 'pollHistory', 'errorLog', 'pollCount', 'pollDelay', 'submitDelay', 'pollDetectionInterval', 'humanDelayMin', 'humanDelayMax', 'useHumanDelay', 'extensionActive', 'panelOpacity'],
         (result) => {
           selectedOption = null;
           nextPollAnswer = null;
@@ -131,6 +131,11 @@
           humanDelayMax = (result.humanDelayMax !== undefined && result.humanDelayMax !== null) ? result.humanDelayMax : PW.HUMAN_DELAY_MAX;
           useHumanDelay = result.useHumanDelay !== false;
           extensionActive = result.extensionActive === true;
+          
+          // Apply panel opacity if saved
+          if (result.panelOpacity !== undefined && statusPanel) {
+            statusPanel.style.opacity = result.panelOpacity / 100;
+          }
           
           updateUI();
           
@@ -1175,6 +1180,16 @@
           if (msg.useHumanDelay !== undefined) {
             useHumanDelay = msg.useHumanDelay;
             saveToStorage('useHumanDelay', useHumanDelay);
+          }
+          if (sendResponse) sendResponse({ ok: true });
+          break;
+
+        case 'SET_OPACITY':
+          if (msg.panelOpacity !== undefined) {
+            const opacity = msg.panelOpacity / 100;
+            const panel = document.getElementById('pw-sniper-panel');
+            if (panel) panel.style.opacity = opacity;
+            saveToStorage('panelOpacity', msg.panelOpacity);
           }
           if (sendResponse) sendResponse({ ok: true });
           break;
