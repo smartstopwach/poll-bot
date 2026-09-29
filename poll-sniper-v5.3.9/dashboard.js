@@ -1,4 +1,4 @@
-// dashboard.js - PW Poll Sniper Laptop Dashboard v1.0.0 (WS Intercept)
+// dashboard.js - PW Poll Sniper Mobile Dashboard v5.4.9
 
 document.addEventListener('DOMContentLoaded', () => {
   // Load all settings
@@ -284,7 +284,7 @@ function renderHistory(history) {
     return `
       <div class="history-item">
         <div>
-          <div style="font-weight:600;">Poll #${poll.poll || '?'} - ${poll.answer || '?'} ${poll.ws && poll.ws !== '-' ? '<span style="color:#fbbf24;font-size:10px;">⚡WS ' + poll.ws + '</span>' : ''}</div>
+          <div style="font-weight:600;">Poll #${poll.poll || '?'} - ${poll.answer || '?'}</div>
           <div style="font-size:11px;color:#64748b;margin-top:2px;">
             ${poll.time || '-'} ${poll.click ? `(${poll.click})` : ''}
           </div>
