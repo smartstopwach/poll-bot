@@ -258,6 +258,9 @@
 
   // ULTRA FAST answer — skips pollDelay, goes straight to click + submit
   function answerPollUltraFast(options) {
+    // FIX: Stop the WS watcher since we're handling this poll now
+    if (wsPreClickInterval) { clearInterval(wsPreClickInterval); wsPreClickInterval = null; }
+    
     try {
       const target = getCurrentAnswer();
       if (!target) {
@@ -412,6 +415,8 @@
               panelOpening = false;
               pollIconClickedAt = 0;
               wsPollDetected = false;
+              // FIX: Stop WS watcher on SPA navigation
+              if (wsPreClickInterval) { clearInterval(wsPreClickInterval); wsPreClickInterval = null; }
               updateUI();
             }
           }, 500);
@@ -420,6 +425,7 @@
             panelOpening = false;
             pollIconClickedAt = 0;
             wsPollDetected = false;
+            if (wsPreClickInterval) { clearInterval(wsPreClickInterval); wsPreClickInterval = null; }
             setTimeout(updateUI, 100);
           });
         }
@@ -438,6 +444,8 @@
           extensionActive = changes.extensionActive.newValue;
           if (!extensionActive) {
             if (checkInterval) { clearInterval(checkInterval); checkInterval = null; }
+            // FIX: Stop WS watcher when extension disabled
+            if (wsPreClickInterval) { clearInterval(wsPreClickInterval); wsPreClickInterval = null; }
           } else if (!checkInterval) {
             checkInterval = setInterval(checkForPoll, pollDetectionInterval);
           }
@@ -760,6 +768,9 @@
       if (options.length >= 2) {
         pollIconClickedAt = 0;
 
+        // FIX: Stop WS pre-click watcher if running (checkForPoll takes over)
+        if (wsPreClickInterval) { clearInterval(wsPreClickInterval); wsPreClickInterval = null; }
+
         // Calculate WS advantage if applicable
         if (wsPollDetected && wsPollTimestamp > 0) {
           wsAdvantageMs = Math.round(performance.now() - wsPollTimestamp);
@@ -958,6 +969,18 @@
         pollAnswerTimer2 = setTimeout(() => {
           pollAnswerTimer2 = null;
           try {
+            // FIX: Verify button still exists in DOM after delay
+            if (!option.button || !document.body.contains(option.button)) {
+              addError(`Poll #${pollCount}: Button removed from DOM during delay`);
+              addPollResult({ poll: pollCount, answer: target, status: 'FAILED', reason: 'Button gone', time: '-', ws: '-' });
+              showNotification(`✗ Button gone`, '#ef4444');
+              nextPollAnswer = null;
+              isProcessing = false;
+              if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
+              updateUI();
+              return;
+            }
+
             showNotification(`🎯 ${target}...`, '#3b82f6');
 
             let clickMethod = 'DOM';

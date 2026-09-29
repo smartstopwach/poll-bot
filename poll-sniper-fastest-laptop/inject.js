@@ -10,13 +10,16 @@
   const OriginalWebSocket = window.WebSocket;
   
   // Pre-compiled regex for fast poll detection
-  const POLL_REGEX = /poll|quiz|question|mcq|answer|pollStarted|pollCreated|newPoll|livePoll|startPoll/i;
+  // More specific to avoid false positives from chat/notifications
+  const POLL_REGEX = /"(?:type|event|action)"\s*:\s*"(?:poll|quiz|startPoll|pollStarted|pollCreated|newPoll|livePoll|mcq_question|poll_question)"/i;
+  // Fallback quick check for raw poll indicators in structured data
+  const POLL_QUICK_REGEX = /poll[_-]?(?:start|create|new|live|question)|quiz[_-]?(?:start|create|new)|mcq/i;
   
   function interceptMessage(data) {
     // Fast path: string data
     if (typeof data === 'string') {
-      // Quick regex check before expensive JSON parse
-      if (POLL_REGEX.test(data)) {
+      // Quick regex check before expensive operations
+      if (POLL_REGEX.test(data) || POLL_QUICK_REGEX.test(data)) {
         // Notify content script immediately
         window.postMessage({ 
           type: 'PW_POLL_WS_DETECTED', 
@@ -36,14 +39,9 @@
     
     // Check if this is PW's socket (central-socket.penpencil.co or similar)
     if (url && (url.includes('penpencil') || url.includes('pw.live') || url.includes('physicswallah'))) {
-      pollSocket = ws;
       console.log('[PW Sniper WS] Socket intercepted:', url);
       
-      // Override onmessage
-      const originalOnMessage = Object.getOwnPropertyDescriptor(WebSocket.prototype, 'onmessage') || 
-                                Object.getOwnPropertyDescriptor(OriginalWebSocket.prototype, 'onmessage');
-      
-      // Add event listener for messages
+      // Add event listener for messages (fires alongside onmessage)
       ws.addEventListener('message', function(event) {
         interceptMessage(event.data);
       });
