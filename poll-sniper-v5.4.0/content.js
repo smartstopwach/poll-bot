@@ -62,6 +62,7 @@
   let humanDelayMax = PW.HUMAN_DELAY_MAX;
   let useHumanDelay = false;
   let panelOpening = false;
+  let panelOpeningTimer = null;  // Track panelOpening timeout
   let aggressiveMode = false;  // Aggressive mode: minimum delays
 
   // UI elements
@@ -168,6 +169,12 @@
         if (changes.autoOpen !== undefined) autoOpen = changes.autoOpen.newValue;
         if (changes.extensionActive !== undefined) {
           extensionActive = changes.extensionActive.newValue;
+          // Manage checkInterval based on extension state
+          if (!extensionActive) {
+            if (checkInterval) { clearInterval(checkInterval); checkInterval = null; }
+          } else {
+            if (!checkInterval) { checkInterval = setInterval(checkForPoll, pollDetectionInterval); }
+          }
           updateUI();
         }
         if (changes.pollDelay !== undefined) pollDelay = changes.pollDelay.newValue;
@@ -180,6 +187,14 @@
         if (changes.humanDelayMin !== undefined) humanDelayMin = changes.humanDelayMin.newValue;
         if (changes.humanDelayMax !== undefined) humanDelayMax = changes.humanDelayMax.newValue;
         if (changes.useHumanDelay !== undefined) useHumanDelay = changes.useHumanDelay.newValue;
+        if (changes.aggressiveMode !== undefined) {
+          aggressiveMode = changes.aggressiveMode.newValue;
+          // Update WS watcher interval if active
+          if (wsPreClickInterval) {
+            clearInterval(wsPreClickInterval);
+            startWsPreClickWatcher();
+          }
+        }
       });
     } catch (e) {
       addError('Init error: ' + e.message);
@@ -403,7 +418,8 @@
         const clicked = clickPollIcon(pollIcon);
         if (clicked) {
           pollIconClickedAt = Date.now();
-          setTimeout(() => { panelOpening = false; }, PW.PANEL_OPEN_TIMEOUT);
+          if (panelOpeningTimer) clearTimeout(panelOpeningTimer);
+          panelOpeningTimer = setTimeout(() => { panelOpening = false; panelOpeningTimer = null; }, PW.PANEL_OPEN_TIMEOUT);
         } else {
           panelOpening = false;
         }
@@ -637,10 +653,10 @@
   // POLL HASH (FIX #2: Use Date.now() for uniqueness)
   // ============================================
   function generatePollHash(options) {
-    // FIX #2: Use precise timestamp instead of 20-second window
-    // This ensures each poll gets a unique hash
+    // FIX: Include option text in hash to prevent collision
+    const optionText = options.map(o => o.letter).join('');
     const timeBucket = Math.floor(Date.now() / 3000); // 3-second window
-    return `poll_${pollCount}_${timeBucket}`;
+    return `poll_${pollCount}_${optionText}_${timeBucket}`;
   }
 
   function getCurrentAnswer() {
@@ -898,8 +914,10 @@
           showNotification('🎯 Poll detected!', '#3b82f6');
           
           // FIX #4: Now 3 seconds instead of 2
-          setTimeout(() => {
+          if (panelOpeningTimer) clearTimeout(panelOpeningTimer);
+          panelOpeningTimer = setTimeout(() => {
             panelOpening = false;
+            panelOpeningTimer = null;
           }, PW.PANEL_OPEN_TIMEOUT);
         } else {
           panelOpening = false;
@@ -1058,6 +1076,14 @@
           e.preventDefault();
           extensionActive = !extensionActive;
           saveToStorage('extensionActive', extensionActive);
+          
+          // Manage checkInterval based on extension state
+          if (!extensionActive) {
+            if (checkInterval) { clearInterval(checkInterval); checkInterval = null; }
+          } else {
+            if (!checkInterval) { checkInterval = setInterval(checkForPoll, pollDetectionInterval); }
+          }
+          
           showNotification(extensionActive ? '▶ ON' : '⏸ OFF', extensionActive ? '#22c55e' : '#ef4444');
           updateUI();
           return;
