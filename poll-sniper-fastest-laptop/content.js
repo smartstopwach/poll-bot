@@ -362,6 +362,8 @@
           } catch(e) {
             addError(`Poll #${pollCount} WS submit: ${e.message}`);
             nextPollAnswer = null;
+            // FIX: Set hash to prevent retry loop on exception
+            lastAnsweredPollHash = generatePollHash(options);
           } finally {
             isProcessing = false;
             if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
@@ -445,6 +447,12 @@
               wsPollDetected = false;
               // FIX: Stop WS watcher on SPA navigation
               if (wsPreClickInterval) { clearInterval(wsPreClickInterval); wsPreClickInterval = null; }
+              // FIX: Clear pending answer timers to prevent stale clicks on new page
+              if (pollAnswerTimer1) { clearTimeout(pollAnswerTimer1); pollAnswerTimer1 = null; }
+              if (pollAnswerTimer2) { clearTimeout(pollAnswerTimer2); pollAnswerTimer2 = null; }
+              if (pollAnswerTimer3) { clearTimeout(pollAnswerTimer3); pollAnswerTimer3 = null; }
+              isProcessing = false;
+              if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
               updateUI();
             }
           }, 500);
@@ -454,6 +462,12 @@
             pollIconClickedAt = 0;
             wsPollDetected = false;
             if (wsPreClickInterval) { clearInterval(wsPreClickInterval); wsPreClickInterval = null; }
+            // FIX: Clear pending answer timers on back/forward navigation
+            if (pollAnswerTimer1) { clearTimeout(pollAnswerTimer1); pollAnswerTimer1 = null; }
+            if (pollAnswerTimer2) { clearTimeout(pollAnswerTimer2); pollAnswerTimer2 = null; }
+            if (pollAnswerTimer3) { clearTimeout(pollAnswerTimer3); pollAnswerTimer3 = null; }
+            isProcessing = false;
+            if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
             setTimeout(updateUI, 100);
           });
         }
@@ -1117,6 +1131,8 @@
                   addPollResult({ poll: pollCount, answer: target, status: 'FAILED', reason: 'Submit error: ' + e.message, time: '-', ws: '-' });
                   showNotification(`✗ #${pollCount} Error`, '#ef4444');
                   nextPollAnswer = null;
+                  // FIX: Set hash to prevent retry loop on exception
+                  lastAnsweredPollHash = generatePollHash(options);
                 } finally {
                   isProcessing = false;
                   if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
