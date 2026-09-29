@@ -182,7 +182,12 @@
         if (changes.pollDetectionInterval !== undefined) {
           pollDetectionInterval = changes.pollDetectionInterval.newValue;
           if (checkInterval) clearInterval(checkInterval);
-          checkInterval = setInterval(checkForPoll, pollDetectionInterval);
+          // Only restart if extension is active
+          if (extensionActive) {
+            checkInterval = setInterval(checkForPoll, pollDetectionInterval);
+          } else {
+            checkInterval = null;
+          }
         }
         if (changes.humanDelayMin !== undefined) humanDelayMin = changes.humanDelayMin.newValue;
         if (changes.humanDelayMax !== undefined) humanDelayMax = changes.humanDelayMax.newValue;
@@ -1212,7 +1217,12 @@
             pollDetectionInterval = msg.pollDetectionInterval;
             saveToStorage('pollDetectionInterval', pollDetectionInterval);
             if (checkInterval) clearInterval(checkInterval);
-            checkInterval = setInterval(checkForPoll, pollDetectionInterval);
+            // Only restart if extension is active
+            if (extensionActive) {
+              checkInterval = setInterval(checkForPoll, pollDetectionInterval);
+            } else {
+              checkInterval = null;
+            }
           }
           if (msg.humanDelayMin !== undefined) {
             humanDelayMin = msg.humanDelayMin;
@@ -1252,9 +1262,13 @@
             saveToStorage('pollDelay', pollDelay);
             saveToStorage('submitDelay', submitDelay);
             saveToStorage('useHumanDelay', false);
-            // Restart check interval with new speed
+            // Restart check interval with new speed (only if extension is active)
             if (checkInterval) clearInterval(checkInterval);
-            checkInterval = setInterval(checkForPoll, pollDetectionInterval);
+            if (extensionActive) {
+              checkInterval = setInterval(checkForPoll, pollDetectionInterval);
+            } else {
+              checkInterval = null;
+            }
             showNotification('🔥 Aggressive ON', '#ef4444');
           } else {
             // Restore safe defaults
@@ -1265,7 +1279,11 @@
             saveToStorage('pollDelay', pollDelay);
             saveToStorage('submitDelay', submitDelay);
             if (checkInterval) clearInterval(checkInterval);
-            checkInterval = setInterval(checkForPoll, pollDetectionInterval);
+            if (extensionActive) {
+              checkInterval = setInterval(checkForPoll, pollDetectionInterval);
+            } else {
+              checkInterval = null;
+            }
             showNotification('🛡️ Normal Mode', '#10b981');
           }
           updateUI();
