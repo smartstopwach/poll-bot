@@ -382,6 +382,11 @@
       }
     } catch(e) {
       addError(`Poll #${pollCount} WS: ${e.message}`);
+      // FIX: Full cleanup on unexpected error — prevent retry loop
+      selectedOption = null;
+      nextPollAnswer = null;
+      saveToStorage('selectedOption', null);
+      if (options) lastAnsweredPollHash = generatePollHash(options);
       isProcessing = false;
       if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
       updateUI();
@@ -1172,7 +1177,11 @@
     } catch(e) {
       addError(`Poll #${pollCount}: ${e.message}`);
       showNotification('✗ Error', '#ef4444');
+      // FIX: Full cleanup on unexpected error — prevent retry loop
+      selectedOption = null;
       nextPollAnswer = null;
+      saveToStorage('selectedOption', null);
+      if (options) lastAnsweredPollHash = generatePollHash(options);
       isProcessing = false;
       if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
       updateUI();
