@@ -1012,6 +1012,8 @@
         selectedOption = null;
         nextPollAnswer = null;
         saveToStorage('selectedOption', null);
+        // FIX: Set hash to prevent retry if user re-selects same answer
+        lastAnsweredPollHash = generatePollHash(options);
         isProcessing = false;
         if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
         updateUI();
@@ -1159,7 +1161,11 @@
             addError(`Poll #${pollCount} answer: ${e.message}`);
             addPollResult({ poll: pollCount, answer: target, status: 'FAILED', reason: 'Answer error: ' + e.message, time: '-', ws: '-' });
             showNotification(`✗ #${pollCount} Error`, '#ef4444');
+            // FIX: Full cleanup — prevent retry loop
+            selectedOption = null;
             nextPollAnswer = null;
+            saveToStorage('selectedOption', null);
+            if (options) lastAnsweredPollHash = generatePollHash(options);
             isProcessing = false;
             if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
             updateUI();
