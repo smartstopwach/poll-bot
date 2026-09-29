@@ -7,148 +7,120 @@
 </head>
 <body>
   <div class="container">
-    <!-- Header with Extension Toggle -->
-    <header class="header">
-      <div class="header-left">
-        <h1>🎯 PW Poll Sniper</h1>
-        <span class="version">v5.4.0</span>
+    <!-- Compact Header -->
+    <div class="header">
+      <div class="logo-row">
+        <span class="logo-icon">🎯</span>
+        <span class="logo-text">Poll Sniper</span>
+        <span class="badge">v5.4.0</span>
       </div>
-      <div class="header-right">
-        <label class="main-toggle">
-          <input type="checkbox" id="extensionToggle">
-          <span class="toggle-slider"></span>
-        </label>
-      </div>
-    </header>
-
-    <!-- Status Bar -->
-    <div class="status-bar" id="statusBar">
-      <div class="status-indicator">
-        <span class="status-dot" id="statusDot"></span>
-        <span class="status-text" id="statusText">Inactive</span>
-      </div>
-      <div class="status-stats">
-        <span id="pollCount">0</span> polls answered
-      </div>
+      <label class="switch">
+        <input type="checkbox" id="extensionToggle">
+        <span class="switch-track"></span>
+      </label>
     </div>
 
-    <!-- Quick Actions -->
-    <div class="section">
-      <h3>Quick Answer</h3>
-      <div class="option-group">
-        <button class="option-btn" data-option="A">A</button>
-        <button class="option-btn" data-option="B">B</button>
-        <button class="option-btn" data-option="C">C</button>
-        <button class="option-btn" data-option="D">D</button>
+    <!-- Status Strip -->
+    <div class="status-strip" id="statusBar">
+      <span class="dot" id="statusDot"></span>
+      <span class="status-label" id="statusText">Inactive</span>
+      <span class="poll-stat"><strong id="pollCount">0</strong> polls</span>
+    </div>
+
+    <!-- Quick Answer -->
+    <div class="card">
+      <div class="card-label">Quick Answer</div>
+      <div class="option-row">
+        <button class="opt-btn" data-option="A">A</button>
+        <button class="opt-btn" data-option="B">B</button>
+        <button class="opt-btn" data-option="C">C</button>
+        <button class="opt-btn" data-option="D">D</button>
       </div>
-      <p class="hint">Select answer for next poll (or press Q + A/B/C/D)</p>
+      <div class="card-hint">Press Q then A/B/C/D in class</div>
     </div>
 
     <!-- Dashboard Button -->
-    <button id="openDashboard" class="dashboard-btn">
-      📊 Open Dashboard
+    <button id="openDashboard" class="dash-btn">
+      <span class="dash-icon">📊</span>
+      <span>Open Dashboard</span>
+      <span class="dash-arrow">→</span>
     </button>
 
-    <!-- WebSocket Feature Info -->
-    <div class="section feature-info">
-      <h3>⚡ WebSocket Intercept (NEW!)</h3>
-      <p class="feature-desc">Detects polls 300-400ms faster by intercepting WebSocket messages before DOM renders.</p>
-      <div class="feature-stats">
-        <div class="stat">
-          <span class="stat-label">Detection:</span>
-          <span class="stat-value">~50ms (was 100ms)</span>
-        </div>
-        <div class="stat">
-          <span class="stat-label">Answer Delay:</span>
-          <span class="stat-value">50ms (was 260ms)</span>
-        </div>
-        <div class="stat">
-          <span class="stat-label">Total Speed:</span>
-          <span class="stat-value highlight">~125ms (11x faster!)</span>
-        </div>
+    <!-- Speed Info -->
+    <div class="speed-card">
+      <div class="speed-row">
+        <span class="speed-label">⚡ Response Speed</span>
+        <span class="speed-value" id="totalTime">~125ms</span>
+      </div>
+      <div class="speed-bar">
+        <div class="speed-fill" id="speedFill"></div>
+      </div>
+      <div class="speed-meta">
+        <span>WS Intercept ✓</span>
+        <span>9x faster</span>
       </div>
     </div>
 
-    <!-- Timing Controls -->
-    <details class="section collapsible">
-      <summary>⚡ Response Speed Settings</summary>
-      <div class="timing-group">
-        <div class="timing-control">
-          <label class="toggle-label">
+    <!-- Collapsible: Settings -->
+    <details class="collapse">
+      <summary>
+        <span>⚙️ Settings</span>
+        <span class="chevron">›</span>
+      </summary>
+      <div class="collapse-body">
+        <div class="setting-row">
+          <span>Human Delay</span>
+          <label class="mini-switch">
             <input type="checkbox" id="useHumanDelay">
-            <span class="toggle-text">Human-like Random Delay</span>
+            <span class="mini-track"></span>
           </label>
-          <div class="timing-hint">Adds random delay to avoid detection (OFF for speed)</div>
         </div>
-        
-        <div id="humanDelaySettings">
-          <div class="timing-control">
-            <label>Human Delay Range (ms):</label>
-            <div class="timing-input-group">
-              <input type="number" id="humanDelayMin" min="300" max="5000" value="500" step="100" class="timing-number">
-              <span class="timing-unit">to</span>
-              <input type="number" id="humanDelayMax" min="300" max="5000" value="1500" step="100" class="timing-number">
+        <div id="humanDelaySettings" style="display:none">
+          <div class="range-row">
+            <label>Delay Range</label>
+            <div class="range-inputs">
+              <input type="number" id="humanDelayMin" min="300" max="5000" value="500" step="100">
+              <span>—</span>
+              <input type="number" id="humanDelayMax" min="300" max="5000" value="1500" step="100">
+              <span>ms</span>
             </div>
           </div>
         </div>
-
-        <div class="timing-control">
-          <label for="pollDetectionInterval">Poll Detection Speed:</label>
-          <div class="timing-input-group">
+        <div class="range-row">
+          <label>Detection Speed</label>
+          <div class="range-group">
             <input type="range" id="pollDetectionInterval" min="50" max="200" value="50" step="10">
-            <input type="number" id="pollDetectionIntervalInput" min="50" max="200" value="50" step="10" class="timing-number">
-            <span class="timing-unit">ms</span>
+            <input type="number" id="pollDetectionIntervalInput" min="50" max="200" value="50" step="10">
           </div>
-          <div class="timing-hint">How often to check for polls (lower = faster detection)</div>
         </div>
-
-        <div class="timing-control">
-          <label for="pollDelay">Answer Delay:</label>
-          <div class="timing-input-group">
+        <div class="range-row">
+          <label>Answer Delay</label>
+          <div class="range-group">
             <input type="range" id="pollDelay" min="50" max="300" value="50" step="10">
-            <input type="number" id="pollDelayInput" min="50" max="300" value="50" step="10" class="timing-number">
-            <span class="timing-unit">ms</span>
+            <input type="number" id="pollDelayInput" min="50" max="300" value="50" step="10">
           </div>
-          <div class="timing-hint">Wait time after options appear before clicking answer</div>
         </div>
-        
-        <div class="timing-control">
-          <label for="submitDelay">Submit Delay:</label>
-          <div class="timing-input-group">
+        <div class="range-row">
+          <label>Submit Delay</label>
+          <div class="range-group">
             <input type="range" id="submitDelay" min="10" max="200" value="25" step="5">
-            <input type="number" id="submitDelayInput" min="10" max="200" value="25" step="5" class="timing-number">
-            <span class="timing-unit">ms</span>
+            <input type="number" id="submitDelayInput" min="10" max="200" value="25" step="5">
           </div>
-          <div class="timing-hint">Wait time after answer click before clicking submit</div>
-        </div>
-        
-        <div class="timing-info">
-          <strong>Total Time:</strong> ~<span id="totalTime">125</span>ms
-          <div class="timing-warning">⚠️ Very low delays may cause poll failures</div>
         </div>
       </div>
     </details>
 
-    <!-- Shortcuts -->
-    <details class="section collapsible">
-      <summary>⌨️ Keyboard Shortcuts</summary>
-      <div class="shortcuts">
-        <div class="shortcut"><kbd>P</kbd> Toggle ON/OFF</div>
-        <div class="shortcut"><kbd>Q</kbd> Set answer mode (30s)</div>
-        <div class="shortcut"><kbd>A/B/C/D</kbd> Select answer</div>
-        <div class="shortcut"><kbd>Esc</kbd> Cancel Q mode</div>
-      </div>
-    </details>
-
-    <!-- Help -->
-    <details class="section collapsible">
-      <summary>❓ How to Use</summary>
-      <div class="help">
-        <p>1. Enable extension (toggle above or press P)</p>
-        <p>2. Press <kbd>Q</kbd> to enter answer mode</p>
-        <p>3. Press <kbd>A/B/C/D</kbd> to select answer</p>
-        <p>4. Poll aane pe auto-answer hoga</p>
-        <p>5. Last letter wins (Q→B→C = C)</p>
+    <!-- Collapsible: Shortcuts -->
+    <details class="collapse">
+      <summary>
+        <span>⌨️ Shortcuts</span>
+        <span class="chevron">›</span>
+      </summary>
+      <div class="collapse-body">
+        <div class="shortcut-row"><kbd>P</kbd> <span>Toggle ON/OFF</span></div>
+        <div class="shortcut-row"><kbd>Q</kbd> <span>Answer mode (30s)</span></div>
+        <div class="shortcut-row"><kbd>A-D</kbd> <span>Select answer</span></div>
+        <div class="shortcut-row"><kbd>Esc</kbd> <span>Cancel</span></div>
       </div>
     </details>
   </div>

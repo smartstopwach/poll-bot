@@ -3,235 +3,338 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PW Poll Sniper - Dashboard</title>
+  <title>PW Poll Sniper — Dashboard</title>
   <link rel="stylesheet" href="dashboard.css">
 </head>
 <body>
   <div class="dashboard">
+
     <!-- Header -->
     <header class="header">
       <div class="header-left">
-        <h1>🎯 PW Poll Sniper Dashboard</h1>
-        <span class="version">v5.4.0</span>
+        <span class="logo-icon">🎯</span>
+        <div>
+          <h1>Poll Sniper Dashboard</h1>
+          <span class="subtitle">Real-time monitoring & control</span>
+        </div>
       </div>
       <div class="header-right">
-        <div class="status-badge" id="statusBadge">
+        <span class="version-badge">v5.4.0</span>
+        <div class="status-pill" id="statusBadge">
           <span class="status-dot"></span>
           <span class="status-text">Inactive</span>
         </div>
       </div>
     </header>
 
-    <!-- Stats Cards -->
-    <div class="stats-grid">
+    <!-- Stats Overview -->
+    <div class="stats-row">
       <div class="stat-card">
-        <div class="stat-icon">📊</div>
-        <div class="stat-info">
-          <div class="stat-value" id="totalPolls">0</div>
-          <div class="stat-label">Total Polls</div>
+        <div class="stat-header">
+          <span class="stat-icon">📊</span>
+          <span class="stat-title">Total Polls</span>
         </div>
+        <div class="stat-number" id="totalPolls">0</div>
       </div>
       <div class="stat-card success">
-        <div class="stat-icon">✅</div>
-        <div class="stat-info">
-          <div class="stat-value" id="successPolls">0</div>
-          <div class="stat-label">Successful</div>
+        <div class="stat-header">
+          <span class="stat-icon">✅</span>
+          <span class="stat-title">Successful</span>
         </div>
+        <div class="stat-number" id="successPolls">0</div>
       </div>
       <div class="stat-card error">
-        <div class="stat-icon">❌</div>
-        <div class="stat-info">
-          <div class="stat-value" id="failedPolls">0</div>
-          <div class="stat-label">Failed</div>
+        <div class="stat-header">
+          <span class="stat-icon">❌</span>
+          <span class="stat-title">Failed</span>
         </div>
+        <div class="stat-number" id="failedPolls">0</div>
       </div>
-      <div class="stat-card info">
-        <div class="stat-icon">⚡</div>
-        <div class="stat-info">
-          <div class="stat-value" id="avgTime">0ms</div>
-          <div class="stat-label">Avg Response</div>
+      <div class="stat-card accent">
+        <div class="stat-header">
+          <span class="stat-icon">⚡</span>
+          <span class="stat-title">Avg Speed</span>
         </div>
+        <div class="stat-number" id="avgTime">—</div>
       </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="main-content">
-      <!-- History Section -->
-      <div class="section">
-        <div class="section-header">
-          <h2>📋 Poll History</h2>
-          <div class="section-actions">
-            <select id="historyFilter" class="filter-select">
-              <option value="all">All</option>
-              <option value="SUCCESS">Success</option>
-              <option value="FAILED">Failed</option>
-            </select>
-            <button class="btn btn-danger" id="clearHistory">🗑 Clear All</button>
+    <!-- Main Grid -->
+    <div class="main-grid">
+
+      <!-- Left Column -->
+      <div class="col-left">
+
+        <!-- Performance Settings -->
+        <div class="panel">
+          <div class="panel-header">
+            <h2>⚡ Performance Settings</h2>
+            <span class="panel-badge" id="totalTimeValue">~125ms</span>
+          </div>
+          <div class="panel-body">
+
+            <div class="slider-group">
+              <div class="slider-header">
+                <label>Poll Detection Speed</label>
+                <span class="slider-value" id="pollDetectionValue">50ms</span>
+              </div>
+              <input type="range" id="pollDetectionSlider" min="50" max="200" step="10" value="50">
+              <div class="slider-desc">How often to scan DOM for new polls. Lower = faster detection but more CPU.</div>
+              <div class="slider-range">
+                <span>50ms (Fastest)</span>
+                <span>200ms (Slow)</span>
+              </div>
+            </div>
+
+            <div class="slider-group">
+              <div class="slider-header">
+                <label>Answer Delay</label>
+                <span class="slider-value" id="pollDelayValue">50ms</span>
+              </div>
+              <input type="range" id="pollDelaySlider" min="50" max="300" step="10" value="50">
+              <div class="slider-desc">Wait time after options appear before clicking. React needs minimum 50ms to attach handlers.</div>
+              <div class="slider-range">
+                <span>50ms (Fastest Safe)</span>
+                <span>300ms (Conservative)</span>
+              </div>
+            </div>
+
+            <div class="slider-group">
+              <div class="slider-header">
+                <label>Submit Delay</label>
+                <span class="slider-value" id="submitDelayValue">25ms</span>
+              </div>
+              <input type="range" id="submitDelaySlider" min="10" max="200" step="5" value="25">
+              <div class="slider-desc">Wait time after selecting answer before clicking submit button.</div>
+              <div class="slider-range">
+                <span>10ms (Fastest)</span>
+                <span>200ms (Safe)</span>
+              </div>
+            </div>
+
+            <div class="slider-group">
+              <div class="slider-header">
+                <label>Status Panel Opacity</label>
+                <span class="slider-value" id="panelOpacityValue">100%</span>
+              </div>
+              <input type="range" id="panelOpacitySlider" min="0" max="100" step="5" value="100">
+              <div class="slider-desc">Control visibility of the floating status panel on the PW page.</div>
+              <div class="slider-range">
+                <span>0% (Hidden)</span>
+                <span>100% (Visible)</span>
+              </div>
+            </div>
+
+            <div class="speed-summary">
+              <div class="speed-item">
+                <span class="speed-label">Total Response Time</span>
+                <span class="speed-number" id="totalTimeDisplay">~125ms</span>
+              </div>
+              <div class="speed-comparison">
+                <span>v5.3.8: ~385ms</span>
+                <span class="arrow">→</span>
+                <span class="highlight">v5.4.0: ~125ms (3x faster)</span>
+              </div>
+            </div>
+
           </div>
         </div>
-        <div class="table-container">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Status</th>
-                <th>Poll #</th>
-                <th>Answer</th>
-                <th>Time</th>
-                <th>Method</th>
-                <th>Timestamp</th>
-              </tr>
-            </thead>
-            <tbody id="historyTable">
-              <tr>
-                <td colspan="6" class="empty">No polls answered yet</td>
-              </tr>
-            </tbody>
-          </table>
+
+        <!-- Extension Settings -->
+        <div class="panel">
+          <div class="panel-header">
+            <h2>⚙️ Extension Settings</h2>
+          </div>
+          <div class="panel-body">
+            <div class="toggle-grid">
+              <div class="toggle-row">
+                <div class="toggle-info">
+                  <span class="toggle-label">Extension Active</span>
+                  <span class="toggle-desc">Master switch for auto-answering</span>
+                </div>
+                <label class="toggle">
+                  <input type="checkbox" id="extensionToggle" checked>
+                  <span class="toggle-track"></span>
+                </label>
+              </div>
+              <div class="toggle-row">
+                <div class="toggle-info">
+                  <span class="toggle-label">Auto Submit</span>
+                  <span class="toggle-desc">Automatically click submit after selecting answer</span>
+                </div>
+                <label class="toggle">
+                  <input type="checkbox" id="autoSubmit" checked>
+                  <span class="toggle-track"></span>
+                </label>
+              </div>
+              <div class="toggle-row">
+                <div class="toggle-info">
+                  <span class="toggle-label">Auto Open Poll</span>
+                  <span class="toggle-desc">Automatically open poll panel when detected</span>
+                </div>
+                <label class="toggle">
+                  <input type="checkbox" id="autoOpen" checked>
+                  <span class="toggle-track"></span>
+                </label>
+              </div>
+              <div class="toggle-row">
+                <div class="toggle-info">
+                  <span class="toggle-label">Human-like Delay</span>
+                  <span class="toggle-desc">Add random delay to mimic human behavior (adds ~1000ms)</span>
+                </div>
+                <label class="toggle">
+                  <input type="checkbox" id="useHumanDelay">
+                  <span class="toggle-track"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Keyboard Shortcuts -->
+        <div class="panel">
+          <div class="panel-header">
+            <h2>⌨️ Keyboard Shortcuts</h2>
+          </div>
+          <div class="panel-body">
+            <div class="shortcuts-grid">
+              <div class="shortcut-card">
+                <kbd>P</kbd>
+                <div class="shortcut-info">
+                  <span class="shortcut-name">Toggle Extension</span>
+                  <span class="shortcut-desc">Turn auto-answer ON or OFF</span>
+                </div>
+              </div>
+              <div class="shortcut-card">
+                <kbd>Q</kbd>
+                <div class="shortcut-info">
+                  <span class="shortcut-name">Answer Mode</span>
+                  <span class="shortcut-desc">Enter Q mode, then press A/B/C/D (30s timeout)</span>
+                </div>
+              </div>
+              <div class="shortcut-card">
+                <kbd>A</kbd><kbd>B</kbd><kbd>C</kbd><kbd>D</kbd>
+                <div class="shortcut-info">
+                  <span class="shortcut-name">Select Answer</span>
+                  <span class="shortcut-desc">Choose option in Q mode. Last press wins.</span>
+                </div>
+              </div>
+              <div class="shortcut-card">
+                <kbd>Esc</kbd>
+                <div class="shortcut-info">
+                  <span class="shortcut-name">Cancel</span>
+                  <span class="shortcut-desc">Exit Q mode without selecting</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Errors Section -->
-      <div class="section">
-        <div class="section-header">
-          <h2>🚨 Error Log</h2>
-          <button class="btn btn-danger" id="clearErrors">🗑 Clear All</button>
-        </div>
-        <div class="table-container">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Level</th>
-                <th>Message</th>
-                <th>Timestamp</th>
-              </tr>
-            </thead>
-            <tbody id="errorTable">
-              <tr>
-                <td colspan="3" class="empty">No errors 🎉</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <!-- Right Column -->
+      <div class="col-right">
 
-      <!-- Advanced Settings -->
-      <div class="section">
-        <div class="section-header">
-          <h2>⚙️ Advanced Settings</h2>
-        </div>
-        <div class="settings-grid">
-          <div class="setting-item">
-            <label>Extension Status</label>
-            <label class="toggle">
-              <input type="checkbox" id="extensionToggle" checked>
-              <span class="toggle-slider"></span>
-            </label>
+        <!-- Poll History -->
+        <div class="panel">
+          <div class="panel-header">
+            <h2>📋 Poll History</h2>
+            <div class="panel-actions">
+              <select id="historyFilter" class="filter-select">
+                <option value="all">All Polls</option>
+                <option value="SUCCESS">Success Only</option>
+                <option value="FAILED">Failed Only</option>
+              </select>
+              <button class="btn btn-sm btn-danger" id="clearHistory">Clear</button>
+            </div>
           </div>
-          <div class="setting-item">
-            <label>Auto Submit</label>
-            <label class="toggle">
-              <input type="checkbox" id="autoSubmit" checked>
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
-          <div class="setting-item">
-            <label>Auto Open Poll</label>
-            <label class="toggle">
-              <input type="checkbox" id="autoOpen" checked>
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
-          <div class="setting-item">
-            <label>Human-like Delay</label>
-            <label class="toggle">
-              <input type="checkbox" id="useHumanDelay">
-              <span class="toggle-slider"></span>
-            </label>
+          <div class="panel-body">
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Status</th>
+                    <th>#</th>
+                    <th>Answer</th>
+                    <th>Time</th>
+                    <th>Method</th>
+                    <th>When</th>
+                  </tr>
+                </thead>
+                <tbody id="historyTable">
+                  <tr><td colspan="6" class="empty">No polls answered yet. Waiting for first poll...</td></tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- Performance Settings -->
-      <div class="section">
-        <div class="section-header">
-          <h2>⚡ Performance Settings</h2>
-        </div>
-        <div class="settings-grid">
-          <div class="setting-item slider-item">
-            <label>
-              Poll Detection Speed
-              <span class="setting-value" id="pollDetectionValue">50ms</span>
-            </label>
-            <input type="range" id="pollDetectionSlider" min="50" max="200" step="10" value="50">
-            <div class="slider-labels">
-              <span>50ms (Fastest)</span>
-              <span>200ms (Slow)</span>
-            </div>
+        <!-- Error Log -->
+        <div class="panel">
+          <div class="panel-header">
+            <h2>🚨 Error Log</h2>
+            <button class="btn btn-sm btn-danger" id="clearErrors">Clear</button>
           </div>
-          <div class="setting-item slider-item">
-            <label>
-              Answer Delay
-              <span class="setting-value" id="pollDelayValue">50ms</span>
-            </label>
-            <input type="range" id="pollDelaySlider" min="50" max="300" step="10" value="50">
-            <div class="slider-labels">
-              <span>50ms (Fastest)</span>
-              <span>300ms (Safe)</span>
-            </div>
-          </div>
-          <div class="setting-item slider-item">
-            <label>
-              Submit Delay
-              <span class="setting-value" id="submitDelayValue">25ms</span>
-            </label>
-            <input type="range" id="submitDelaySlider" min="10" max="200" step="5" value="25">
-            <div class="slider-labels">
-              <span>10ms (Fastest)</span>
-              <span>200ms (Safe)</span>
-            </div>
-          </div>
-          <div class="setting-item slider-item">
-            <label>
-              Status Panel Opacity
-              <span class="setting-value" id="panelOpacityValue">100%</span>
-            </label>
-            <input type="range" id="panelOpacitySlider" min="0" max="100" step="5" value="100">
-            <div class="slider-labels">
-              <span>0% (Hidden)</span>
-              <span>100% (Visible)</span>
-            </div>
-          </div>
-          <div class="setting-item info-item">
-            <label>Total Response Time</label>
-            <div class="info-value">
-              <span id="totalTimeValue">~125ms</span>
-              <span class="info-badge">11x faster than v5.3.8</span>
+          <div class="panel-body">
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Level</th>
+                    <th>Message</th>
+                    <th>When</th>
+                  </tr>
+                </thead>
+                <tbody id="errorTable">
+                  <tr><td colspan="3" class="empty">No errors — everything running smoothly 🎉</td></tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Keyboard Shortcuts -->
-      <div class="section">
-        <div class="section-header">
-          <h2>⌨️ Keyboard Shortcuts</h2>
-        </div>
-        <div class="shortcuts-grid">
-          <div class="shortcut-item">
-            <kbd>P</kbd>
-            <span>Toggle Extension ON/OFF</span>
+        <!-- How It Works -->
+        <div class="panel">
+          <div class="panel-header">
+            <h2>💡 How It Works</h2>
           </div>
-          <div class="shortcut-item">
-            <kbd>Q</kbd>
-            <span>Set answer mode (30s timeout)</span>
-          </div>
-          <div class="shortcut-item">
-            <kbd>A / B / C / D</kbd>
-            <span>Select answer (in Q mode)</span>
-          </div>
-          <div class="shortcut-item">
-            <kbd>Esc</kbd>
-            <span>Cancel Q mode</span>
+          <div class="panel-body">
+            <div class="flow-steps">
+              <div class="flow-step">
+                <div class="flow-number">1</div>
+                <div class="flow-content">
+                  <span class="flow-title">WebSocket Intercept</span>
+                  <span class="flow-desc">inject.js captures poll data from PW's WebSocket before DOM renders (300-400ms early)</span>
+                </div>
+              </div>
+              <div class="flow-step">
+                <div class="flow-number">2</div>
+                <div class="flow-content">
+                  <span class="flow-title">Pre-Open Panel</span>
+                  <span class="flow-desc">Poll panel opens immediately on WS detection, saving 100-200ms</span>
+                </div>
+              </div>
+              <div class="flow-step">
+                <div class="flow-number">3</div>
+                <div class="flow-content">
+                  <span class="flow-title">Fast DOM Watcher</span>
+                  <span class="flow-desc">5ms interval watcher clicks answer the instant options appear in DOM</span>
+                </div>
+              </div>
+              <div class="flow-step">
+                <div class="flow-number">4</div>
+                <div class="flow-content">
+                  <span class="flow-title">React Click + Submit</span>
+                  <span class="flow-desc">Uses React's internal onClick for reliable clicks, then submits</span>
+                </div>
+              </div>
+              <div class="flow-step fallback">
+                <div class="flow-number">⟳</div>
+                <div class="flow-content">
+                  <span class="flow-title">DOM Polling Fallback</span>
+                  <span class="flow-desc">If WS fails, proven DOM polling catches every poll (always works)</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -239,7 +342,11 @@
 
     <!-- Footer -->
     <footer class="footer">
-      <p>PW Poll Sniper v5.4.0 | WebSocket Intercept + Fastest Safe | <a href="https://github.com" target="_blank">GitHub</a></p>
+      <span>PW Poll Sniper v5.4.0</span>
+      <span class="footer-sep">·</span>
+      <span>WebSocket Intercept + Fastest Safe</span>
+      <span class="footer-sep">·</span>
+      <span>Auto-refreshes every 2s</span>
     </footer>
   </div>
 
