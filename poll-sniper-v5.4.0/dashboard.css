@@ -338,6 +338,11 @@ body {
   border-radius: 8px;
 }
 
+.toggle-row.aggressive-row {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
 .toggle-info {
   display: flex;
   flex-direction: column;

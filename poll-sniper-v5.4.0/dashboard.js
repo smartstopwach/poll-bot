@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const autoSubmitCheck = document.getElementById('autoSubmit');
   const autoOpenCheck = document.getElementById('autoOpen');
   const useHumanDelayCheck = document.getElementById('useHumanDelay');
+  const aggressiveToggle = document.getElementById('aggressiveToggle');
   const pollDetectionSlider = document.getElementById('pollDetectionSlider');
   const pollDetectionValue = document.getElementById('pollDetectionValue');
   const pollDelaySlider = document.getElementById('pollDelaySlider');
@@ -32,12 +33,17 @@ document.addEventListener('DOMContentLoaded', () => {
   function loadSettings() {
     chrome.storage.local.get([
       'extensionActive', 'autoSubmit', 'autoOpen', 'useHumanDelay',
-      'pollDetectionInterval', 'pollDelay', 'submitDelay', 'panelOpacity'
+      'pollDetectionInterval', 'pollDelay', 'submitDelay', 'panelOpacity', 'aggressiveMode'
     ], (result) => {
       extensionToggle.checked = result.extensionActive !== false;  // Default ON
       autoSubmitCheck.checked = result.autoSubmit !== false;
       autoOpenCheck.checked = result.autoOpen !== false;
       useHumanDelayCheck.checked = result.useHumanDelay === true;  // Default OFF
+      
+      // Aggressive mode
+      if (aggressiveToggle) {
+        aggressiveToggle.checked = result.aggressiveMode === true;
+      }
       
       // Poll detection slider
       const pollDetectionInterval = result.pollDetectionInterval !== undefined ? result.pollDetectionInterval : 50;  // Default 50ms
@@ -127,6 +133,36 @@ document.addEventListener('DOMContentLoaded', () => {
     sendToPWTab({ type: 'SET_TIMING', useHumanDelay });
     updateTotalTime();
   });
+
+  // Aggressive mode toggle
+  if (aggressiveToggle) {
+    aggressiveToggle.addEventListener('change', () => {
+      const aggressive = aggressiveToggle.checked;
+      chrome.storage.local.set({ aggressiveMode: aggressive });
+      sendToPWTab({ type: 'SET_AGGRESSIVE', aggressive });
+      
+      // Update sliders and total time display
+      if (aggressive) {
+        pollDetectionSlider.value = 10;
+        pollDetectionValue.textContent = '10ms';
+        pollDelaySlider.value = 10;
+        pollDelayValue.textContent = '10ms';
+        submitDelaySlider.value = 5;
+        submitDelayValue.textContent = '5ms';
+        totalTimeValue.textContent = '~25ms';
+        if (totalTimeDisplay) totalTimeDisplay.textContent = '~25ms';
+      } else {
+        // Restore defaults
+        pollDetectionSlider.value = 50;
+        pollDetectionValue.textContent = '50ms';
+        pollDelaySlider.value = 50;
+        pollDelayValue.textContent = '50ms';
+        submitDelaySlider.value = 25;
+        submitDelayValue.textContent = '25ms';
+        updateTotalTime();
+      }
+    });
+  }
 
   // Poll detection slider
   pollDetectionSlider.addEventListener('input', () => {

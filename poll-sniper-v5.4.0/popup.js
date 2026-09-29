@@ -22,11 +22,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const submitDelaySlider = document.getElementById('submitDelay');
   const submitDelayInput = document.getElementById('submitDelayInput');
   const totalTimeDisplay = document.getElementById('totalTime');
+  const aggressiveToggle = document.getElementById('aggressiveToggle');
 
   // Load current state
   chrome.storage.local.get([
     'extensionActive', 'selectedOption', 'pollCount',
-    'pollDetectionInterval', 'pollDelay', 'submitDelay', 'humanDelayMin', 'humanDelayMax', 'useHumanDelay'
+    'pollDetectionInterval', 'pollDelay', 'submitDelay', 'humanDelayMin', 'humanDelayMax', 'useHumanDelay', 'aggressiveMode'
   ], (result) => {
     // Extension toggle
     const isActive = result.extensionActive !== false;  // Default ON
@@ -61,6 +62,12 @@ document.addEventListener('DOMContentLoaded', () => {
     useHumanDelayCheckbox.checked = useHumanDelay;
     
     humanDelaySettings.style.display = useHumanDelay ? 'block' : 'none';
+    
+    // Aggressive mode
+    if (aggressiveToggle) {
+      aggressiveToggle.checked = result.aggressiveMode === true;
+    }
+    
     updateTotalTime();
   });
 
@@ -180,6 +187,30 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     updateTotalTime();
   });
+
+  // Aggressive mode toggle
+  if (aggressiveToggle) {
+    aggressiveToggle.addEventListener('change', () => {
+      const aggressive = aggressiveToggle.checked;
+      chrome.storage.local.set({ aggressiveMode: aggressive });
+      
+      chrome.tabs.query({ url: ['*://*.pw.live/*', '*://pw.live/*'] }, (tabs) => {
+        if (tabs && tabs.length > 0) {
+          chrome.tabs.sendMessage(tabs[0].id, { 
+            type: 'SET_AGGRESSIVE', 
+            aggressive 
+          }).catch(() => {});
+        }
+      });
+      
+      // Update total time display
+      if (aggressive) {
+        totalTimeDisplay.textContent = '~25ms';
+      } else {
+        updateTotalTime();
+      }
+    });
+  }
 
   // Human delay inputs
   humanDelayMinInput.addEventListener('change', () => {

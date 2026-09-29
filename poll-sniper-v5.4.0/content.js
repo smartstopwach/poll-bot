@@ -26,7 +26,12 @@
     ICON_RESET_TIME: 5000, // FIX #1: Was 1800000 (30 min!) → Now 5 seconds
     PANEL_OPEN_TIMEOUT: 3000, // FIX #4: Was 2000 → Now 3 seconds
     PROCESSING_SAFETY_TIMEOUT: 15000, // FIX #3: Force reset isProcessing after 15s
-    NOTIFICATION_DURATION: 2500
+    NOTIFICATION_DURATION: 2500,
+    // Aggressive mode minimums (non-zero, maximum speed)
+    AGGRESSIVE_POLL_INTERVAL: 10,
+    AGGRESSIVE_POLL_DELAY: 10,
+    AGGRESSIVE_SUBMIT_DELAY: 5,
+    AGGRESSIVE_WS_WATCHER: 2
   };
 
   // ============================================
@@ -57,6 +62,7 @@
   let humanDelayMax = PW.HUMAN_DELAY_MAX;
   let useHumanDelay = false;
   let panelOpening = false;
+  let aggressiveMode = false;  // Aggressive mode: minimum delays
 
   // UI elements
   let statusPanel = null;
@@ -113,7 +119,7 @@
       if (existing) existing.remove();
 
       chrome.storage.local.get(
-        ['autoSubmit', 'autoOpen', 'pollHistory', 'errorLog', 'pollCount', 'pollDelay', 'submitDelay', 'pollDetectionInterval', 'humanDelayMin', 'humanDelayMax', 'useHumanDelay', 'extensionActive', 'panelOpacity'],
+        ['autoSubmit', 'autoOpen', 'pollHistory', 'errorLog', 'pollCount', 'pollDelay', 'submitDelay', 'pollDetectionInterval', 'humanDelayMin', 'humanDelayMax', 'useHumanDelay', 'extensionActive', 'panelOpacity', 'aggressiveMode'],
         (result) => {
           selectedOption = null;
           nextPollAnswer = null;
@@ -129,6 +135,7 @@
           humanDelayMax = (result.humanDelayMax !== undefined && result.humanDelayMax !== null) ? result.humanDelayMax : PW.HUMAN_DELAY_MAX;
           useHumanDelay = result.useHumanDelay === true;  // Default OFF for speed
           extensionActive = result.extensionActive !== false;  // Default ON
+          aggressiveMode = result.aggressiveMode === true;  // Default OFF
           
           // Apply panel opacity if saved
           if (result.panelOpacity !== undefined && statusPanel) {
@@ -443,7 +450,7 @@
           answerPoll(options, wsAdv);
         }
       } catch(e) {}
-    }, 5);
+    }, aggressiveMode ? PW.AGGRESSIVE_WS_WATCHER : 5);
   }
 
   // ============================================
@@ -1203,6 +1210,39 @@
             if (panel) panel.style.opacity = opacity;
             saveToStorage('panelOpacity', msg.panelOpacity);
           }
+          if (sendResponse) sendResponse({ ok: true });
+          break;
+
+        case 'SET_AGGRESSIVE':
+          aggressiveMode = msg.aggressive === true;
+          saveToStorage('aggressiveMode', aggressiveMode);
+          if (aggressiveMode) {
+            // Set all timings to minimum (non-zero)
+            pollDetectionInterval = PW.AGGRESSIVE_POLL_INTERVAL;
+            pollDelay = PW.AGGRESSIVE_POLL_DELAY;
+            submitDelay = PW.AGGRESSIVE_SUBMIT_DELAY;
+            useHumanDelay = false;
+            saveToStorage('pollDetectionInterval', pollDetectionInterval);
+            saveToStorage('pollDelay', pollDelay);
+            saveToStorage('submitDelay', submitDelay);
+            saveToStorage('useHumanDelay', false);
+            // Restart check interval with new speed
+            if (checkInterval) clearInterval(checkInterval);
+            checkInterval = setInterval(checkForPoll, pollDetectionInterval);
+            showNotification('🔥 Aggressive ON', '#ef4444');
+          } else {
+            // Restore safe defaults
+            pollDetectionInterval = PW.POLL_INTERVAL;
+            pollDelay = PW.POLL_DELAY;
+            submitDelay = PW.SUBMIT_DELAY;
+            saveToStorage('pollDetectionInterval', pollDetectionInterval);
+            saveToStorage('pollDelay', pollDelay);
+            saveToStorage('submitDelay', submitDelay);
+            if (checkInterval) clearInterval(checkInterval);
+            checkInterval = setInterval(checkForPoll, pollDetectionInterval);
+            showNotification('🛡️ Normal Mode', '#10b981');
+          }
+          updateUI();
           if (sendResponse) sendResponse({ ok: true });
           break;
 

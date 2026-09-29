@@ -269,6 +269,47 @@ body {
   color: rgba(255, 255, 255, 0.8);
 }
 
+/* Aggressive Mode Card */
+.aggressive-card {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.aggressive-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.aggressive-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.aggressive-icon {
+  font-size: 18px;
+}
+
+.aggressive-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.aggressive-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.aggressive-desc {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
 /* Collapsible Sections */
 .collapse {
   background: #1a1a1a;
