@@ -94,6 +94,7 @@
         hour: '2-digit', minute: '2-digit', second: '2-digit'
       })
     });
+    if (pollHistory.length > 50) pollHistory = pollHistory.slice(-50);
     savePollHistory();
   }
 
@@ -104,6 +105,7 @@
         hour: '2-digit', minute: '2-digit', second: '2-digit'
       })
     });
+    if (errorLog.length > 20) errorLog = errorLog.slice(-20);
     saveErrorLog();
     console.error('[PW Sniper] ERROR:', msg);
   }
@@ -224,6 +226,11 @@
             clearInterval(wsPreClickInterval);
             startWsPreClickWatcher();
           }
+        }
+        if (changes.debugMode !== undefined) debugMode = changes.debugMode.newValue;
+        if (changes.theme !== undefined) {
+          currentTheme = changes.theme.newValue;
+          applyTheme();
         }
       });
     } catch (e) {
@@ -403,6 +410,7 @@
   function setupWebSocketListener() {
     window.addEventListener('message', (event) => {
       if (event.source !== window) return;
+      if (event.origin !== window.location.origin) return;
       if (!event.data || event.data.type !== 'PW_POLL_WS_DETECTED') return;
 
       const now = performance.now();
@@ -460,6 +468,7 @@
       }
     } catch(e) {
       panelOpening = false;
+      addError('wsPreOpenPoll: ' + e.message);
     }
   }
 
@@ -755,7 +764,21 @@
       }
 
       setTimeout(() => {
+        if (!extensionActive) {
+          clearAnswerState();
+          isProcessing = false;
+          if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
+          updateUI();
+          return;
+        }
         setTimeout(() => {
+          if (!extensionActive) {
+            clearAnswerState();
+            isProcessing = false;
+            if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
+            updateUI();
+            return;
+          }
           try {
             const answerClickTime = Date.now();
             showNotification(`🎯 ${target}...`, '#3b82f6');
@@ -776,6 +799,13 @@
 
             if (autoSubmit) {
               setTimeout(() => {
+                if (!extensionActive) {
+                  clearAnswerState();
+                  isProcessing = false;
+                  if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
+                  updateUI();
+                  return;
+                }
                 try {
                   const submitBtn = findSubmitButton();
                   if (submitBtn) {
@@ -802,6 +832,7 @@
 
                     // Calculate network delay (time from WS detection to answer completion)
                     const networkDelay = wsDetectedAt > 0 ? Date.now() - wsDetectedAt : 0;
+                    wsDetectedAt = 0; // Reset for next poll
 
                     addPollResult({
                       poll: pollCount,
@@ -1032,7 +1063,9 @@
         el.click();
         return true;
       }
-    } catch(e) {}
+    } catch(e) {
+      addError('clickPollIcon: All click methods failed');
+    }
     
     return false;
   }
@@ -1205,8 +1238,10 @@
     try {
       switch (msg.type) {
         case 'OPTION_CHANGED':
-          selectedOption = msg.option;
-          updateUI();
+          if (msg.option && ['A', 'B', 'C', 'D'].includes(String(msg.option).toUpperCase())) {
+            selectedOption = String(msg.option).toUpperCase();
+            updateUI();
+          }
           if (sendResponse) sendResponse({ ok: true });
           break;
 

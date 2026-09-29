@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const statusDot = document.getElementById('statusDot');
   const statusText = document.getElementById('statusText');
   const pollCountEl = document.getElementById('pollCount');
-  const optionBtns = document.querySelectorAll('.option-btn');
+  const optionBtns = document.querySelectorAll('.opt-btn');
   const openDashboardBtn = document.getElementById('openDashboard');
   
   // Timing controls
@@ -312,5 +312,119 @@ document.addEventListener('DOMContentLoaded', () => {
 
   pollDetectionIntervalInput.addEventListener('change', (e) => {
     syncTiming(pollDetectionIntervalSlider, e.target, 'pollDetectionInterval');
+  });
+
+  // ==========================================
+  // ADVANCED SECTION
+  // ==========================================
+  const debugModeToggle = document.getElementById('debugModeToggle');
+  const clearDebugLogsBtn = document.getElementById('clearDebugLogs');
+  const debugLogCountEl = document.getElementById('debugLogCount');
+  const resetStatsBtn = document.getElementById('resetStats');
+  const perfSuccessRate = document.getElementById('perfSuccessRate');
+  const perfAvgTime = document.getElementById('perfAvgTime');
+  const perfPollsPerMin = document.getElementById('perfPollsPerMin');
+  const perfWarnings = document.getElementById('perfWarnings');
+  const themeBtns = document.querySelectorAll('.theme-btn');
+
+  // Send message to PW tab helper
+  function sendToPWTab(msg) {
+    chrome.tabs.query({ url: ['*://*.pw.live/*', '*://pw.live/*'] }, (tabs) => {
+      if (tabs && tabs.length > 0) {
+        chrome.tabs.sendMessage(tabs[0].id, msg).catch(() => {});
+      }
+    });
+  }
+
+  // Load advanced settings
+  chrome.storage.local.get(['debugMode', 'theme', 'performanceMetrics'], (result) => {
+    if (debugModeToggle) debugModeToggle.checked = result.debugMode === true;
+    
+    // Highlight active theme button
+    const currentTheme = result.theme || 'dark';
+    themeBtns.forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.theme === currentTheme);
+    });
+    
+    // Load performance metrics
+    loadPerformanceStats();
+  });
+
+  // Load performance stats from PW tab
+  function loadPerformanceStats() {
+    sendToPWTab({ type: 'GET_PERFORMANCE' });
+    // Also try to get from storage directly
+    chrome.storage.local.get(['performanceMetrics'], (result) => {
+      const m = result.performanceMetrics;
+      if (m) {
+        if (perfSuccessRate) perfSuccessRate.textContent = m.pollsAnswered > 0 ? m.successRate + '%' : '-';
+        if (perfAvgTime) perfAvgTime.textContent = m.successCount > 0 ? m.avgResponseTime + 'ms' : '-';
+        if (perfPollsPerMin) perfPollsPerMin.textContent = m.pollsInLastMinute || 0;
+        
+        // Check warnings
+        const warnings = [];
+        if (m.successRate < 80 && m.pollsAnswered > 5) warnings.push('Low success rate');
+        if (m.avgResponseTime > 500 && m.successCount > 3) warnings.push('Slow responses');
+        if (m.pollsInLastMinute > 20) warnings.push('High frequency');
+        
+        if (perfWarnings) {
+          if (warnings.length > 0) {
+            perfWarnings.style.display = 'block';
+            perfWarnings.textContent = '⚠ ' + warnings.join(', ');
+          } else {
+            perfWarnings.style.display = 'none';
+          }
+        }
+      }
+    });
+  }
+
+  // Debug mode toggle
+  if (debugModeToggle) {
+    debugModeToggle.addEventListener('change', () => {
+      const debugMode = debugModeToggle.checked;
+      chrome.storage.local.set({ debugMode });
+      sendToPWTab({ type: 'SET_DEBUG_MODE', debugMode });
+    });
+  }
+
+  // Clear debug logs
+  if (clearDebugLogsBtn) {
+    clearDebugLogsBtn.addEventListener('click', () => {
+      chrome.storage.local.set({ debugLogs: [], wsMessageLog: [] });
+      sendToPWTab({ type: 'CLEAR_DEBUG_LOGS' });
+      if (debugLogCountEl) debugLogCountEl.textContent = '(0 logs)';
+    });
+  }
+
+  // Reset performance stats
+  if (resetStatsBtn) {
+    resetStatsBtn.addEventListener('click', () => {
+      sendToPWTab({ type: 'RESET_PERFORMANCE' });
+      chrome.storage.local.set({ performanceMetrics: null });
+      loadPerformanceStats();
+    });
+  }
+
+  // Theme buttons
+  themeBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const theme = btn.dataset.theme;
+      chrome.storage.local.set({ theme });
+      sendToPWTab({ type: 'SET_THEME', theme });
+      
+      // Highlight active
+      themeBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+
+  // Refresh performance stats every 5 seconds when popup is open
+  setInterval(loadPerformanceStats, 5000);
+
+  // Update debug log count from storage
+  chrome.storage.local.get(['debugLogs'], (result) => {
+    const count = (result.debugLogs || []).length;
+    if (debugLogCountEl) debugLogCountEl.textContent = `(${count} logs)`;
   });
 });

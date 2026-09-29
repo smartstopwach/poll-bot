@@ -127,6 +127,63 @@
       </div>
     </details>
 
+    <!-- Collapsible: Advanced -->
+    <details class="collapse">
+      <summary>
+        <span>🚀 Advanced</span>
+        <span class="chevron">›</span>
+      </summary>
+      <div class="collapse-body">
+        <!-- Performance Stats -->
+        <div class="setting-row" style="flex-direction: column; align-items: stretch; gap: 8px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-weight: 600;">Performance</span>
+            <button id="resetStats" class="mini-btn">Reset</button>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; font-size: 10px;">
+            <div>
+              <div style="color: #999;">Success Rate</div>
+              <div id="perfSuccessRate" style="font-weight: 700; color: #10b981;">-</div>
+            </div>
+            <div>
+              <div style="color: #999;">Avg Time</div>
+              <div id="perfAvgTime" style="font-weight: 700; color: #3b82f6;">-</div>
+            </div>
+            <div>
+              <div style="color: #999;">Polls/min</div>
+              <div id="perfPollsPerMin" style="font-weight: 700; color: #f59e0b;">-</div>
+            </div>
+          </div>
+          <div id="perfWarnings" style="display: none; color: #ef4444; font-size: 10px; margin-top: 4px;"></div>
+        </div>
+
+        <!-- Theme Toggle -->
+        <div class="setting-row">
+          <span>Theme</span>
+          <div style="display: flex; gap: 4px;">
+            <button class="theme-btn" data-theme="dark">Dark</button>
+            <button class="theme-btn" data-theme="light">Light</button>
+            <button class="theme-btn" data-theme="auto">Auto</button>
+          </div>
+        </div>
+
+        <!-- Debug Mode -->
+        <div class="setting-row">
+          <div>
+            <span>Debug Mode</span>
+            <span id="debugLogCount" style="color: #999; font-size: 10px; margin-left: 8px;">(0 logs)</span>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <button id="clearDebugLogs" class="mini-btn">Clear</button>
+            <label class="mini-switch">
+              <input type="checkbox" id="debugModeToggle">
+              <span class="mini-track"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </details>
+
     <!-- Collapsible: Shortcuts -->
     <details class="collapse">
       <summary>

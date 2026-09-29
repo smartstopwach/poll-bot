@@ -494,3 +494,42 @@ body {
 .shortcut-row span {
   color: #a1a1aa;
 }
+
+/* Advanced Section */
+.mini-btn {
+  background: #27272a;
+  border: 1px solid #3f3f46;
+  color: #a1a1aa;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mini-btn:hover {
+  background: #3f3f46;
+  color: #e4e4e7;
+}
+
+.theme-btn {
+  background: #27272a;
+  border: 1px solid #3f3f46;
+  color: #a1a1aa;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.theme-btn:hover {
+  background: #3f3f46;
+  color: #e4e4e7;
+}
+
+.theme-btn.active {
+  background: #3b82f6;
+  border-color: #3b82f6;
+  color: white;
+}

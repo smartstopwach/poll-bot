@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const panelOpacitySlider = document.getElementById('panelOpacitySlider');
   const panelOpacityValue = document.getElementById('panelOpacityValue');
   const totalTimeValue = document.getElementById('totalTimeValue');
+  const totalTimeDisplay = document.getElementById('totalTimeDisplay');
   const clearHistoryBtn = document.getElementById('clearHistory');
   const clearErrorsBtn = document.getElementById('clearErrors');
   const statusBadge = document.getElementById('statusBadge');
@@ -301,7 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const statusIcon = item.status === 'SUCCESS' ? '✓' : '✗';
       const method = item.status === 'SUCCESS'
         ? `${item.click || '-'}/${item.submit || '-'}`
-        : (item.reason || 'Unknown');
+        : escapeHtml(item.reason || 'Unknown');
       const netDelay = item.networkDelay || '-';
 
       return `
