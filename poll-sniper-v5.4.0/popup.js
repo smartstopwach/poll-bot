@@ -108,9 +108,9 @@ document.addEventListener('DOMContentLoaded', () => {
       // Save to storage so content.js picks it up
       chrome.storage.local.set({ selectedOption: option });
       
-      // Also send message to content.js
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        if (tabs[0]) {
+      // Also send message to content.js (find PW tab)
+      chrome.tabs.query({ url: ['*://*.pw.live/*', '*://pw.live/*'] }, (tabs) => {
+        if (tabs && tabs.length > 0) {
           chrome.tabs.sendMessage(tabs[0].id, { 
             type: 'OPTION_CHANGED', 
             option 
