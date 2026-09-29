@@ -1111,6 +1111,12 @@
           nextPollAnswer = letter;
           selectedOption = letter;
           
+          // Clear the 30s timeout — answer is set, keep it until poll comes
+          if (waitingForAnswerTimeout) {
+            clearTimeout(waitingForAnswerTimeout);
+            waitingForAnswerTimeout = null;
+          }
+          
           showNotification(`→ ${letter} (can change)`, '#3b82f6');
           updateUI();
         }
