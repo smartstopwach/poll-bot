@@ -147,7 +147,10 @@
         }, 10);
         
         // ULTRA FAST: Start pre-click watcher — clicks answer the instant DOM renders
-        startWsPreClickWatcher();
+        // FIX: Don't start watcher if already processing a poll
+        if (!isProcessing) {
+          startWsPreClickWatcher();
+        }
       }
 
       // Clear WS flag after 10 seconds (in case DOM never renders)
@@ -164,6 +167,7 @@
 
   // Try to open poll panel immediately (called from WS intercept)
   function tryOpenPollImmediate() {
+    if (!extensionActive) return; // FIX: Don't act if extension is OFF
     if (panelOpening) return;
     
     try {
@@ -276,6 +280,12 @@
       const option = options.find(o => o.letter === target);
       if (!option) {
         addError(`Poll #${pollCount}: WS Pre-click - option ${target} not found`);
+        // FIX: Reset answer to prevent retry loop
+        selectedOption = null;
+        nextPollAnswer = null;
+        saveToStorage('selectedOption', null);
+        // FIX: Set hash to prevent checkForPoll retry
+        lastAnsweredPollHash = generatePollHash(options);
         isProcessing = false;
         if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
         updateUI();
@@ -290,6 +300,8 @@
         addError(`Poll #${pollCount}: WS button not in DOM`);
         addPollResult({ poll: pollCount, answer: target, status: 'FAILED', reason: 'Button gone (WS)', time: '-', ws: '-' });
         showNotification(`✗ Button gone`, '#ef4444');
+        // FIX: Set hash to prevent retry loop
+        lastAnsweredPollHash = generatePollHash(options);
         isProcessing = false;
         if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
         updateUI();
@@ -344,6 +356,8 @@
               addPollResult({ poll: pollCount, answer: target, status: 'FAILED', reason: 'No submit (WS)', time: '-', ws: '-' });
               showNotification(`⚠ No submit`, '#f59e0b');
               nextPollAnswer = null;
+              // FIX: Set hash to prevent checkForPoll retry loop
+              lastAnsweredPollHash = generatePollHash(options);
             }
           } catch(e) {
             addError(`Poll #${pollCount} WS submit: ${e.message}`);
@@ -1008,6 +1022,8 @@
               addPollResult({ poll: pollCount, answer: target, status: 'FAILED', reason: 'Button gone', time: '-', ws: '-' });
               showNotification(`✗ Button gone`, '#ef4444');
               nextPollAnswer = null;
+              // FIX: Set hash to prevent retry loop
+              lastAnsweredPollHash = generatePollHash(options);
               isProcessing = false;
               if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
               updateUI();
@@ -1093,6 +1109,8 @@
                     addPollResult({ poll: pollCount, answer: target, status: 'FAILED', reason: 'No submit button', time: time + 'ms', ws: '-' });
                     showNotification(`⚠ #${pollCount} No submit`, '#f59e0b');
                     nextPollAnswer = null;
+                    // FIX: Set hash to prevent checkForPoll retry loop
+                    lastAnsweredPollHash = generatePollHash(options);
                   }
                 } catch(e) {
                   addError(`Poll #${pollCount} submit: ${e.message}`);
