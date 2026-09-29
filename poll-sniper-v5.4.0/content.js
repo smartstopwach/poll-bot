@@ -120,7 +120,7 @@
       if (existing) existing.remove();
 
       chrome.storage.local.get(
-        ['autoSubmit', 'autoOpen', 'pollHistory', 'errorLog', 'pollCount', 'pollDelay', 'submitDelay', 'pollDetectionInterval', 'humanDelayMin', 'humanDelayMax', 'useHumanDelay', 'extensionActive', 'panelOpacity', 'aggressiveMode'],
+        ['autoSubmit', 'autoOpen', 'pollHistory', 'errorLog', 'pollCount', 'pollDelay', 'submitDelay', 'pollDetectionInterval', 'humanDelayMin', 'humanDelayMax', 'useHumanDelay', 'extensionActive', 'panelOpacity', 'aggressiveMode', 'debugMode', 'theme', 'performanceMetrics'],
         (result) => {
           selectedOption = null;
           nextPollAnswer = null;
@@ -137,6 +137,17 @@
           useHumanDelay = result.useHumanDelay === true;  // Default OFF for speed
           extensionActive = result.extensionActive !== false;  // Default ON
           aggressiveMode = result.aggressiveMode === true;  // Default OFF
+          debugMode = result.debugMode === true;  // Default OFF
+          
+          // Load performance metrics if saved
+          if (result.performanceMetrics) {
+            performanceMetrics = { ...performanceMetrics, ...result.performanceMetrics };
+          }
+          
+          // Load theme
+          if (result.theme) {
+            currentTheme = result.theme;
+          }
           
           // Apply panel opacity if saved
           if (result.panelOpacity !== undefined && statusPanel) {
@@ -154,6 +165,20 @@
       setupKeyboard();
       setupDrag();
       setupWebSocketListener();
+      
+      // Initialize theme
+      applyTheme();
+      
+      // Log initialization
+      debugLog('Extension initialized', {
+        extensionActive,
+        aggressiveMode,
+        debugMode,
+        theme: currentTheme,
+        pollDelay,
+        submitDelay,
+        pollDetectionInterval
+      });
 
       chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         handleMessage(msg, sendResponse);
@@ -383,6 +408,10 @@
       const now = performance.now();
       wsPollTimestamp = now;
       wsDetectedAt = event.data.wsDetectedAt || Date.now();
+
+      // Log WebSocket message for debug mode
+      logWsMessage('incoming', event.data);
+      debugLog('WS poll detected', { timestamp: wsPollTimestamp, wsDetectedAt });
 
       // Pre-open poll panel immediately
       if (autoOpen && extensionActive && (nextPollAnswer || selectedOption || waitingForAnswer)) {
@@ -708,6 +737,7 @@
           reason: 'Option not found',
           time: '-'
         });
+        updatePerformanceMetrics(0, false);
         clearAnswerState();
         isProcessing = false;
         if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
@@ -767,6 +797,9 @@
                     const wsText = (wsAdv && wsAdv > 0) ? ` (WS+${wsAdv}ms)` : '';
                     showNotification(`✓ #${pollCount} ${totalTime}ms${wsText}`, '#10b981');
 
+                    // Update performance metrics on success
+                    updatePerformanceMetrics(totalTime, true);
+
                     // Calculate network delay (time from WS detection to answer completion)
                     const networkDelay = wsDetectedAt > 0 ? Date.now() - wsDetectedAt : 0;
 
@@ -805,6 +838,7 @@
                       reason: 'No submit button',
                       time: totalTime + 'ms'
                     });
+                    updatePerformanceMetrics(totalTime, false);
                     clearAnswerState();
                   }
                 } catch (e) {
@@ -816,6 +850,7 @@
                     reason: 'Submit error: ' + e.message,
                     time: '-'
                   });
+                  updatePerformanceMetrics(0, false);
                   clearAnswerState();
                 } finally {
                   isProcessing = false;
@@ -851,6 +886,7 @@
               reason: 'Answer error: ' + e.message,
               time: '-'
             });
+            updatePerformanceMetrics(0, false);
             clearAnswerState();
             isProcessing = false;
             if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
@@ -1290,12 +1326,259 @@
           if (sendResponse) sendResponse({ ok: true });
           break;
 
+        case 'SET_DEBUG_MODE':
+          debugMode = msg.debugMode === true;
+          saveToStorage('debugMode', debugMode);
+          debugLog('Debug mode changed', { debugMode });
+          if (sendResponse) sendResponse({ ok: true });
+          break;
+
+        case 'GET_DEBUG_INFO':
+          if (sendResponse) sendResponse(getDebugInfo());
+          break;
+
+        case 'CLEAR_DEBUG_LOGS':
+          debugLogs = [];
+          wsMessageLog = [];
+          saveToStorage('debugLogs', []);
+          saveToStorage('wsMessageLog', []);
+          debugLog('Debug logs cleared');
+          if (sendResponse) sendResponse({ ok: true });
+          break;
+
+        case 'SET_THEME':
+          if (msg.theme && ['dark', 'light', 'auto'].includes(msg.theme)) {
+            currentTheme = msg.theme;
+            saveToStorage('theme', currentTheme);
+            applyTheme();
+            debugLog('Theme changed', { theme: currentTheme });
+            if (sendResponse) sendResponse({ ok: true });
+          } else {
+            if (sendResponse) sendResponse({ ok: false, reason: 'Invalid theme' });
+          }
+          break;
+
+        case 'GET_PERFORMANCE':
+          if (sendResponse) sendResponse({
+            metrics: performanceMetrics,
+            warnings: getPerformanceWarnings()
+          });
+          break;
+
+        case 'RESET_PERFORMANCE':
+          performanceMetrics = {
+            pollsAnswered: 0,
+            totalResponseTime: 0,
+            avgResponseTime: 0,
+            minResponseTime: Infinity,
+            maxResponseTime: 0,
+            successCount: 0,
+            failureCount: 0,
+            successRate: 0,
+            pollsInLastMinute: 0,
+            pollsInLastMinuteTimestamps: [],
+            memoryUsage: null,
+            lastUpdated: null
+          };
+          saveToStorage('performanceMetrics', performanceMetrics);
+          debugLog('Performance metrics reset');
+          if (sendResponse) sendResponse({ ok: true });
+          break;
+
         default:
           if (sendResponse) sendResponse({ ok: false, reason: 'Unknown message type' });
       }
     } catch (e) {
       if (sendResponse) sendResponse({ ok: false, reason: e.message });
     }
+  }
+
+  // ============================================
+  // PERFORMANCE MONITOR (Feature #8)
+  // ============================================
+  let performanceMetrics = {
+    pollsAnswered: 0,
+    totalResponseTime: 0,
+    avgResponseTime: 0,
+    minResponseTime: Infinity,
+    maxResponseTime: 0,
+    successCount: 0,
+    failureCount: 0,
+    successRate: 0,
+    pollsInLastMinute: 0,
+    pollsInLastMinuteTimestamps: [],
+    memoryUsage: null,
+    lastUpdated: null
+  };
+
+  function updatePerformanceMetrics(responseTime, success) {
+    performanceMetrics.pollsAnswered++;
+    
+    if (success) {
+      performanceMetrics.successCount++;
+      performanceMetrics.totalResponseTime += responseTime;
+      performanceMetrics.avgResponseTime = Math.round(performanceMetrics.totalResponseTime / performanceMetrics.successCount);
+      
+      if (responseTime < performanceMetrics.minResponseTime) {
+        performanceMetrics.minResponseTime = responseTime;
+      }
+      if (responseTime > performanceMetrics.maxResponseTime) {
+        performanceMetrics.maxResponseTime = responseTime;
+      }
+    } else {
+      performanceMetrics.failureCount++;
+    }
+    
+    performanceMetrics.successRate = Math.round((performanceMetrics.successCount / performanceMetrics.pollsAnswered) * 100);
+    
+    // Track polls in last minute
+    const now = Date.now();
+    performanceMetrics.pollsInLastMinuteTimestamps.push(now);
+    const oneMinuteAgo = now - 60000;
+    performanceMetrics.pollsInLastMinuteTimestamps = performanceMetrics.pollsInLastMinuteTimestamps.filter(t => t > oneMinuteAgo);
+    performanceMetrics.pollsInLastMinute = performanceMetrics.pollsInLastMinuteTimestamps.length;
+    
+    // Get memory usage if available
+    try {
+      if (performance.memory) {
+        performanceMetrics.memoryUsage = {
+          used: Math.round(performance.memory.usedJSHeapSize / 1048576),
+          total: Math.round(performance.memory.totalJSHeapSize / 1048576),
+          limit: Math.round(performance.memory.jsHeapSizeLimit / 1048576)
+        };
+      }
+    } catch(e) {}
+    
+    performanceMetrics.lastUpdated = now;
+    
+    // Save to storage
+    saveToStorage('performanceMetrics', performanceMetrics);
+    
+    debugLog('Performance updated', performanceMetrics);
+  }
+
+  function getPerformanceWarnings() {
+    const warnings = [];
+    
+    if (performanceMetrics.successRate < 80 && performanceMetrics.pollsAnswered > 5) {
+      warnings.push(`Low success rate: ${performanceMetrics.successRate}%`);
+    }
+    
+    if (performanceMetrics.avgResponseTime > 500 && performanceMetrics.successCount > 3) {
+      warnings.push(`High avg response time: ${performanceMetrics.avgResponseTime}ms`);
+    }
+    
+    if (performanceMetrics.memoryUsage) {
+      const memPercent = (performanceMetrics.memoryUsage.used / performanceMetrics.memoryUsage.limit) * 100;
+      if (memPercent > 80) {
+        warnings.push(`High memory usage: ${performanceMetrics.memoryUsage.used}MB / ${performanceMetrics.memoryUsage.limit}MB`);
+      }
+    }
+    
+    if (performanceMetrics.pollsInLastMinute > 20) {
+      warnings.push(`High poll frequency: ${performanceMetrics.pollsInLastMinute} polls/min`);
+    }
+    
+    return warnings;
+  }
+
+  // ============================================
+  // DEBUG MODE (Feature #11)
+  // ============================================
+  let debugMode = false;
+  let debugLogs = [];
+  let wsMessageLog = [];
+
+  function debugLog(message, data = null) {
+    if (!debugMode) return;
+    
+    const timestamp = new Date().toISOString();
+    const logEntry = {
+      timestamp,
+      message,
+      data: data ? JSON.stringify(data).substring(0, 500) : null
+    };
+    
+    debugLogs.push(logEntry);
+    
+    // Keep only last 200 logs
+    if (debugLogs.length > 200) {
+      debugLogs.shift();
+    }
+    
+    console.log('[PW Sniper DEBUG]', timestamp, message, data || '');
+    
+    // Save to storage periodically
+    if (debugLogs.length % 20 === 0) {
+      saveToStorage('debugLogs', debugLogs.slice(-100));
+    }
+  }
+
+  function logWsMessage(direction, data) {
+    if (!debugMode) return;
+    
+    wsMessageLog.push({
+      timestamp: new Date().toISOString(),
+      direction,
+      preview: typeof data === 'string' ? data.substring(0, 200) : JSON.stringify(data).substring(0, 200)
+    });
+    
+    // Keep only last 50 messages
+    if (wsMessageLog.length > 50) {
+      wsMessageLog.shift();
+    }
+    
+    saveToStorage('wsMessageLog', wsMessageLog);
+  }
+
+  function getDebugInfo() {
+    return {
+      debugMode,
+      logCount: debugLogs.length,
+      wsMessageCount: wsMessageLog.length,
+      state: {
+        extensionActive,
+        isProcessing,
+        aggressiveMode,
+        selectedOption,
+        nextPollAnswer,
+        waitingForAnswer,
+        pollCount,
+        pollDelay,
+        submitDelay,
+        pollDetectionInterval
+      },
+      performance: performanceMetrics,
+      warnings: getPerformanceWarnings()
+    };
+  }
+
+  // ============================================
+  // THEME MANAGEMENT (Feature #14)
+  // ============================================
+  let currentTheme = 'dark'; // dark, light, auto
+
+  function applyTheme() {
+    const effectiveTheme = getEffectiveTheme();
+    saveToStorage('effectiveTheme', effectiveTheme);
+    debugLog('Theme applied', { current: currentTheme, effective: effectiveTheme });
+  }
+
+  function getEffectiveTheme() {
+    if (currentTheme === 'auto') {
+      return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    }
+    return currentTheme;
+  }
+
+  // Listen for system theme changes
+  if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
+      if (currentTheme === 'auto') {
+        applyTheme();
+        debugLog('System theme changed', { prefersLight: e.matches });
+      }
+    });
   }
 
   // ============================================

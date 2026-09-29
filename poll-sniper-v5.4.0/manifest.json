@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "PW Poll Sniper",
-  "version": "5.4.0",
+  "version": "5.4.1",
   "description": "Fastest PW poll sniper. WebSocket intercept + proven DOM polling. Press Q then A/B/C/D.",
   "permissions": ["storage"],
   "host_permissions": [
