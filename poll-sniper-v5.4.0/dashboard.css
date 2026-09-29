@@ -447,6 +447,34 @@ input[type="range"]::-moz-range-thumb {
   margin-top: 4px;
 }
 
+/* Info Item */
+.setting-item.info-item {
+  grid-column: 1 / -1;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.info-value {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.info-value span:first-child {
+  font-size: 24px;
+  font-weight: 700;
+  color: #10b981;
+}
+
+.info-badge {
+  font-size: 11px;
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.15);
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .dashboard {

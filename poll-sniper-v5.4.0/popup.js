@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // Timing settings
-    const pollDetectionInterval = result.pollDetectionInterval || 100;
+    const pollDetectionInterval = result.pollDetectionInterval || 50;  // Default 50ms
     const pollDelay = result.pollDelay || 50;  // Default 50ms
     const submitDelay = result.submitDelay || 25;
     const humanDelayMin = result.humanDelayMin || 500;

@@ -5,10 +5,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const autoSubmitCheck = document.getElementById('autoSubmit');
   const autoOpenCheck = document.getElementById('autoOpen');
   const useHumanDelayCheck = document.getElementById('useHumanDelay');
+  const pollDetectionSlider = document.getElementById('pollDetectionSlider');
+  const pollDetectionValue = document.getElementById('pollDetectionValue');
   const pollDelaySlider = document.getElementById('pollDelaySlider');
   const pollDelayValue = document.getElementById('pollDelayValue');
+  const submitDelaySlider = document.getElementById('submitDelaySlider');
+  const submitDelayValue = document.getElementById('submitDelayValue');
   const panelOpacitySlider = document.getElementById('panelOpacitySlider');
   const panelOpacityValue = document.getElementById('panelOpacityValue');
+  const totalTimeValue = document.getElementById('totalTimeValue');
   const clearHistoryBtn = document.getElementById('clearHistory');
   const clearErrorsBtn = document.getElementById('clearErrors');
   const statusBadge = document.getElementById('statusBadge');
@@ -27,23 +32,34 @@ document.addEventListener('DOMContentLoaded', () => {
   function loadSettings() {
     chrome.storage.local.get([
       'extensionActive', 'autoSubmit', 'autoOpen', 'useHumanDelay',
-      'pollDelay', 'panelOpacity'
+      'pollDetectionInterval', 'pollDelay', 'submitDelay', 'panelOpacity'
     ], (result) => {
       extensionToggle.checked = result.extensionActive !== false;  // Default ON
       autoSubmitCheck.checked = result.autoSubmit !== false;
       autoOpenCheck.checked = result.autoOpen !== false;
       useHumanDelayCheck.checked = result.useHumanDelay === true;  // Default OFF
       
+      // Poll detection slider
+      const pollDetectionInterval = result.pollDetectionInterval !== undefined ? result.pollDetectionInterval : 50;  // Default 50ms
+      pollDetectionSlider.value = pollDetectionInterval;
+      pollDetectionValue.textContent = pollDetectionInterval + 'ms';
+      
       // Poll speed slider
       const pollDelay = result.pollDelay !== undefined ? result.pollDelay : 50;  // Default 50ms
       pollDelaySlider.value = pollDelay;
       pollDelayValue.textContent = pollDelay + 'ms';
+      
+      // Submit delay slider
+      const submitDelay = result.submitDelay !== undefined ? result.submitDelay : 25;  // Default 25ms
+      submitDelaySlider.value = submitDelay;
+      submitDelayValue.textContent = submitDelay + 'ms';
       
       // Opacity slider
       const panelOpacity = result.panelOpacity !== undefined ? result.panelOpacity : 100;
       panelOpacitySlider.value = panelOpacity;
       panelOpacityValue.textContent = panelOpacity + '%';
       
+      updateTotalTime();
       updateStatusBadge(result.extensionActive !== false);  // Default ON
     });
   }
@@ -56,6 +72,24 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       statusBadge.classList.remove('active');
       statusBadge.querySelector('.status-text').textContent = 'Inactive';
+    }
+  }
+
+  // Update total response time
+  function updateTotalTime() {
+    const pollDetectionInterval = parseInt(pollDetectionSlider.value) || 50;
+    const pollDelay = parseInt(pollDelaySlider.value) || 50;
+    const submitDelay = parseInt(submitDelaySlider.value) || 25;
+    const useHumanDelay = useHumanDelayCheck.checked;
+    
+    let total;
+    if (useHumanDelay) {
+      // Human delay adds ~1000ms on average (500-1500ms range)
+      total = pollDetectionInterval + 1000 + pollDelay + submitDelay;
+      totalTimeValue.textContent = '~' + total + 'ms (avg)';
+    } else {
+      total = pollDetectionInterval + pollDelay + submitDelay;
+      totalTimeValue.textContent = '~' + total + 'ms';
     }
   }
 
@@ -91,18 +125,46 @@ document.addEventListener('DOMContentLoaded', () => {
     const useHumanDelay = useHumanDelayCheck.checked;
     chrome.storage.local.set({ useHumanDelay });
     sendToPWTab({ type: 'SET_TIMING', useHumanDelay });
+    updateTotalTime();
+  });
+
+  // Poll detection slider
+  pollDetectionSlider.addEventListener('input', () => {
+    const pollDetectionInterval = parseInt(pollDetectionSlider.value);
+    pollDetectionValue.textContent = pollDetectionInterval + 'ms';
+    updateTotalTime();
+  });
+  
+  pollDetectionSlider.addEventListener('change', () => {
+    const pollDetectionInterval = parseInt(pollDetectionSlider.value);
+    chrome.storage.local.set({ pollDetectionInterval });
+    sendToPWTab({ type: 'SET_TIMING', pollDetectionInterval });
   });
 
   // Poll speed slider
   pollDelaySlider.addEventListener('input', () => {
     const pollDelay = parseInt(pollDelaySlider.value);
     pollDelayValue.textContent = pollDelay + 'ms';
+    updateTotalTime();
   });
   
   pollDelaySlider.addEventListener('change', () => {
     const pollDelay = parseInt(pollDelaySlider.value);
     chrome.storage.local.set({ pollDelay });
     sendToPWTab({ type: 'SET_TIMING', pollDelay });
+  });
+
+  // Submit delay slider
+  submitDelaySlider.addEventListener('input', () => {
+    const submitDelay = parseInt(submitDelaySlider.value);
+    submitDelayValue.textContent = submitDelay + 'ms';
+    updateTotalTime();
+  });
+  
+  submitDelaySlider.addEventListener('change', () => {
+    const submitDelay = parseInt(submitDelaySlider.value);
+    chrome.storage.local.set({ submitDelay });
+    sendToPWTab({ type: 'SET_TIMING', submitDelay });
   });
 
   // Panel opacity slider
