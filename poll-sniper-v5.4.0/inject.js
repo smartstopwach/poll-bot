@@ -16,7 +16,7 @@
       window.postMessage({
         type: 'PW_POLL_WS_DETECTED',
         timestamp: performance.now()
-      }, '*');
+      }, window.location.origin);
     }
   }
   
@@ -55,7 +55,7 @@
               window.postMessage({
                 type: 'PW_POLL_WS_DETECTED',
                 timestamp: performance.now()
-              }, '*');
+              }, window.location.origin);
             }
           }).catch(function() {});
         } catch(e) {}

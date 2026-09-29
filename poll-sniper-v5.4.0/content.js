@@ -41,7 +41,6 @@
   let autoSubmit = true;
   let autoOpen = true;
   let extensionActive = false;
-  let lastPollTime = 0;
   let lastAnsweredPollHash = '';
   let pollCount = 0;
   let isProcessing = false;
@@ -56,14 +55,13 @@
   let pollDetectionInterval = PW.POLL_INTERVAL;
   let humanDelayMin = PW.HUMAN_DELAY_MIN;
   let humanDelayMax = PW.HUMAN_DELAY_MAX;
-  let useHumanDelay = true;
+  let useHumanDelay = false;
   let panelOpening = false;
 
   // UI elements
   let statusPanel = null;
   let isDragging = false;
   let dragOffset = { x: 0, y: 0 };
-  let dragStartPos = { x: 0, y: 0 };
 
   // ============================================
   // STORAGE HELPERS
@@ -306,7 +304,6 @@
     statusPanel.addEventListener('mousedown', (e) => {
       e.preventDefault();
       isDragging = true;
-      dragStartPos = { x: e.clientX, y: e.clientY };
       const rect = statusPanel.getBoundingClientRect();
       dragOffset.x = e.clientX - rect.left;
       dragOffset.y = e.clientY - rect.top;
@@ -347,7 +344,6 @@
   // ============================================
   // WEBSOCKET INTERCEPT LISTENER (v5.4.0)
   // ============================================
-  let wsPollDetected = false;
   let wsPollTimestamp = 0;
   let wsPreClickInterval = null;
 
@@ -357,7 +353,6 @@
       if (!event.data || event.data.type !== 'PW_POLL_WS_DETECTED') return;
 
       const now = performance.now();
-      wsPollDetected = true;
       wsPollTimestamp = now;
 
       // Pre-open poll panel immediately
@@ -369,9 +364,6 @@
       if (extensionActive && !isProcessing && (nextPollAnswer || selectedOption)) {
         startWsPreClickWatcher();
       }
-
-      // Clear WS flag after 10 seconds
-      setTimeout(() => { wsPollDetected = false; }, 10000);
     });
   }
 
@@ -407,7 +399,9 @@
           panelOpening = false;
         }
       }
-    } catch(e) {}
+    } catch(e) {
+      panelOpening = false;
+    }
   }
 
   // Fast watcher — checks DOM every 5ms for poll options after WS detect
@@ -434,7 +428,6 @@
           if (!hasAnswer) return;
 
           isProcessing = true;
-          lastPollTime = Date.now();
           lastAnsweredPollHash = pollHash;
 
           if (processingSafetyTimer) clearTimeout(processingSafetyTimer);
@@ -497,7 +490,6 @@
           }
         }, PW.PROCESSING_SAFETY_TIMEOUT);
         
-        lastPollTime = Date.now();
         lastAnsweredPollHash = pollHash;
 
         // FIX #6: Don't increment pollCount here - increment on success
@@ -652,10 +644,27 @@
   }
 
   // ============================================
+  // BUG FIX #2: Clear answer state only if user hasn't re-entered Q mode
+  // ============================================
+  function clearAnswerState() {
+    if (!waitingForAnswer) {
+      selectedOption = null;
+      nextPollAnswer = null;
+      saveToStorage('selectedOption', null);
+    }
+  }
+
+  // ============================================
   // ANSWER POLL (FIX #3: Safety timeout, FIX #6: pollCount on success)
   // ============================================
   function answerPoll(options, wsAdv) {
     try {
+      // BUG FIX #1: Clear Q mode timeout so it doesn't fire after poll is answered
+      if (waitingForAnswerTimeout) {
+        clearTimeout(waitingForAnswerTimeout);
+        waitingForAnswerTimeout = null;
+      }
+
       const pollStartTime = Date.now();
       const target = getCurrentAnswer();
       const option = options.find(o => o.letter === target);
@@ -669,9 +678,7 @@
           reason: 'Option not found',
           time: '-'
         });
-        selectedOption = null;
-        nextPollAnswer = null;
-        saveToStorage('selectedOption', null);
+        clearAnswerState();
         isProcessing = false;
         if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
         updateUI();
@@ -727,7 +734,7 @@
                     pollCount++;
                     saveToStorage('pollCount', pollCount);
                     
-                    const wsText = wsAdv > 0 ? ` (WS+${wsAdv}ms)` : '';
+                    const wsText = (wsAdv && wsAdv > 0) ? ` (WS+${wsAdv}ms)` : '';
                     showNotification(`✓ #${pollCount} ${totalTime}ms${wsText}`, '#10b981');
 
                     addPollResult({
@@ -751,9 +758,7 @@
                       pollCount: pollCount
                     });
                     
-                    selectedOption = null;
-                    nextPollAnswer = null;
-                    saveToStorage('selectedOption', null);
+                    clearAnswerState();
                   } else {
                     const totalTime = Date.now() - pollStartTime;
                     showNotification(`⚠ No submit btn`, '#f59e0b');
@@ -765,9 +770,7 @@
                       reason: 'No submit button',
                       time: totalTime + 'ms'
                     });
-                    selectedOption = null;
-                    nextPollAnswer = null;
-                    saveToStorage('selectedOption', null);
+                    clearAnswerState();
                   }
                 } catch (e) {
                   addError('Submit error: ' + e.message);
@@ -778,9 +781,7 @@
                     reason: 'Submit error: ' + e.message,
                     time: '-'
                   });
-                  selectedOption = null;
-                  nextPollAnswer = null;
-                  saveToStorage('selectedOption', null);
+                  clearAnswerState();
                 } finally {
                   isProcessing = false;
                   if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
@@ -800,9 +801,7 @@
                 time: '-'
               });
               
-              selectedOption = null;
-              nextPollAnswer = null;
-              saveToStorage('selectedOption', null);
+              clearAnswerState();
               
               isProcessing = false;
               if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
@@ -817,9 +816,7 @@
               reason: 'Answer error: ' + e.message,
               time: '-'
             });
-            selectedOption = null;
-            nextPollAnswer = null;
-            saveToStorage('selectedOption', null);
+            clearAnswerState();
             isProcessing = false;
             if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
             updateUI();
@@ -828,9 +825,7 @@
       }, humanDelay);
     } catch (e) {
       addError('answerPoll: ' + e.message);
-      selectedOption = null;
-      nextPollAnswer = null;
-      saveToStorage('selectedOption', null);
+      clearAnswerState();
       isProcessing = false;
       if (processingSafetyTimer) { clearTimeout(processingSafetyTimer); processingSafetyTimer = null; }
       updateUI();
@@ -1065,12 +1060,12 @@
           }
           waitingForAnswerTimeout = setTimeout(() => {
             waitingForAnswer = false;
-            waitingForAnswerTimeout = null;
             nextPollAnswer = null;
             selectedOption = null;
             saveToStorage('selectedOption', null);
             showNotification('⏱️ Q mode expired', '#ef4444');
             updateUI();
+            waitingForAnswerTimeout = null;
           }, 30000);
           
           showNotification('⏳ A/B/C/D? (30s)', '#fbbf24');
