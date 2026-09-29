@@ -251,6 +251,59 @@ body {
   box-shadow: 0 6px 16px rgba(139, 92, 246, 0.4);
 }
 
+/* Feature Info Section */
+.feature-info {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.feature-info h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #10b981;
+  margin-bottom: 8px;
+}
+
+.feature-desc {
+  font-size: 12px;
+  color: #d4d4d8;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+.feature-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.feature-stats .stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+}
+
+.feature-stats .stat-label {
+  color: #a1a1aa;
+  font-weight: 600;
+}
+
+.feature-stats .stat-value {
+  color: #e4e4e7;
+  font-weight: 700;
+}
+
+.feature-stats .stat-value.highlight {
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.15);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
 /* Timing Controls */
 .timing-group {
   display: flex;
