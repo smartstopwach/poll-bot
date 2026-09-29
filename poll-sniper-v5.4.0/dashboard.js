@@ -256,7 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (filtered.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="6" class="empty">No polls found</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="7" class="empty">No polls found</td></tr>';
       return;
     }
 
@@ -266,6 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const method = item.status === 'SUCCESS'
         ? `${item.click || '-'}/${item.submit || '-'}`
         : (item.reason || 'Unknown');
+      const netDelay = item.networkDelay || '-';
 
       return `
         <tr>
@@ -273,6 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <td><strong>#${item.poll}</strong></td>
           <td><strong>${item.answer}</strong></td>
           <td>${item.time || '-'}</td>
+          <td><span class="net-delay">${netDelay}</span></td>
           <td>${method}</td>
           <td>${item.timestamp || '-'}</td>
         </tr>

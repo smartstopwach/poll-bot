@@ -345,6 +345,7 @@
   // WEBSOCKET INTERCEPT LISTENER (v5.4.0)
   // ============================================
   let wsPollTimestamp = 0;
+  let wsDetectedAt = 0;  // Wall clock time when WS detected
   let wsPreClickInterval = null;
 
   function setupWebSocketListener() {
@@ -354,6 +355,7 @@
 
       const now = performance.now();
       wsPollTimestamp = now;
+      wsDetectedAt = event.data.wsDetectedAt || Date.now();
 
       // Pre-open poll panel immediately
       if (autoOpen && extensionActive && (nextPollAnswer || selectedOption || waitingForAnswer)) {
@@ -737,6 +739,9 @@
                     const wsText = (wsAdv && wsAdv > 0) ? ` (WS+${wsAdv}ms)` : '';
                     showNotification(`✓ #${pollCount} ${totalTime}ms${wsText}`, '#10b981');
 
+                    // Calculate network delay (time from WS detection to answer completion)
+                    const networkDelay = wsDetectedAt > 0 ? Date.now() - wsDetectedAt : 0;
+
                     addPollResult({
                       poll: pollCount,
                       answer: target,
@@ -744,11 +749,13 @@
                       click: clickMethod,
                       submit: submitMethod,
                       time: totalTime + 'ms',
+                      networkDelay: networkDelay > 0 ? networkDelay + 'ms' : '-',
                       breakdown: {
                         humanDelay: humanDelay,
                         pollDelay: pollDelay,
                         submitDelay: submitDelay,
-                        processingTime: submitClickTime - answerClickTime
+                        processingTime: submitClickTime - answerClickTime,
+                        networkDelay: networkDelay
                       }
                     });
 

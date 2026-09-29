@@ -15,7 +15,8 @@
     if (POLL_REGEX.test(data) || POLL_QUICK_REGEX.test(data)) {
       window.postMessage({
         type: 'PW_POLL_WS_DETECTED',
-        timestamp: performance.now()
+        timestamp: performance.now(),
+        wsDetectedAt: Date.now()
       }, window.location.origin);
     }
   }
@@ -54,7 +55,8 @@
             if (POLL_QUICK_REGEX.test(text)) {
               window.postMessage({
                 type: 'PW_POLL_WS_DETECTED',
-                timestamp: performance.now()
+                timestamp: performance.now(),
+                wsDetectedAt: Date.now()
               }, window.location.origin);
             }
           }).catch(function() {});

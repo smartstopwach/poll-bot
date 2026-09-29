@@ -316,21 +316,10 @@ body {
   color: #10b981;
 }
 
-.speed-comparison {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.speed-note {
   font-size: 11px;
-  color: #71717a;
-}
-
-.speed-comparison .arrow {
-  color: #52525b;
-}
-
-.speed-comparison .highlight {
-  color: #10b981;
-  font-weight: 600;
+  color: #a1a1aa;
+  line-height: 1.5;
 }
 
 /* Toggle Grid */
@@ -552,6 +541,11 @@ body {
 .status-badge.failed {
   background: rgba(239, 68, 68, 0.1);
   color: #ef4444;
+}
+
+.net-delay {
+  color: #f59e0b;
+  font-weight: 600;
 }
 
 /* Flow Steps */
